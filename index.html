@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Monitoring Compost</title>
+
+    <style>
+        body {
+            font-family: monospace;
+            background: #ffffff;
+            color: #000000;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .node {
+            border: 1px solid #000000;
+            padding: 15px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        .online {
+            color: green;
+            font-weight: bold;
+        }
+
+        .offline {
+            color: red;
+            font-weight: bold;
+        }
+
+        #error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>SMART MONITORING COMPOST</h1>
+
+    <div id="system">
+        Loading...
+    </div>
+
+    <hr>
+
+    <div id="nodes">
+        Loading node data...
+    </div>
+
+    <div id="error"></div>
+
+
+    <script>
+
+        // ==================================================
+        // API
+        // ==================================================
+
+        const API_URL =
+            "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
+
+
+        // ==================================================
+        // LOAD DATA
+        // ==================================================
+
+        async function loadData() {
+
+            try {
+
+                const response =
+                    await fetch(API_URL);
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP Error " + response.status
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                // ==========================================
+                // CHECK API
+                // ==========================================
+
+                if (!data.success) {
+
+                    throw new Error(
+                        "API returned success=false"
+                    );
+                }
+
+
+                // ==========================================
+                // CLEAR ERROR
+                // ==========================================
+
+                document.getElementById("error")
+                    .textContent = "";
+
+
+                // ==========================================
+                // SYSTEM INFORMATION
+                // ==========================================
+
+                document.getElementById("system")
+                    .textContent =
+`SERVER
+Status        : ONLINE
+Server Time   : ${data.server_time}
+Heartbeat     : ${data.heartbeat_timeout} seconds
+Auto Refresh  : 5 seconds`;
+
+
+                // ==========================================
+                // NODE DATA
+                // ==========================================
+
+                let output = "";
+
+
+                for (
+                    let i = 1;
+                    i <= 5;
+                    i++
+                ) {
+
+                    const node =
+                        data.nodes["node_" + i];
+
+
+                    // ======================================
+                    // NODE NOT FOUND
+                    // ======================================
+
+                    if (!node) {
+
+                        output +=
+`NODE ${i}
+========================================
+DATA NOT AVAILABLE
+
+`;
+
+                        continue;
+                    }
+
+
+                    // ======================================
+                    // NODE DATA
+                    // ======================================
+
+                    output +=
+`NODE ${node.node_id}
+========================================
+Status        : ${node.status}
+Last Seen     : ${node.last_seen}
+
+RECORDED DATA
+Recorded At   : ${node.recorded_at}
+
+Temperature   : ${node.temperature} °C
+Temp Status   : ${node.temp_status}
+
+Moisture      : ${node.moisture} %
+Soil ADC      : ${node.soil_adc}
+
+MQ4 ADC       : ${node.mq4_adc}
+CH4 Index     : ${node.ch4_index}
+
+Compost       : ${node.compost_status}
+
+SAMPLING
+Sample Count  : ${node.sample_count}
+Sample Index  : ${node.sample_index}
+Daily Sample  : ${node.daily_sample}
+
+`;
+
+
+                }
+
+
+                // ==========================================
+                // DISPLAY
+                // ==========================================
+
+                document.getElementById("nodes")
+                    .textContent = output;
+
+            }
+
+
+            catch (error) {
+
+                document.getElementById("system")
+                    .textContent =
+`SERVER
+Status        : ERROR`;
+
+
+                document.getElementById("error")
+                    .textContent =
+`Cannot connect to API.
+
+${error.message}`;
+
+            }
+
+        }
+
+
+        // ==================================================
+        // FIRST LOAD
+        // ==================================================
+
+        loadData();
+
+
+        // ==================================================
+        // AUTO REFRESH
+        // ==================================================
+
+        setInterval(
+            loadData,
+            5000
+        );
+
+    </script>
+
+</body>
+</html>

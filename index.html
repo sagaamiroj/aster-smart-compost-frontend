@@ -1,246 +1,1818 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Smart Monitoring Compost</title>
+```
+<meta charset="UTF-8">
 
-    <style>
-        body {
-            font-family: monospace;
-            background: #ffffff;
-            color: #000000;
-            margin: 20px;
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Smart Monitoring Compost</title>
+
+
+<style>
+
+    /* ==================================================
+       GLOBAL
+    ================================================== */
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    body {
+
+        margin: 0;
+
+        font-family:
+            Inter,
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background: #f4f7f5;
+
+        color: #1f2933;
+
+    }
+
+
+    .container {
+
+        width: 100%;
+
+        max-width: 1400px;
+
+        margin: 0 auto;
+
+        padding: 24px;
+
+    }
+
+
+    /* ==================================================
+       HEADER
+    ================================================== */
+
+    .header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 20px;
+
+        margin-bottom: 24px;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .title-area h1 {
+
+        margin: 0;
+
+        font-size: 28px;
+
+        font-weight: 700;
+
+        color: #17251d;
+
+    }
+
+
+    .title-area p {
+
+        margin: 6px 0 0;
+
+        color: #6b7280;
+
+        font-size: 14px;
+
+    }
+
+
+    .refresh-box {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        background: #ffffff;
+
+        border: 1px solid #dfe6e1;
+
+        border-radius: 10px;
+
+        padding: 10px 14px;
+
+        font-size: 13px;
+
+        color: #66736a;
+
+    }
+
+
+    .refresh-dot {
+
+        width: 9px;
+
+        height: 9px;
+
+        border-radius: 50%;
+
+        background: #16a34a;
+
+        animation: pulse 1.8s infinite;
+
+    }
+
+
+    @keyframes pulse {
+
+        0% {
+            opacity: 1;
         }
 
-        h1 {
-            font-size: 24px;
+        50% {
+            opacity: 0.35;
         }
 
-        .node {
-            border: 1px solid #000000;
-            padding: 15px;
-            margin-bottom: 20px;
-            white-space: pre-wrap;
+        100% {
+            opacity: 1;
         }
 
-        .online {
-            color: green;
-            font-weight: bold;
+    }
+
+
+    /* ==================================================
+       SYSTEM PANEL
+    ================================================== */
+
+    .system-panel {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 14px;
+
+        margin-bottom: 28px;
+
+    }
+
+
+    .system-card {
+
+        background: #ffffff;
+
+        border: 1px solid #dfe6e1;
+
+        border-radius: 12px;
+
+        padding: 16px;
+
+    }
+
+
+    .system-label {
+
+        font-size: 12px;
+
+        color: #7b857d;
+
+        margin-bottom: 6px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.5px;
+
+    }
+
+
+    .system-value {
+
+        font-size: 18px;
+
+        font-weight: 700;
+
+        color: #1f2933;
+
+    }
+
+
+    .system-value.online {
+
+        color: #15803d;
+
+    }
+
+
+    .system-value.error {
+
+        color: #dc2626;
+
+    }
+
+
+    /* ==================================================
+       SECTION TITLE
+    ================================================== */
+
+    .section-header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 14px;
+
+    }
+
+
+    .section-title {
+
+        margin: 0;
+
+        font-size: 20px;
+
+        font-weight: 700;
+
+        color: #17251d;
+
+    }
+
+
+    .section-subtitle {
+
+        color: #7b857d;
+
+        font-size: 13px;
+
+    }
+
+
+    /* ==================================================
+       NODE GRID
+    ================================================== */
+
+    .nodes-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 18px;
+
+    }
+
+
+    /* ==================================================
+       NODE CARD
+    ================================================== */
+
+    .node-card {
+
+        background: #ffffff;
+
+        border: 1px solid #dfe6e1;
+
+        border-radius: 14px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 2px 8px
+            rgba(0, 0, 0, 0.04);
+
+    }
+
+
+    .node-header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        padding: 16px 18px;
+
+        border-bottom:
+            1px solid #edf1ee;
+
+        background: #fafcfb;
+
+    }
+
+
+    .node-name {
+
+        font-size: 18px;
+
+        font-weight: 700;
+
+        color: #17251d;
+
+    }
+
+
+    .node-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 6px 10px;
+
+        border-radius: 20px;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        letter-spacing: 0.4px;
+
+    }
+
+
+    .node-status::before {
+
+        content: "";
+
+        width: 7px;
+
+        height: 7px;
+
+        border-radius: 50%;
+
+    }
+
+
+    .node-status.online {
+
+        color: #166534;
+
+        background: #dcfce7;
+
+    }
+
+
+    .node-status.online::before {
+
+        background: #16a34a;
+
+    }
+
+
+    .node-status.offline {
+
+        color: #991b1b;
+
+        background: #fee2e2;
+
+    }
+
+
+    .node-status.offline::before {
+
+        background: #dc2626;
+
+    }
+
+
+    /* ==================================================
+       NODE META
+    ================================================== */
+
+    .node-meta {
+
+        padding: 12px 18px;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        border-bottom:
+            1px solid #edf1ee;
+
+        font-size: 12px;
+
+        color: #6b7280;
+
+    }
+
+
+    .node-meta strong {
+
+        color: #374151;
+
+    }
+
+
+    /* ==================================================
+       DATA SECTION
+    ================================================== */
+
+    .data-section {
+
+        padding: 16px 18px;
+
+    }
+
+
+    .data-title {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 12px;
+
+    }
+
+
+    .data-title h3 {
+
+        margin: 0;
+
+        font-size: 14px;
+
+        color: #374151;
+
+        letter-spacing: 0.3px;
+
+    }
+
+
+    .data-badge {
+
+        font-size: 10px;
+
+        padding: 4px 7px;
+
+        border-radius: 5px;
+
+        background: #eef2f7;
+
+        color: #64748b;
+
+        font-weight: 700;
+
+    }
+
+
+    /* ==================================================
+       SENSOR GRID
+    ================================================== */
+
+    .sensor-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 10px;
+
+    }
+
+
+    .sensor-item {
+
+        background: #f8faf9;
+
+        border: 1px solid #edf1ee;
+
+        border-radius: 9px;
+
+        padding: 11px;
+
+        min-height: 70px;
+
+    }
+
+
+    .sensor-label {
+
+        font-size: 11px;
+
+        color: #7b857d;
+
+        margin-bottom: 5px;
+
+    }
+
+
+    .sensor-value {
+
+        font-size: 17px;
+
+        font-weight: 700;
+
+        color: #1f2933;
+
+        word-break: break-word;
+
+    }
+
+
+    .sensor-unit {
+
+        font-size: 11px;
+
+        font-weight: 500;
+
+        color: #6b7280;
+
+    }
+
+
+    /* ==================================================
+       STATUS COLORS
+    ================================================== */
+
+    .status-normal {
+
+        color: #15803d;
+
+    }
+
+
+    .status-warning {
+
+        color: #ca8a04;
+
+    }
+
+
+    .status-danger {
+
+        color: #dc2626;
+
+    }
+
+
+    .status-neutral {
+
+        color: #64748b;
+
+    }
+
+
+    /* ==================================================
+       RAW EMPTY
+    ================================================== */
+
+    .no-data {
+
+        padding: 16px;
+
+        text-align: center;
+
+        border:
+            1px dashed #d6ddd8;
+
+        border-radius: 9px;
+
+        color: #8a948d;
+
+        font-size: 12px;
+
+        background: #fafbfa;
+
+    }
+
+
+    /* ==================================================
+       FOOTER
+    ================================================== */
+
+    .footer {
+
+        margin-top: 30px;
+
+        padding-top: 18px;
+
+        border-top:
+            1px solid #dfe6e1;
+
+        text-align: center;
+
+        color: #8a948d;
+
+        font-size: 12px;
+
+    }
+
+
+    /* ==================================================
+       ERROR
+    ================================================== */
+
+    #error {
+
+        display: none;
+
+        margin-bottom: 20px;
+
+        padding: 14px 16px;
+
+        border-radius: 10px;
+
+        background: #fee2e2;
+
+        border: 1px solid #fecaca;
+
+        color: #991b1b;
+
+        font-size: 13px;
+
+    }
+
+
+    /* ==================================================
+       RESPONSIVE
+    ================================================== */
+
+    @media (max-width: 1000px) {
+
+        .nodes-grid {
+
+            grid-template-columns:
+                1fr;
+
         }
 
-        .offline {
-            color: red;
-            font-weight: bold;
+
+        .system-panel {
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
         }
 
-        #error {
-            color: red;
-            font-weight: bold;
+    }
+
+
+    @media (max-width: 600px) {
+
+        .container {
+
+            padding: 16px;
+
         }
-    </style>
+
+
+        .title-area h1 {
+
+            font-size: 22px;
+
+        }
+
+
+        .system-panel {
+
+            grid-template-columns:
+                1fr;
+
+        }
+
+
+        .sensor-grid {
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+        }
+
+
+        .node-meta {
+
+            flex-direction:
+                column;
+
+        }
+
+    }
+
+</style>
+```
+
 </head>
 
 <body>
 
-    <h1>SMART MONITORING COMPOST</h1>
+<div class="container">
 
-    <div id="system">
-        Loading...
+```
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header class="header">
+
+    <div class="title-area">
+
+        <h1>
+            SMART MONITORING COMPOST
+        </h1>
+
+        <p>
+            Real-time compost monitoring system
+        </p>
+
     </div>
 
-    <hr>
 
-    <div id="nodes">
-        Loading node data...
+    <div class="refresh-box">
+
+        <span class="refresh-dot"></span>
+
+        Auto refresh setiap 5 detik
+
     </div>
 
-    <div id="error"></div>
+</header>
 
 
-    <script>
+<!-- ==================================================
+     ERROR
+================================================== -->
 
-        // ==================================================
-        // API
-        // ==================================================
-
-        const API_URL =
-            "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
+<div id="error"></div>
 
 
-        // ==================================================
-        // LOAD DATA
-        // ==================================================
+<!-- ==================================================
+     SYSTEM INFORMATION
+================================================== -->
 
-        async function loadData() {
+<section>
 
-            try {
+    <div class="section-header">
 
-                const response =
-                    await fetch(API_URL);
+        <h2 class="section-title">
+            System Information
+        </h2>
 
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "HTTP Error " + response.status
-                    );
-                }
+    </div>
 
 
-                const data =
-                    await response.json();
+    <div class="system-panel">
 
 
-                // ==========================================
-                // CHECK API
-                // ==========================================
+        <div class="system-card">
 
-                if (!data.success) {
+            <div class="system-label">
+                Server Status
+            </div>
 
-                    throw new Error(
-                        "API returned success=false"
-                    );
-                }
+            <div
+                id="server-status"
+                class="system-value online"
+            >
+                ONLINE
+            </div>
 
-
-                // ==========================================
-                // CLEAR ERROR
-                // ==========================================
-
-                document.getElementById("error")
-                    .textContent = "";
+        </div>
 
 
-                // ==========================================
-                // SYSTEM INFORMATION
-                // ==========================================
+        <div class="system-card">
 
-                document.getElementById("system")
-                    .textContent =
-`SERVER
-Status        : ONLINE
-Server Time   : ${data.server_time}
-Heartbeat     : ${data.heartbeat_timeout} seconds
-Auto Refresh  : 5 seconds`;
+            <div class="system-label">
+                Server Time
+            </div>
 
+            <div
+                id="server-time"
+                class="system-value"
+            >
+                --
+            </div>
 
-                // ==========================================
-                // NODE DATA
-                // ==========================================
-
-                let output = "";
+        </div>
 
 
-                for (
-                    let i = 1;
-                    i <= 5;
-                    i++
-                ) {
+        <div class="system-card">
 
-                    const node =
-                        data.nodes["node_" + i];
+            <div class="system-label">
+                Heartbeat Timeout
+            </div>
 
+            <div
+                id="heartbeat"
+                class="system-value"
+            >
+                --
+            </div>
 
-                    // ======================================
-                    // NODE NOT FOUND
-                    // ======================================
-
-                    if (!node) {
-
-                        output +=
-`NODE ${i}
-========================================
-DATA NOT AVAILABLE
-
-`;
-
-                        continue;
-                    }
+        </div>
 
 
-                    // ======================================
-                    // NODE DATA
-                    // ======================================
+        <div class="system-card">
 
-                    output +=
-`NODE ${node.node_id}
-========================================
-Status        : ${node.status}
-Last Seen     : ${node.last_seen}
+            <div class="system-label">
+                Last Update
+            </div>
 
-RECORDED DATA
-Recorded At   : ${node.recorded_at}
+            <div
+                id="last-update"
+                class="system-value"
+            >
+                --
+            </div>
 
-Temperature   : ${node.temperature} °C
-Temp Status   : ${node.temp_status}
-
-Moisture      : ${node.moisture} %
-Soil ADC      : ${node.soil_adc}
-
-MQ4 ADC       : ${node.mq4_adc}
-CH4 Index     : ${node.ch4_index}
-
-Compost       : ${node.compost_status}
-
-SAMPLING
-Sample Count  : ${node.sample_count}
-Sample Index  : ${node.sample_index}
-Daily Sample  : ${node.daily_sample}
-
-`;
+        </div>
 
 
-                }
+    </div>
+
+</section>
 
 
-                // ==========================================
-                // DISPLAY
-                // ==========================================
+<!-- ==================================================
+     NODE MONITORING
+================================================== -->
 
-                document.getElementById("nodes")
-                    .textContent = output;
+<section>
 
-            }
+    <div class="section-header">
+
+        <div>
+
+            <h2 class="section-title">
+                Compost Nodes
+            </h2>
+
+            <div class="section-subtitle">
+                Monitoring 5 compost sensor nodes
+            </div>
+
+        </div>
+
+    </div>
 
 
-            catch (error) {
+    <div
+        id="nodes"
+        class="nodes-grid"
+    >
 
-                document.getElementById("system")
-                    .textContent =
-`SERVER
-Status        : ERROR`;
+        <!-- Javascript -->
+
+    </div>
+
+</section>
 
 
-                document.getElementById("error")
-                    .textContent =
-`Cannot connect to API.
+<!-- ==================================================
+     FOOTER
+================================================== -->
 
-${error.message}`;
+<footer class="footer">
 
-            }
+    Smart Monitoring Compost
+    &nbsp;•&nbsp;
+    ESP32 Sensor Network
+    &nbsp;•&nbsp;
+    API Monitoring
+
+</footer>
+```
+
+</div>
+
+<script>
+
+
+    // ==================================================
+    // API
+    // ==================================================
+
+    const API_URL =
+        "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
+
+
+    // ==================================================
+    // REFRESH INTERVAL
+    // ==================================================
+
+    const REFRESH_INTERVAL =
+        5000;
+
+
+    // ==================================================
+    // ELEMENTS
+    // ==================================================
+
+    const nodesContainer =
+        document.getElementById("nodes");
+
+    const errorElement =
+        document.getElementById("error");
+
+    const serverStatusElement =
+        document.getElementById("server-status");
+
+    const serverTimeElement =
+        document.getElementById("server-time");
+
+    const heartbeatElement =
+        document.getElementById("heartbeat");
+
+    const lastUpdateElement =
+        document.getElementById("last-update");
+
+
+    // ==================================================
+    // FORMAT VALUE
+    // ==================================================
+
+    function valueOrDash(value) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+
+            return "--";
+
+        }
+
+        return value;
+
+    }
+
+
+    // ==================================================
+    // STATUS CLASS
+    // ==================================================
+
+    function getStatusClass(status) {
+
+        if (!status) {
+
+            return "status-neutral";
 
         }
 
 
-        // ==================================================
-        // FIRST LOAD
-        // ==================================================
-
-        loadData();
+        const value =
+            String(status)
+                .toUpperCase();
 
 
-        // ==================================================
-        // AUTO REFRESH
-        // ==================================================
+        if (
+            value === "NORMAL" ||
+            value === "ONLINE" ||
+            value === "MESOPHILIC"
+        ) {
 
-        setInterval(
-            loadData,
-            5000
-        );
+            return "status-normal";
 
-    </script>
+        }
+
+
+        if (
+            value === "WARNING" ||
+            value === "SEDANG" ||
+            value === "THERMOPHILIC"
+        ) {
+
+            return "status-warning";
+
+        }
+
+
+        if (
+            value === "DANGER" ||
+            value === "HIGH" ||
+            value === "TINGGI"
+        ) {
+
+            return "status-danger";
+
+        }
+
+
+        return "status-neutral";
+
+    }
+
+
+    // ==================================================
+    // FORMAT TEMPERATURE
+    // ==================================================
+
+    function formatTemperature(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "--";
+
+        }
+
+
+        return Number(value).toFixed(2);
+
+    }
+
+
+    // ==================================================
+    // RAW DATA HTML
+    // ==================================================
+
+    function renderRawData(raw) {
+
+
+        if (!raw) {
+
+            return `
+
+                <div class="no-data">
+
+                    Belum ada raw sensor data
+                    untuk node ini.
+
+                </div>
+
+            `;
+
+        }
+
+
+        return `
+
+            <div class="data-title">
+
+                <h3>
+                    RAW SENSOR DATA
+                </h3>
+
+                <span class="data-badge">
+                    SAMPLE ${valueOrDash(raw.sample_index)}
+                </span>
+
+            </div>
+
+
+            <div class="sensor-grid">
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Temperature
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${formatTemperature(raw.temperature)}
+
+                        <span class="sensor-unit">
+                            °C
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Moisture
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(raw.moisture)}
+
+                        <span class="sensor-unit">
+                            %
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Soil ADC
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(raw.soil_adc)}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        MQ4 ADC
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(raw.mq4_adc)}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Temperature Status
+                    </div>
+
+                    <div
+                        class="sensor-value
+                        ${getStatusClass(raw.temp_status)}"
+                    >
+
+                        ${valueOrDash(raw.temp_status)}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        MQ4 Status
+                    </div>
+
+                    <div
+                        class="sensor-value
+                        ${getStatusClass(raw.mq4_status)}"
+                    >
+
+                        ${valueOrDash(raw.mq4_status)}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:12px;
+                    font-size:11px;
+                    color:#8a948d;
+                "
+            >
+
+                Recorded:
+                ${valueOrDash(raw.recorded_at)}
+
+            </div>
+
+        `;
+
+    }
+
+
+    // ==================================================
+    // AGGREGATED DATA HTML
+    // ==================================================
+
+    function renderAggregatedData(aggregated) {
+
+
+        if (!aggregated) {
+
+            return `
+
+                <div class="no-data">
+
+                    Belum ada aggregated data
+                    untuk node ini.
+
+                </div>
+
+            `;
+
+        }
+
+
+        return `
+
+            <div class="data-title">
+
+                <h3>
+                    AGGREGATED DATA
+                </h3>
+
+                <span class="data-badge">
+                    ${valueOrDash(aggregated.sample_count)}
+                    SAMPLES
+                </span>
+
+            </div>
+
+
+            <div class="sensor-grid">
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Temperature
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${formatTemperature(
+                            aggregated.temperature
+                        )}
+
+                        <span class="sensor-unit">
+                            °C
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Moisture
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.moisture
+                        )}
+
+                        <span class="sensor-unit">
+                            %
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Soil ADC
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.soil_adc
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        MQ4 ADC
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.mq4_adc
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        CH4 Index
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.ch4_index
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Compost Status
+                    </div>
+
+                    <div
+                        class="sensor-value
+                        ${getStatusClass(
+                            aggregated.compost_status
+                        )}"
+                    >
+
+                        ${valueOrDash(
+                            aggregated.compost_status
+                        )}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                style="
+                    display:grid;
+                    grid-template-columns:
+                        repeat(3,1fr);
+                    gap:10px;
+                    margin-top:10px;
+                "
+            >
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Sample Index
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.sample_index
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Daily Sample
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.daily_sample
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="sensor-item">
+
+                    <div class="sensor-label">
+                        Sample Count
+                    </div>
+
+                    <div class="sensor-value">
+
+                        ${valueOrDash(
+                            aggregated.sample_count
+                        )}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:12px;
+                    font-size:11px;
+                    color:#8a948d;
+                "
+            >
+
+                Recorded:
+                ${valueOrDash(
+                    aggregated.recorded_at
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+
+    // ==================================================
+    // NODE CARD
+    // ==================================================
+
+    function renderNode(node, index) {
+
+
+        if (!node) {
+
+            return `
+
+                <article class="node-card">
+
+                    <div class="node-header">
+
+                        <div class="node-name">
+                            Node ${index}
+                        </div>
+
+                        <div class="
+                            node-status
+                            offline
+                        ">
+
+                            OFFLINE
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="no-data"
+                        style="
+                            margin:18px;
+                        "
+                    >
+
+                        Node data tidak tersedia.
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }
+
+
+        const status =
+            String(
+                valueOrDash(node.status)
+            ).toUpperCase();
+
+
+        const statusClass =
+            status === "ONLINE"
+                ? "online"
+                : "offline";
+
+
+        return `
+
+            <article class="node-card">
+
+
+                <!-- NODE HEADER -->
+
+                <div class="node-header">
+
+                    <div class="node-name">
+
+                        Node ${node.node_id}
+
+                    </div>
+
+
+                    <div class="
+                        node-status
+                        ${statusClass}
+                    ">
+
+                        ${status}
+
+                    </div>
+
+                </div>
+
+
+                <!-- NODE META -->
+
+                <div class="node-meta">
+
+                    <div>
+
+                        Last Seen:
+                        <strong>
+                            ${valueOrDash(
+                                node.last_seen
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        Node ID:
+                        <strong>
+                            ${valueOrDash(
+                                node.node_id
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RAW -->
+
+                <div class="data-section">
+
+                    ${renderRawData(
+                        node.raw
+                    )}
+
+                </div>
+
+
+                <!-- AGGREGATED -->
+
+                <div
+                    class="data-section"
+                    style="
+                        border-top:
+                        1px solid #edf1ee;
+                    "
+                >
+
+                    ${renderAggregatedData(
+                        node.aggregated
+                    )}
+
+                </div>
+
+
+            </article>
+
+        `;
+
+    }
+
+
+    // ==================================================
+    // RENDER ALL NODES
+    // ==================================================
+
+    function renderNodes(nodes) {
+
+
+        let html = "";
+
+
+        for (
+            let i = 1;
+            i <= 5;
+            i++
+        ) {
+
+            const node =
+                nodes[
+                    "node_" + i
+                ];
+
+
+            html +=
+                renderNode(
+                    node,
+                    i
+                );
+
+        }
+
+
+        nodesContainer.innerHTML =
+            html;
+
+    }
+
+
+    // ==================================================
+    // LOAD DATA
+    // ==================================================
+
+    async function loadData() {
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "GET",
+
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP Error " +
+                    response.status
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "API returned success=false"
+                );
+
+            }
+
+
+            // ==========================================
+            // CLEAR ERROR
+            // ==========================================
+
+            errorElement.style.display =
+                "none";
+
+            errorElement.textContent =
+                "";
+
+
+            // ==========================================
+            // SERVER STATUS
+            // ==========================================
+
+            serverStatusElement.textContent =
+                "ONLINE";
+
+            serverStatusElement.className =
+                "system-value online";
+
+
+            // ==========================================
+            // SERVER TIME
+            // ==========================================
+
+            serverTimeElement.textContent =
+                valueOrDash(
+                    data.server_time
+                );
+
+
+            // ==========================================
+            // HEARTBEAT
+            // ==========================================
+
+            heartbeatElement.textContent =
+                valueOrDash(
+                    data.heartbeat_timeout
+                ) +
+                " sec";
+
+
+            // ==========================================
+            // LAST UPDATE
+            // ==========================================
+
+            const now =
+                new Date();
+
+
+            lastUpdateElement.textContent =
+                now.toLocaleTimeString(
+                    "id-ID",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit"
+                    }
+                );
+
+
+            // ==========================================
+            // NODES
+            // ==========================================
+
+            renderNodes(
+                data.nodes
+            );
+
+        }
+
+
+        catch (error) {
+
+
+            // ==========================================
+            // SERVER ERROR
+            // ==========================================
+
+            serverStatusElement.textContent =
+                "ERROR";
+
+            serverStatusElement.className =
+                "system-value error";
+
+
+            // ==========================================
+            // ERROR MESSAGE
+            // ==========================================
+
+            errorElement.style.display =
+                "block";
+
+
+            errorElement.textContent =
+                "Cannot connect to API: " +
+                error.message;
+
+
+        }
+
+    }
+
+
+    // ==================================================
+    // INITIAL LOAD
+    // ==================================================
+
+    loadData();
+
+
+    // ==================================================
+    // AUTO REFRESH
+    // ==================================================
+
+    setInterval(
+        loadData,
+        REFRESH_INTERVAL
+    );
+
+
+</script>
 
 </body>
+
 </html>

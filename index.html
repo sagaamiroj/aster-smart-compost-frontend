@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +38,6 @@
             background: #f4f7f5;
 
             color: #1f2933;
-
         }
 
 
@@ -45,12 +45,11 @@
 
             width: 100%;
 
-            max-width: 1450px;
+            max-width: 1400px;
 
             margin: 0 auto;
 
             padding: 24px;
-
         }
 
 
@@ -71,7 +70,6 @@
             margin-bottom: 24px;
 
             flex-wrap: wrap;
-
         }
 
 
@@ -81,10 +79,9 @@
 
             font-size: 28px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             color: #17251d;
-
         }
 
 
@@ -95,7 +92,6 @@
             color: #6b7280;
 
             font-size: 14px;
-
         }
 
 
@@ -108,17 +104,16 @@
             gap: 10px;
 
             flex-wrap: wrap;
-
         }
 
 
-        .live-box {
+        .refresh-box {
 
             display: flex;
 
             align-items: center;
 
-            gap: 9px;
+            gap: 10px;
 
             background: #ffffff;
 
@@ -131,11 +126,10 @@
             font-size: 13px;
 
             color: #66736a;
-
         }
 
 
-        .live-dot {
+        .refresh-dot {
 
             width: 9px;
 
@@ -145,8 +139,7 @@
 
             background: #16a34a;
 
-            animation: pulse 1.4s infinite;
-
+            animation: pulse 1.5s infinite;
         }
 
 
@@ -163,7 +156,6 @@
             100% {
                 opacity: 1;
             }
-
         }
 
 
@@ -175,34 +167,39 @@
 
             color: #ffffff;
 
-            padding: 11px 15px;
-
-            border-radius: 9px;
-
-            font-size: 12px;
+            font-size: 13px;
 
             font-weight: 700;
 
+            padding: 11px 16px;
+
+            border-radius: 9px;
+
             cursor: pointer;
 
-            transition: 0.2s;
-
+            transition:
+                background 0.2s,
+                transform 0.1s;
         }
 
 
         .reset-button:hover {
 
             background: #b91c1c;
+        }
 
+
+        .reset-button:active {
+
+            transform: scale(0.98);
         }
 
 
         .reset-button:disabled {
 
-            opacity: 0.5;
+            background: #9ca3af;
 
             cursor: not-allowed;
-
         }
 
 
@@ -228,17 +225,41 @@
 
             font-size: 13px;
 
+            line-height: 1.5;
         }
 
 
         /* ==================================================
-           SYSTEM INFORMATION
+           RESET MESSAGE
+        ================================================== */
+
+        #reset-message {
+
+            display: none;
+
+            margin-bottom: 20px;
+
+            padding: 14px 16px;
+
+            border-radius: 10px;
+
+            background: #dcfce7;
+
+            border: 1px solid #bbf7d0;
+
+            color: #166534;
+
+            font-size: 13px;
+        }
+
+
+        /* ==================================================
+           SECTION
         ================================================== */
 
         .section {
 
             margin-bottom: 28px;
-
         }
 
 
@@ -251,7 +272,6 @@
             align-items: center;
 
             margin-bottom: 14px;
-
         }
 
 
@@ -261,10 +281,9 @@
 
             font-size: 20px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             color: #17251d;
-
         }
 
 
@@ -275,9 +294,12 @@
             font-size: 13px;
 
             margin-top: 4px;
-
         }
 
+
+        /* ==================================================
+           SYSTEM PANEL
+        ================================================== */
 
         .system-panel {
 
@@ -287,7 +309,6 @@
                 repeat(4, 1fr);
 
             gap: 14px;
-
         }
 
 
@@ -300,22 +321,20 @@
             border-radius: 12px;
 
             padding: 16px;
-
         }
 
 
         .system-label {
 
-            font-size: 11px;
+            font-size: 12px;
 
             color: #7b857d;
 
-            margin-bottom: 7px;
+            margin-bottom: 6px;
 
             text-transform: uppercase;
 
-            letter-spacing: 0.6px;
-
+            letter-spacing: 0.5px;
         }
 
 
@@ -323,31 +342,23 @@
 
             font-size: 18px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             color: #1f2933;
 
+            word-break: break-word;
         }
 
 
         .system-value.online {
 
             color: #15803d;
-
         }
 
 
         .system-value.error {
 
             color: #dc2626;
-
-        }
-
-
-        .system-value.zero {
-
-            color: #64748b;
-
         }
 
 
@@ -363,7 +374,6 @@
                 repeat(2, 1fr);
 
             gap: 18px;
-
         }
 
 
@@ -384,13 +394,8 @@
             box-shadow:
                 0 2px 8px
                 rgba(0, 0, 0, 0.04);
-
         }
 
-
-        /* ==================================================
-           NODE HEADER
-        ================================================== */
 
         .node-header {
 
@@ -400,15 +405,12 @@
 
             align-items: center;
 
-            gap: 15px;
-
             padding: 16px 18px;
 
             border-bottom:
                 1px solid #edf1ee;
 
             background: #fafcfb;
-
         }
 
 
@@ -416,10 +418,9 @@
 
             font-size: 18px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             color: #17251d;
-
         }
 
 
@@ -437,10 +438,9 @@
 
             font-size: 11px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             letter-spacing: 0.4px;
-
         }
 
 
@@ -453,7 +453,6 @@
             height: 7px;
 
             border-radius: 50%;
-
         }
 
 
@@ -462,14 +461,12 @@
             color: #166534;
 
             background: #dcfce7;
-
         }
 
 
         .node-status.online::before {
 
             background: #16a34a;
-
         }
 
 
@@ -478,14 +475,12 @@
             color: #991b1b;
 
             background: #fee2e2;
-
         }
 
 
         .node-status.offline::before {
 
             background: #dc2626;
-
         }
 
 
@@ -495,13 +490,14 @@
 
         .node-meta {
 
-            padding: 11px 18px;
+            display: grid;
 
-            display: flex;
+            grid-template-columns:
+                1fr 1fr;
 
-            justify-content: space-between;
+            gap: 10px;
 
-            gap: 15px;
+            padding: 12px 18px;
 
             border-bottom:
                 1px solid #edf1ee;
@@ -509,14 +505,16 @@
             font-size: 12px;
 
             color: #6b7280;
-
         }
 
 
         .node-meta strong {
 
-            color: #374151;
+            display: block;
 
+            margin-top: 3px;
+
+            color: #374151;
         }
 
 
@@ -526,8 +524,7 @@
 
         .data-section {
 
-            padding: 18px;
-
+            padding: 16px 18px;
         }
 
 
@@ -535,7 +532,6 @@
 
             border-top:
                 1px solid #edf1ee;
-
         }
 
 
@@ -547,10 +543,7 @@
 
             align-items: center;
 
-            gap: 10px;
-
-            margin-bottom: 13px;
-
+            margin-bottom: 12px;
         }
 
 
@@ -563,16 +556,6 @@
             color: #374151;
 
             letter-spacing: 0.3px;
-
-        }
-
-
-        .data-title small {
-
-            color: #8a948d;
-
-            font-size: 11px;
-
         }
 
 
@@ -580,16 +563,15 @@
 
             font-size: 10px;
 
-            padding: 5px 8px;
+            padding: 4px 7px;
 
-            border-radius: 6px;
+            border-radius: 5px;
 
             background: #eef2f7;
 
             color: #64748b;
 
-            font-weight: 800;
-
+            font-weight: 700;
         }
 
 
@@ -605,7 +587,6 @@
                 repeat(3, 1fr);
 
             gap: 10px;
-
         }
 
 
@@ -617,10 +598,9 @@
 
             border-radius: 9px;
 
-            padding: 12px;
+            padding: 11px;
 
-            min-height: 75px;
-
+            min-height: 70px;
         }
 
 
@@ -630,21 +610,19 @@
 
             color: #7b857d;
 
-            margin-bottom: 6px;
-
+            margin-bottom: 5px;
         }
 
 
         .sensor-value {
 
-            font-size: 19px;
+            font-size: 17px;
 
-            font-weight: 800;
+            font-weight: 700;
 
             color: #1f2933;
 
             word-break: break-word;
-
         }
 
 
@@ -655,41 +633,6 @@
             font-weight: 500;
 
             color: #6b7280;
-
-        }
-
-
-        .sensor-zero {
-
-            color: #64748b;
-
-        }
-
-
-        /* ==================================================
-           PRIMARY SENSOR READING
-        ================================================== */
-
-        .raw-section {
-
-            background: #ffffff;
-
-        }
-
-
-        .raw-highlight {
-
-            background: #f0fdf4;
-
-            border: 1px solid #bbf7d0;
-
-        }
-
-
-        .raw-highlight .sensor-value {
-
-            font-size: 22px;
-
         }
 
 
@@ -700,43 +643,38 @@
         .status-normal {
 
             color: #15803d;
-
         }
 
 
         .status-warning {
 
             color: #ca8a04;
-
         }
 
 
         .status-danger {
 
             color: #dc2626;
-
         }
 
 
         .status-neutral {
 
             color: #64748b;
-
         }
 
 
         /* ==================================================
-           DATA FOOTER
+           RECORDED
         ================================================== */
 
-        .recorded-time {
+        .recorded {
 
             margin-top: 12px;
 
             font-size: 11px;
 
             color: #8a948d;
-
         }
 
 
@@ -746,7 +684,7 @@
 
         .no-data {
 
-            padding: 18px;
+            padding: 16px;
 
             text-align: center;
 
@@ -760,127 +698,6 @@
             font-size: 12px;
 
             background: #fafbfa;
-
-        }
-
-
-        /* ==================================================
-           RESET MODAL
-        ================================================== */
-
-        .modal {
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(15, 23, 42, 0.45);
-
-            display: none;
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 20px;
-
-            z-index: 9999;
-
-        }
-
-
-        .modal.show {
-
-            display: flex;
-
-        }
-
-
-        .modal-card {
-
-            width: 100%;
-
-            max-width: 420px;
-
-            background: #ffffff;
-
-            border-radius: 14px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 20px 50px
-                rgba(0, 0, 0, 0.2);
-
-        }
-
-
-        .modal-card h3 {
-
-            margin: 0 0 8px;
-
-            color: #17251d;
-
-        }
-
-
-        .modal-card p {
-
-            margin: 0 0 20px;
-
-            font-size: 13px;
-
-            line-height: 1.6;
-
-            color: #6b7280;
-
-        }
-
-
-        .modal-actions {
-
-            display: flex;
-
-            justify-content: flex-end;
-
-            gap: 10px;
-
-        }
-
-
-        .modal-button {
-
-            border: none;
-
-            border-radius: 8px;
-
-            padding: 10px 14px;
-
-            cursor: pointer;
-
-            font-size: 12px;
-
-            font-weight: 700;
-
-        }
-
-
-        .cancel-button {
-
-            background: #eef2f7;
-
-            color: #475569;
-
-        }
-
-
-        .confirm-button {
-
-            background: #dc2626;
-
-            color: #ffffff;
-
         }
 
 
@@ -902,7 +719,6 @@
             color: #8a948d;
 
             font-size: 12px;
-
         }
 
 
@@ -916,7 +732,6 @@
 
                 grid-template-columns:
                     1fr;
-
             }
 
 
@@ -924,9 +739,7 @@
 
                 grid-template-columns:
                     repeat(2, 1fr);
-
             }
-
         }
 
 
@@ -935,14 +748,31 @@
             .container {
 
                 padding: 16px;
+            }
 
+
+            .header {
+
+                align-items:
+                    flex-start;
             }
 
 
             .title-area h1 {
 
                 font-size: 22px;
+            }
 
+
+            .header-actions {
+
+                width: 100%;
+            }
+
+
+            .refresh-box {
+
+                flex: 1;
             }
 
 
@@ -950,7 +780,6 @@
 
                 grid-template-columns:
                     1fr;
-
             }
 
 
@@ -958,31 +787,20 @@
 
                 grid-template-columns:
                     repeat(2, 1fr);
-
             }
 
 
             .node-meta {
 
-                flex-direction:
-                    column;
-
+                grid-template-columns:
+                    1fr;
             }
 
 
-            .header-actions {
+            .reset-button {
 
                 width: 100%;
-
             }
-
-
-            .live-box {
-
-                flex: 1;
-
-            }
-
         }
 
     </style>
@@ -1002,6 +820,7 @@
 
     <header class="header">
 
+
         <div class="title-area">
 
             <h1>
@@ -1017,16 +836,12 @@
 
         <div class="header-actions">
 
-            <div class="live-box">
 
-                <span
-                    id="live-dot"
-                    class="live-dot"
-                ></span>
+            <div class="refresh-box">
 
-                <span id="live-text">
-                    LIVE • Refresh 1 detik
-                </span>
+                <span class="refresh-dot"></span>
+
+                LIVE • Refresh 1 detik
 
             </div>
 
@@ -1034,12 +849,14 @@
             <button
                 id="reset-button"
                 class="reset-button"
-                onclick="openResetModal()"
+                type="button"
             >
                 RESET ALL HISTORY
             </button>
 
+
         </div>
+
 
     </header>
 
@@ -1052,10 +869,18 @@
 
 
     <!-- ==================================================
+         RESET MESSAGE
+    ================================================== -->
+
+    <div id="reset-message"></div>
+
+
+    <!-- ==================================================
          SYSTEM INFORMATION
     ================================================== -->
 
     <section class="section">
+
 
         <div class="section-header">
 
@@ -1085,9 +910,9 @@
 
                 <div
                     id="server-status"
-                    class="system-value online"
+                    class="system-value"
                 >
-                    ONLINE
+                    0
                 </div>
 
             </div>
@@ -1143,6 +968,7 @@
 
         </div>
 
+
     </section>
 
 
@@ -1151,6 +977,7 @@
     ================================================== -->
 
     <section class="section">
+
 
         <div class="section-header">
 
@@ -1172,7 +999,12 @@
         <div
             id="nodes"
             class="nodes-grid"
-        ></div>
+        >
+
+            <!-- JavaScript -->
+
+        </div>
+
 
     </section>
 
@@ -1195,674 +1027,683 @@
 </div>
 
 
-<!-- ==================================================
-     RESET MODAL
-================================================== -->
-
-<div
-    id="reset-modal"
-    class="modal"
->
-
-    <div class="modal-card">
-
-        <h3>
-            Reset All History?
-        </h3>
-
-        <p>
-
-            Semua data pada
-            <strong>compost_raw</strong>
-            dan
-            <strong>compost_data</strong>
-            akan dihapus.
-
-            Setelah reset, tampilan web akan kembali
-            menjadi 0 sampai ESP32 mengirim data baru.
-
-        </p>
-
-
-        <div class="modal-actions">
-
-            <button
-                class="modal-button cancel-button"
-                onclick="closeResetModal()"
-            >
-                CANCEL
-            </button>
-
-
-            <button
-                id="confirm-reset"
-                class="modal-button confirm-button"
-                onclick="resetAllHistory()"
-            >
-                DELETE ALL DATA
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
 <script>
 
 
-    // ==================================================
-    // API
-    // ==================================================
+// ==================================================
+// API
+// ==================================================
 
-    const API_URL =
-        "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
-
-
-    // ==================================================
-    // RESET API
-    // ==================================================
-    //
-    // Endpoint ini harus dibuat di backend.
-    //
-    // ==================================================
-
-    const RESET_API_URL =
-        "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/reset.php";
+const API_URL =
+    "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
 
 
-    // ==================================================
-    // REFRESH
-    // ==================================================
+// ==================================================
+// RESET API
+// ==================================================
 
-    const REFRESH_INTERVAL = 1000;
-
-
-    // ==================================================
-    // ELEMENTS
-    // ==================================================
-
-    const nodesContainer =
-        document.getElementById("nodes");
-
-    const errorElement =
-        document.getElementById("error");
-
-    const serverStatusElement =
-        document.getElementById("server-status");
-
-    const serverTimeElement =
-        document.getElementById("server-time");
-
-    const heartbeatElement =
-        document.getElementById("heartbeat");
-
-    const lastUpdateElement =
-        document.getElementById("last-update");
-
-    const liveTextElement =
-        document.getElementById("live-text");
-
-    const liveDotElement =
-        document.getElementById("live-dot");
-
-    const resetButton =
-        document.getElementById("reset-button");
+const RESET_URL =
+    "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/reset.php";
 
 
-    // ==================================================
-    // VALUE
-    // ==================================================
+// ==================================================
+// REFRESH
+// ==================================================
 
-    function valueOrZero(value) {
+const REFRESH_INTERVAL = 1000;
 
-        if (
-            value === null ||
-            value === undefined ||
-            value === ""
-        ) {
 
-            return "0";
+// ==================================================
+// ELEMENTS
+// ==================================================
 
-        }
+const nodesContainer =
+    document.getElementById("nodes");
 
-        return value;
+const errorElement =
+    document.getElementById("error");
 
+const resetMessageElement =
+    document.getElementById("reset-message");
+
+const serverStatusElement =
+    document.getElementById("server-status");
+
+const serverTimeElement =
+    document.getElementById("server-time");
+
+const heartbeatElement =
+    document.getElementById("heartbeat");
+
+const lastUpdateElement =
+    document.getElementById("last-update");
+
+const resetButton =
+    document.getElementById("reset-button");
+
+
+// ==================================================
+// VALUE
+// ==================================================
+
+function valueOrZero(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return "0";
+    }
+
+    return value;
+}
+
+
+// ==================================================
+// TEMPERATURE
+// ==================================================
+
+function formatTemperature(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return "0";
     }
 
 
-    // ==================================================
-    // TEMPERATURE
-    // ==================================================
-
-    function formatTemperature(value) {
-
-        if (
-            value === null ||
-            value === undefined ||
-            value === ""
-        ) {
-
-            return "0";
-
-        }
+    const number =
+        Number(value);
 
 
-        const number =
-            Number(value);
+    if (
+        Number.isNaN(number)
+    ) {
 
-
-        if (Number.isNaN(number)) {
-
-            return "0";
-
-        }
-
-
-        return number.toFixed(2);
-
+        return "0";
     }
 
 
-    // ==================================================
-    // STATUS CLASS
-    // ==================================================
-
-    function getStatusClass(status) {
-
-        if (!status) {
-
-            return "status-neutral";
-
-        }
+    return number.toFixed(2);
+}
 
 
-        const value =
-            String(status)
-                .toUpperCase();
+// ==================================================
+// STATUS CLASS
+// ==================================================
 
+function getStatusClass(status) {
 
-        if (
-            value === "NORMAL" ||
-            value === "ONLINE" ||
-            value === "MESOPHILIC" ||
-            value === "ACTIVE"
-        ) {
-
-            return "status-normal";
-
-        }
-
-
-        if (
-            value === "WARNING" ||
-            value === "SEDANG" ||
-            value === "THERMOPHILIC"
-        ) {
-
-            return "status-warning";
-
-        }
-
-
-        if (
-            value === "DANGER" ||
-            value === "HIGH" ||
-            value === "TINGGI"
-        ) {
-
-            return "status-danger";
-
-        }
-
+    if (!status) {
 
         return "status-neutral";
-
     }
 
 
-    // ==================================================
-    // RAW DATA
-    // ==================================================
-
-    function renderRawData(raw) {
+    const value =
+        String(status)
+            .toUpperCase();
 
 
-        if (!raw) {
+    if (
+        value === "NORMAL" ||
+        value === "ONLINE" ||
+        value === "MESOPHILIC" ||
+        value === "ACTIVE"
+    ) {
 
-            return `
+        return "status-normal";
+    }
 
-                <div class="data-title">
 
-                    <h3>
-                        RAW SENSOR DATA
-                    </h3>
+    if (
+        value === "WARNING" ||
+        value === "SEDANG" ||
+        value === "THERMOPHILIC"
+    ) {
 
-                    <span class="data-badge">
-                        SAMPLE 0
+        return "status-warning";
+    }
+
+
+    if (
+        value === "DANGER" ||
+        value === "HIGH" ||
+        value === "TINGGI" ||
+        value === "LOW"
+    ) {
+
+        return "status-danger";
+    }
+
+
+    return "status-neutral";
+}
+
+
+// ==================================================
+// NODE STATUS
+// ==================================================
+
+function getNodeStatusClass(status) {
+
+    return String(status)
+        .toUpperCase() === "ONLINE"
+        ? "online"
+        : "offline";
+}
+
+
+// ==================================================
+// RENDER EMPTY DATA
+// ==================================================
+
+function renderEmptyData(title) {
+
+    return `
+
+        <div class="data-title">
+
+            <h3>
+                ${title}
+            </h3>
+
+            <span class="data-badge">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="no-data">
+
+            Belum ada data.
+
+        </div>
+
+    `;
+}
+
+
+// ==================================================
+// RAW DATA
+// ==================================================
+
+function renderRawData(raw) {
+
+
+    if (!raw) {
+
+        return renderEmptyData(
+            "RAW SENSOR DATA"
+        );
+    }
+
+
+    return `
+
+        <div class="data-title">
+
+            <h3>
+                RAW SENSOR DATA
+            </h3>
+
+            <span class="data-badge">
+
+                SAMPLE
+                ${valueOrZero(
+                    raw.sample_index
+                )}
+
+            </span>
+
+        </div>
+
+
+        <div class="sensor-grid">
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Temperature
+                </div>
+
+                <div class="sensor-value">
+
+                    ${formatTemperature(
+                        raw.temperature
+                    )}
+
+                    <span class="sensor-unit">
+                        °C
                     </span>
 
                 </div>
 
+            </div>
 
-                <div class="no-data">
 
-                    Belum ada raw sensor data.
+            <div class="sensor-item">
 
-                    Semua pembacaan:
-                    <strong>0</strong>
-
+                <div class="sensor-label">
+                    Moisture
                 </div>
 
-            `;
+                <div class="sensor-value">
 
-        }
+                    ${valueOrZero(
+                        raw.moisture
+                    )}
 
-
-        return `
-
-            <div class="data-title">
-
-                <div>
-
-                    <h3>
-                        RAW SENSOR DATA
-                    </h3>
-
-                    <small>
-                        Pembacaan sensor terbaru
-                    </small>
+                    <span class="sensor-unit">
+                        %
+                    </span>
 
                 </div>
-
-
-                <span class="data-badge">
-
-                    SAMPLE
-                    ${valueOrZero(raw.sample_index)}
-
-                </span>
 
             </div>
 
 
-            <div class="sensor-grid">
+            <div class="sensor-item">
 
+                <div class="sensor-label">
+                    Soil ADC
+                </div>
 
-                <div class="sensor-item raw-highlight">
+                <div class="sensor-value">
 
-                    <div class="sensor-label">
-                        Temperature
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${formatTemperature(
-                            raw.temperature
-                        )}
-
-                        <span class="sensor-unit">
-                            °C
-                        </span>
-
-                    </div>
+                    ${valueOrZero(
+                        raw.soil_adc
+                    )}
 
                 </div>
 
+            </div>
 
-                <div class="sensor-item raw-highlight">
 
-                    <div class="sensor-label">
-                        Moisture
-                    </div>
+            <div class="sensor-item">
 
-                    <div class="sensor-value">
+                <div class="sensor-label">
+                    MQ4 ADC
+                </div>
 
-                        ${valueOrZero(
-                            raw.moisture
-                        )}
+                <div class="sensor-value">
 
-                        <span class="sensor-unit">
-                            %
-                        </span>
-
-                    </div>
+                    ${valueOrZero(
+                        raw.mq4_adc
+                    )}
 
                 </div>
 
+            </div>
 
-                <div class="sensor-item">
 
-                    <div class="sensor-label">
-                        Soil ADC
-                    </div>
+            <div class="sensor-item">
 
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            raw.soil_adc
-                        )}
-
-                    </div>
-
+                <div class="sensor-label">
+                    Temperature Status
                 </div>
 
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        MQ4 ADC
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            raw.mq4_adc
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        Temperature Status
-                    </div>
-
-                    <div
-                        class="
-                            sensor-value
-                            ${getStatusClass(
-                                raw.temp_status
-                            )}
-                        "
-                    >
-
-                        ${valueOrZero(
+                <div
+                    class="
+                        sensor-value
+                        ${getStatusClass(
                             raw.temp_status
                         )}
+                    "
+                >
 
-                    </div>
+                    ${valueOrZero(
+                        raw.temp_status
+                    )}
 
                 </div>
 
+            </div>
 
-                <div class="sensor-item">
 
-                    <div class="sensor-label">
-                        MQ4 Status
-                    </div>
+            <div class="sensor-item">
 
-                    <div
-                        class="
-                            sensor-value
-                            ${getStatusClass(
-                                raw.mq4_status
-                            )}
-                        "
-                    >
+                <div class="sensor-label">
+                    MQ4 Status
+                </div>
 
-                        ${valueOrZero(
+                <div
+                    class="
+                        sensor-value
+                        ${getStatusClass(
                             raw.mq4_status
                         )}
+                    "
+                >
 
-                    </div>
+                    ${valueOrZero(
+                        raw.mq4_status
+                    )}
 
                 </div>
 
-
             </div>
 
 
-            <div class="recorded-time">
+        </div>
 
-                Sensor reading:
-                ${valueOrZero(raw.recorded_at)}
 
-            </div>
+        <div class="recorded">
 
-        `;
+            Recorded:
+            ${valueOrZero(
+                raw.recorded_at
+            )}
 
+        </div>
+
+    `;
+}
+
+
+// ==================================================
+// AGGREGATED DATA
+// ==================================================
+
+function renderAggregatedData(aggregated) {
+
+
+    if (!aggregated) {
+
+        return renderEmptyData(
+            "AGGREGATED DATA"
+        );
     }
 
 
-    // ==================================================
-    // AGGREGATED DATA
-    // ==================================================
+    return `
 
-    function renderAggregatedData(aggregated) {
+        <div class="data-title">
+
+            <h3>
+                AGGREGATED DATA
+            </h3>
+
+            <span class="data-badge">
+
+                ${valueOrZero(
+                    aggregated.sample_count
+                )}
+                SAMPLES
+
+            </span>
+
+        </div>
 
 
-        if (!aggregated) {
+        <div class="sensor-grid">
 
-            return `
 
-                <div class="data-title">
+            <div class="sensor-item">
 
-                    <h3>
-                        AGGREGATED DATA
-                    </h3>
+                <div class="sensor-label">
+                    Temperature
+                </div>
 
-                    <span class="data-badge">
-                        SAMPLE 0
+                <div class="sensor-value">
+
+                    ${formatTemperature(
+                        aggregated.temperature
+                    )}
+
+                    <span class="sensor-unit">
+                        °C
                     </span>
 
                 </div>
 
+            </div>
 
-                <div class="no-data">
 
-                    Belum ada hasil aggregation.
+            <div class="sensor-item">
 
-                    Semua nilai:
-                    <strong>0</strong>
+                <div class="sensor-label">
+                    Moisture
+                </div>
+
+                <div class="sensor-value">
+
+                    ${valueOrZero(
+                        aggregated.moisture
+                    )}
+
+                    <span class="sensor-unit">
+                        %
+                    </span>
 
                 </div>
 
-            `;
-
-        }
+            </div>
 
 
-        return `
+            <div class="sensor-item">
 
-            <div class="data-title">
+                <div class="sensor-label">
+                    Soil ADC
+                </div>
 
-                <div>
+                <div class="sensor-value">
 
-                    <h3>
-                        AGGREGATED DATA
-                    </h3>
-
-                    <small>
-                        Hasil pengolahan 100 sample
-                    </small>
+                    ${valueOrZero(
+                        aggregated.soil_adc
+                    )}
 
                 </div>
 
+            </div>
 
-                <span class="data-badge">
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    MQ4 ADC
+                </div>
+
+                <div class="sensor-value">
+
+                    ${valueOrZero(
+                        aggregated.mq4_adc
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    CH4 Index
+                </div>
+
+                <div class="sensor-value">
+
+                    ${valueOrZero(
+                        aggregated.ch4_index
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Compost Status
+                </div>
+
+                <div
+                    class="
+                        sensor-value
+                        ${getStatusClass(
+                            aggregated.compost_status
+                        )}
+                    "
+                >
+
+                    ${valueOrZero(
+                        aggregated.compost_status
+                    )}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="sensor-grid"
+            style="margin-top:10px;"
+        >
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Sample Index
+                </div>
+
+                <div class="sensor-value">
+
+                    ${valueOrZero(
+                        aggregated.sample_index
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Daily Sample
+                </div>
+
+                <div class="sensor-value">
+
+                    ${valueOrZero(
+                        aggregated.daily_sample
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Sample Count
+                </div>
+
+                <div class="sensor-value">
 
                     ${valueOrZero(
                         aggregated.sample_count
                     )}
-                    SAMPLES
 
-                </span>
+                </div>
 
             </div>
 
 
-            <div class="sensor-grid">
+        </div>
 
 
-                <div class="sensor-item">
+        <div class="recorded">
 
-                    <div class="sensor-label">
-                        Temperature
-                    </div>
+            Recorded:
+            ${valueOrZero(
+                aggregated.recorded_at
+            )}
 
-                    <div class="sensor-value">
+        </div>
 
-                        ${formatTemperature(
-                            aggregated.temperature
-                        )}
-
-                        <span class="sensor-unit">
-                            °C
-                        </span>
-
-                    </div>
-
-                </div>
+    `;
+}
 
 
-                <div class="sensor-item">
+// ==================================================
+// NODE CARD
+// ==================================================
 
-                    <div class="sensor-label">
-                        Moisture
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            aggregated.moisture
-                        )}
-
-                        <span class="sensor-unit">
-                            %
-                        </span>
-
-                    </div>
-
-                </div>
+function renderNode(node, index) {
 
 
-                <div class="sensor-item">
+    if (!node) {
 
-                    <div class="sensor-label">
-                        Soil ADC
-                    </div>
+        node = {
 
-                    <div class="sensor-value">
+            node_id: index,
 
-                        ${valueOrZero(
-                            aggregated.soil_adc
-                        )}
+            status: "OFFLINE",
 
-                    </div>
+            last_seen: null,
 
-                </div>
+            raw: null,
+
+            aggregated: null
+
+        };
+    }
 
 
-                <div class="sensor-item">
+    const status =
+        String(
+            valueOrZero(
+                node.status
+            )
+        ).toUpperCase();
 
-                    <div class="sensor-label">
-                        MQ4 ADC
-                    </div>
 
-                    <div class="sensor-value">
+    const statusClass =
+        getNodeStatusClass(status);
 
-                        ${valueOrZero(
-                            aggregated.mq4_adc
-                        )}
 
-                    </div>
+    return `
+
+        <article class="node-card">
+
+
+            <!-- NODE HEADER -->
+
+            <div class="node-header">
+
+
+                <div class="node-name">
+
+                    Node
+                    ${valueOrZero(
+                        node.node_id
+                    )}
 
                 </div>
 
 
-                <div class="sensor-item">
+                <div
+                    class="
+                        node-status
+                        ${statusClass}
+                    "
+                >
 
-                    <div class="sensor-label">
-                        CH4 Index
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            aggregated.ch4_index
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        Compost Status
-                    </div>
-
-                    <div
-                        class="
-                            sensor-value
-                            ${getStatusClass(
-                                aggregated.compost_status
-                            )}
-                        "
-                    >
-
-                        ${valueOrZero(
-                            aggregated.compost_status
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        Sample Index
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            aggregated.sample_index
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        Daily Sample
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            aggregated.daily_sample
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="sensor-item">
-
-                    <div class="sensor-label">
-                        Sample Count
-                    </div>
-
-                    <div class="sensor-value">
-
-                        ${valueOrZero(
-                            aggregated.sample_count
-                        )}
-
-                    </div>
+                    ${status}
 
                 </div>
 
@@ -1870,299 +1711,181 @@
             </div>
 
 
-            <div class="recorded-time">
+            <!-- NODE META -->
 
-                Aggregated:
-                ${valueOrZero(
-                    aggregated.recorded_at
+            <div class="node-meta">
+
+
+                <div>
+
+                    Last Seen
+
+                    <strong>
+
+                        ${valueOrZero(
+                            node.last_seen
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    Node ID
+
+                    <strong>
+
+                        ${valueOrZero(
+                            node.node_id
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- RAW -->
+
+            <div class="data-section">
+
+                ${renderRawData(
+                    node.raw
                 )}
 
             </div>
 
-        `;
 
+            <!-- AGGREGATED -->
+
+            <div class="data-section">
+
+                ${renderAggregatedData(
+                    node.aggregated
+                )}
+
+            </div>
+
+
+        </article>
+
+    `;
+}
+
+
+// ==================================================
+// RENDER NODES
+// ==================================================
+
+function renderNodes(nodes) {
+
+
+    let html = "";
+
+
+    for (
+        let i = 1;
+        i <= 5;
+        i++
+    ) {
+
+        const node =
+            nodes &&
+            nodes["node_" + i];
+
+
+        html +=
+            renderNode(
+                node,
+                i
+            );
     }
 
 
-    // ==================================================
-    // NODE
-    // ==================================================
+    nodesContainer.innerHTML =
+        html;
+}
 
-    function renderNode(node, index) {
 
+// ==================================================
+// SHOW ERROR
+// ==================================================
 
-        if (!node) {
+function showError(message) {
 
-            return `
+    errorElement.style.display =
+        "block";
 
-                <article class="node-card">
+    errorElement.textContent =
+        message;
+}
 
-                    <div class="node-header">
 
-                        <div class="node-name">
-                            Node ${index}
-                        </div>
+// ==================================================
+// CLEAR ERROR
+// ==================================================
 
-                        <div
-                            class="
-                                node-status
-                                offline
-                            "
-                        >
+function clearError() {
 
-                            OFFLINE
+    errorElement.style.display =
+        "none";
 
-                        </div>
+    errorElement.textContent =
+        "";
+}
 
-                    </div>
 
-
-                    <div class="data-section">
-
-                        <div class="no-data">
-
-                            Node data tidak tersedia.
-
-                            Semua nilai:
-                            <strong>0</strong>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-            `;
-
-        }
-
-
-        const status =
-            String(
-                valueOrZero(node.status)
-            ).toUpperCase();
-
-
-        const statusClass =
-            status === "ONLINE"
-                ? "online"
-                : "offline";
-
-
-        return `
-
-            <article class="node-card">
-
-
-                <!-- NODE HEADER -->
-
-                <div class="node-header">
-
-                    <div class="node-name">
-
-                        Node ${valueOrZero(
-                            node.node_id
-                        )}
-
-                    </div>
-
-
-                    <div
-                        class="
-                            node-status
-                            ${statusClass}
-                        "
-                    >
-
-                        ${status}
-
-                    </div>
-
-                </div>
-
-
-                <!-- NODE META -->
-
-                <div class="node-meta">
-
-                    <div>
-
-                        Last Seen:
-
-                        <strong>
-                            ${valueOrZero(
-                                node.last_seen
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        Node ID:
-
-                        <strong>
-                            ${valueOrZero(
-                                node.node_id
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- RAW SENSOR -->
-
-                <div
-                    class="
-                        data-section
-                        raw-section
-                    "
-                >
-
-                    ${renderRawData(
-                        node.raw
-                    )}
-
-                </div>
-
-
-                <!-- AGGREGATED -->
-
-                <div class="data-section">
-
-                    ${renderAggregatedData(
-                        node.aggregated
-                    )}
-
-                </div>
-
-
-            </article>
-
-        `;
-
-    }
-
-
-    // ==================================================
-    // RENDER ALL NODES
-    // ==================================================
-
-    function renderNodes(nodes) {
-
-
-        let html = "";
-
-
-        for (
-            let i = 1;
-            i <= 5;
-            i++
-        ) {
-
-            const node =
-                nodes
-                ? nodes["node_" + i]
-                : null;
-
-
-            html +=
-                renderNode(
-                    node,
-                    i
-                );
-
-        }
-
-
-        nodesContainer.innerHTML =
-            html;
-
-    }
-
-
-    // ==================================================
-    // RESET DISPLAY
-    // ==================================================
-
-    function renderZeroState() {
-
-
-        const zeroNodes = {};
-
-
-        for (
-            let i = 1;
-            i <= 5;
-            i++
-        ) {
-
-            zeroNodes[
-                "node_" + i
-            ] = {
-
-                node_id: i,
-
-                status: "OFFLINE",
-
-                last_seen: "0",
-
-                raw: null,
-
-                aggregated: null
-
-            };
-
-        }
-
-
-        renderNodes(
-            zeroNodes
-        );
-
-
-        serverTimeElement.textContent =
-            "0";
-
-
-        heartbeatElement.textContent =
-            "0 sec";
-
-
-        lastUpdateElement.textContent =
-            "0";
-
-    }
-
-
-    // ==================================================
-    // LOAD DATA
-    // ==================================================
-const API_URL =
-    "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
-
-const REFRESH_INTERVAL = 5000;
+// ==================================================
+// LOAD DATA
+// ==================================================
 
 async function loadData() {
 
+
     try {
 
-        const response = await fetch(API_URL);
+
+        /*
+         * Cache busting.
+         *
+         * Parameter ini hanya memastikan
+         * browser meminta response terbaru.
+         */
+
+        const url =
+            API_URL +
+            "?_=" +
+            Date.now();
+
+
+        const response =
+            await fetch(
+                url
+            );
+
 
         if (!response.ok) {
 
             throw new Error(
-                "HTTP Error " + response.status
+                "HTTP Error " +
+                response.status
             );
-
         }
 
-        const data = await response.json();
 
-        console.log("API DATA:", data);
+        const data =
+            await response.json();
+
+
+        console.log(
+            "API DATA:",
+            data
+        );
+
 
         if (!data.success) {
 
@@ -2170,383 +1893,264 @@ async function loadData() {
                 data.message ||
                 "API returned success=false"
             );
-
         }
 
-        document.getElementById("error").style.display =
-            "none";
 
-        document.getElementById("server-status").textContent =
+        // ==============================================
+        // CLEAR ERROR
+        // ==============================================
+
+        clearError();
+
+
+        // ==============================================
+        // SERVER STATUS
+        // ==============================================
+
+        serverStatusElement.textContent =
             "ONLINE";
 
-        document.getElementById("server-status").className =
+        serverStatusElement.className =
             "system-value online";
 
-        document.getElementById("server-time").textContent =
-            data.server_time ?? "--";
 
-        document.getElementById("heartbeat").textContent =
-            (data.heartbeat_timeout ?? "--") + " sec";
+        // ==============================================
+        // SERVER TIME
+        // ==============================================
 
-        document.getElementById("last-update").textContent =
-            new Date().toLocaleTimeString(
-                "id-ID",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                }
+        serverTimeElement.textContent =
+            valueOrZero(
+                data.server_time
             );
 
-        renderNodes(data.nodes);
+
+        // ==============================================
+        // HEARTBEAT
+        // ==============================================
+
+        heartbeatElement.textContent =
+            valueOrZero(
+                data.heartbeat_timeout
+            ) +
+            " sec";
+
+
+        // ==============================================
+        // LAST WEB UPDATE
+        // ==============================================
+
+        lastUpdateElement.textContent =
+            new Date()
+                .toLocaleTimeString(
+                    "id-ID",
+                    {
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit",
+
+                        second:
+                            "2-digit"
+                    }
+                );
+
+
+        // ==============================================
+        // NODES
+        // ==============================================
+
+        renderNodes(
+            data.nodes
+        );
+
 
     }
 
+
     catch (error) {
+
 
         console.error(
             "loadData ERROR:",
             error
         );
 
-        document.getElementById("server-status").textContent =
+
+        serverStatusElement.textContent =
             "ERROR";
 
-        document.getElementById("server-status").className =
+
+        serverStatusElement.className =
             "system-value error";
 
-        const errorElement =
-            document.getElementById("error");
 
-        errorElement.style.display =
-            "block";
-
-        errorElement.textContent =
+        showError(
             "Cannot connect to API: " +
-            error.message;
+            error.message
+        );
+
+
+        /*
+         * Jangan menghapus node terakhir
+         * ketika koneksi sesaat gagal.
+         *
+         * Website tetap menampilkan data terakhir.
+         */
 
     }
 
 }
 
+
+// ==================================================
+// RESET ALL HISTORY
+// ==================================================
+
+async function resetAllHistory() {
+
+
+    const confirmation =
+        confirm(
+            "RESET ALL HISTORY?\n\n" +
+            "Semua data RAW dan AGGREGATED " +
+            "akan dihapus dari database.\n\n" +
+            "Tindakan ini tidak dapat dibatalkan."
+        );
+
+
+    if (!confirmation) {
+
+        return;
+    }
+
+
+    resetButton.disabled =
+        true;
+
+    resetButton.textContent =
+        "RESETTING...";
+
+
+    resetMessageElement.style.display =
+        "none";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                RESET_URL,
+                {
+                    method:
+                        "GET"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error " +
+                response.status
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "RESET RESPONSE:",
+            data
+        );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Reset failed"
+            );
+        }
+
+
+        resetMessageElement.style.display =
+            "block";
+
+
+        resetMessageElement.textContent =
+            "Semua history berhasil dihapus. " +
+            "Menunggu data ESP32 berikutnya.";
+
+
+        /*
+         * Ambil kondisi database terbaru.
+         */
+
+        await loadData();
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(
+            "RESET ERROR:",
+            error
+        );
+
+
+        showError(
+            "Reset failed: " +
+            error.message
+        );
+
+    }
+
+
+    finally {
+
+        resetButton.disabled =
+            false;
+
+        resetButton.textContent =
+            "RESET ALL HISTORY";
+
+    }
+
+}
+
+
+// ==================================================
+// RESET BUTTON
+// ==================================================
+
+resetButton.addEventListener(
+    "click",
+    resetAllHistory
+);
+
+
+// ==================================================
+// INITIAL LOAD
+// ==================================================
+
 loadData();
+
+
+// ==================================================
+// AUTO REFRESH
+// ==================================================
 
 setInterval(
     loadData,
     REFRESH_INTERVAL
 );
-    
-
-            // ==========================================
-            // CLEAR ERROR
-            // ==========================================
-
-            errorElement.style.display =
-                "none";
-
-            errorElement.textContent =
-                "";
-
-
-            // ==========================================
-            // LIVE STATUS
-            // ==========================================
-
-            serverStatusElement.textContent =
-                "ONLINE";
-
-            serverStatusElement.className =
-                "system-value online";
-
-
-            liveTextElement.textContent =
-                "LIVE • Data diterima";
-
-
-            liveDotElement.style.background =
-                "#16a34a";
-
-
-            // ==========================================
-            // SERVER TIME
-            // ==========================================
-
-            serverTimeElement.textContent =
-                valueOrZero(
-                    data.server_time
-                );
-
-
-            // ==========================================
-            // HEARTBEAT
-            // ==========================================
-
-            heartbeatElement.textContent =
-                valueOrZero(
-                    data.heartbeat_timeout
-                ) +
-                " sec";
-
-
-            // ==========================================
-            // LAST UPDATE
-            // ==========================================
-
-            const now =
-                new Date();
-
-
-            lastUpdateElement.textContent =
-                now.toLocaleTimeString(
-                    "id-ID",
-                    {
-                        hour: "2-digit",
-
-                        minute: "2-digit",
-
-                        second: "2-digit"
-                    }
-                );
-
-
-            // ==========================================
-            // NODES
-            // ==========================================
-
-            renderNodes(
-                data.nodes
-            );
-
-        }
-
-
-        catch (error) {
-
-
-            serverStatusElement.textContent =
-                "ERROR";
-
-
-            serverStatusElement.className =
-                "system-value error";
-
-
-            liveTextElement.textContent =
-                "API CONNECTION ERROR";
-
-
-            liveDotElement.style.background =
-                "#dc2626";
-
-
-            errorElement.style.display =
-                "block";
-
-
-            errorElement.textContent =
-                "Cannot connect to API: " +
-                error.message;
-
-        }
-
-    }
-
-
-    // ==================================================
-    // RESET MODAL
-    // ==================================================
-
-    function openResetModal() {
-
-        document
-            .getElementById("reset-modal")
-            .classList
-            .add("show");
-
-    }
-
-
-    function closeResetModal() {
-
-        document
-            .getElementById("reset-modal")
-            .classList
-            .remove("show");
-
-    }
-
-
-    // ==================================================
-    // RESET ALL HISTORY
-    // ==================================================
-
-    async function resetAllHistory() {
-
-
-        const confirmButton =
-            document.getElementById(
-                "confirm-reset"
-            );
-
-
-        confirmButton.disabled =
-            true;
-
-
-        confirmButton.textContent =
-            "DELETING...";
-
-
-        try {
-
-
-            const response =
-                await fetch(
-                    RESET_API_URL +
-                    "?_=" +
-                    Date.now(),
-                    {
-
-                        method: "DELETE",
-
-                        cache: "no-store",
-
-                        headers: {
-
-                            "Cache-Control":
-                                "no-cache"
-
-                        }
-
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            if (!response.ok ||
-                !data.success
-            ) {
-
-                throw new Error(
-                    data.message ||
-                    "Reset failed"
-                );
-
-            }
-
-
-            // ==========================================
-            // CLOSE MODAL
-            // ==========================================
-
-            closeResetModal();
-
-
-            // ==========================================
-            // SHOW ZERO
-            // ==========================================
-
-            renderZeroState();
-
-
-            // ==========================================
-            // SHOW SUCCESS
-            // ==========================================
-
-            errorElement.style.display =
-                "block";
-
-            errorElement.style.background =
-                "#dcfce7";
-
-            errorElement.style.borderColor =
-                "#bbf7d0";
-
-            errorElement.style.color =
-                "#166534";
-
-            errorElement.textContent =
-                "Semua history berhasil dihapus. " +
-                "Menunggu data baru dari ESP32...";
-
-
-            // ==========================================
-            // RELOAD API
-            // ==========================================
-
-            setTimeout(
-                loadData,
-                1000
-            );
-
-        }
-
-
-        catch (error) {
-
-
-            closeResetModal();
-
-
-            errorElement.style.display =
-                "block";
-
-            errorElement.style.background =
-                "#fee2e2";
-
-            errorElement.style.borderColor =
-                "#fecaca";
-
-            errorElement.style.color =
-                "#991b1b";
-
-            errorElement.textContent =
-                "Gagal menghapus history: " +
-                error.message;
-
-        }
-
-
-        finally {
-
-
-            confirmButton.disabled =
-                false;
-
-
-            confirmButton.textContent =
-                "DELETE ALL DATA";
-
-        }
-
-    }
-
-
-    // ==================================================
-    // INITIAL ZERO STATE
-    // ==================================================
-
-    renderZeroState();
-
-
-    // ==================================================
-    // FIRST LOAD
-    // ==================================================
-
-    loadData();
-
-
-    // ==================================================
-    // AUTO REFRESH
-    // ==================================================
-
-    setInterval(
-        loadData,
-        REFRESH_INTERVAL
-    );
 
 
 </script>
@@ -2555,3 +2159,4 @@ setInterval(
 </body>
 
 </html>
+```

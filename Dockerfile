@@ -1,12 +1,10 @@
 FROM php:8.3-apache
 
-RUN docker-php-ext-install mysqli
-
 RUN a2enmod rewrite
 
 WORKDIR /var/www/html
 
-COPY . /var/www/html/
+COPY index.html /var/www/html/index.html
 
 RUN chown -R www-data:www-data /var/www/html
 

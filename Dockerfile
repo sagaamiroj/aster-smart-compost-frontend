@@ -1,4 +1,11 @@
-FROM nginx:alpine
+FROM php:8.3-apache
 
-COPY index.html /usr/share/nginx/html/index.html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN docker-php-ext-install mysqli
+
+WORKDIR /var/www/html
+
+COPY . /var/www/html/
+
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 80

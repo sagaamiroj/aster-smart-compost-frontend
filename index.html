@@ -1,907 +1,1253 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
-```
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>Smart Monitoring Compost</title>
+    <title>Smart Monitoring Compost</title>
 
 
-<style>
+    <style>
 
-    /* ==================================================
-       GLOBAL
-    ================================================== */
+        /* ==================================================
+           GLOBAL
+        ================================================== */
 
-    * {
-        box-sizing: border-box;
-    }
-
-
-    body {
-
-        margin: 0;
-
-        font-family:
-            Inter,
-            Arial,
-            Helvetica,
-            sans-serif;
-
-        background: #f4f7f5;
-
-        color: #1f2933;
-
-    }
-
-
-    .container {
-
-        width: 100%;
-
-        max-width: 1400px;
-
-        margin: 0 auto;
-
-        padding: 24px;
-
-    }
-
-
-    /* ==================================================
-       HEADER
-    ================================================== */
-
-    .header {
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        gap: 20px;
-
-        margin-bottom: 24px;
-
-        flex-wrap: wrap;
-
-    }
-
-
-    .title-area h1 {
-
-        margin: 0;
-
-        font-size: 28px;
-
-        font-weight: 700;
-
-        color: #17251d;
-
-    }
-
-
-    .title-area p {
-
-        margin: 6px 0 0;
-
-        color: #6b7280;
-
-        font-size: 14px;
-
-    }
-
-
-    .refresh-box {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 10px;
-
-        background: #ffffff;
-
-        border: 1px solid #dfe6e1;
-
-        border-radius: 10px;
-
-        padding: 10px 14px;
-
-        font-size: 13px;
-
-        color: #66736a;
-
-    }
-
-
-    .refresh-dot {
-
-        width: 9px;
-
-        height: 9px;
-
-        border-radius: 50%;
-
-        background: #16a34a;
-
-        animation: pulse 1.8s infinite;
-
-    }
-
-
-    @keyframes pulse {
-
-        0% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.35;
-        }
-
-        100% {
-            opacity: 1;
-        }
-
-    }
-
-
-    /* ==================================================
-       SYSTEM PANEL
-    ================================================== */
-
-    .system-panel {
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(4, 1fr);
-
-        gap: 14px;
-
-        margin-bottom: 28px;
-
-    }
-
-
-    .system-card {
-
-        background: #ffffff;
-
-        border: 1px solid #dfe6e1;
-
-        border-radius: 12px;
-
-        padding: 16px;
-
-    }
-
-
-    .system-label {
-
-        font-size: 12px;
-
-        color: #7b857d;
-
-        margin-bottom: 6px;
-
-        text-transform: uppercase;
-
-        letter-spacing: 0.5px;
-
-    }
-
-
-    .system-value {
-
-        font-size: 18px;
-
-        font-weight: 700;
-
-        color: #1f2933;
-
-    }
-
-
-    .system-value.online {
-
-        color: #15803d;
-
-    }
-
-
-    .system-value.error {
-
-        color: #dc2626;
-
-    }
-
-
-    /* ==================================================
-       SECTION TITLE
-    ================================================== */
-
-    .section-header {
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        margin-bottom: 14px;
-
-    }
-
-
-    .section-title {
-
-        margin: 0;
-
-        font-size: 20px;
-
-        font-weight: 700;
-
-        color: #17251d;
-
-    }
-
-
-    .section-subtitle {
-
-        color: #7b857d;
-
-        font-size: 13px;
-
-    }
-
-
-    /* ==================================================
-       NODE GRID
-    ================================================== */
-
-    .nodes-grid {
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 18px;
-
-    }
-
-
-    /* ==================================================
-       NODE CARD
-    ================================================== */
-
-    .node-card {
-
-        background: #ffffff;
-
-        border: 1px solid #dfe6e1;
-
-        border-radius: 14px;
-
-        overflow: hidden;
-
-        box-shadow:
-            0 2px 8px
-            rgba(0, 0, 0, 0.04);
-
-    }
-
-
-    .node-header {
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        padding: 16px 18px;
-
-        border-bottom:
-            1px solid #edf1ee;
-
-        background: #fafcfb;
-
-    }
-
-
-    .node-name {
-
-        font-size: 18px;
-
-        font-weight: 700;
-
-        color: #17251d;
-
-    }
-
-
-    .node-status {
-
-        display: inline-flex;
-
-        align-items: center;
-
-        gap: 7px;
-
-        padding: 6px 10px;
-
-        border-radius: 20px;
-
-        font-size: 11px;
-
-        font-weight: 700;
-
-        letter-spacing: 0.4px;
-
-    }
-
-
-    .node-status::before {
-
-        content: "";
-
-        width: 7px;
-
-        height: 7px;
-
-        border-radius: 50%;
-
-    }
-
-
-    .node-status.online {
-
-        color: #166534;
-
-        background: #dcfce7;
-
-    }
-
-
-    .node-status.online::before {
-
-        background: #16a34a;
-
-    }
-
-
-    .node-status.offline {
-
-        color: #991b1b;
-
-        background: #fee2e2;
-
-    }
-
-
-    .node-status.offline::before {
-
-        background: #dc2626;
-
-    }
-
-
-    /* ==================================================
-       NODE META
-    ================================================== */
-
-    .node-meta {
-
-        padding: 12px 18px;
-
-        display: flex;
-
-        justify-content: space-between;
-
-        gap: 15px;
-
-        border-bottom:
-            1px solid #edf1ee;
-
-        font-size: 12px;
-
-        color: #6b7280;
-
-    }
-
-
-    .node-meta strong {
-
-        color: #374151;
-
-    }
-
-
-    /* ==================================================
-       DATA SECTION
-    ================================================== */
-
-    .data-section {
-
-        padding: 16px 18px;
-
-    }
-
-
-    .data-title {
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        margin-bottom: 12px;
-
-    }
-
-
-    .data-title h3 {
-
-        margin: 0;
-
-        font-size: 14px;
-
-        color: #374151;
-
-        letter-spacing: 0.3px;
-
-    }
-
-
-    .data-badge {
-
-        font-size: 10px;
-
-        padding: 4px 7px;
-
-        border-radius: 5px;
-
-        background: #eef2f7;
-
-        color: #64748b;
-
-        font-weight: 700;
-
-    }
-
-
-    /* ==================================================
-       SENSOR GRID
-    ================================================== */
-
-    .sensor-grid {
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(3, 1fr);
-
-        gap: 10px;
-
-    }
-
-
-    .sensor-item {
-
-        background: #f8faf9;
-
-        border: 1px solid #edf1ee;
-
-        border-radius: 9px;
-
-        padding: 11px;
-
-        min-height: 70px;
-
-    }
-
-
-    .sensor-label {
-
-        font-size: 11px;
-
-        color: #7b857d;
-
-        margin-bottom: 5px;
-
-    }
-
-
-    .sensor-value {
-
-        font-size: 17px;
-
-        font-weight: 700;
-
-        color: #1f2933;
-
-        word-break: break-word;
-
-    }
-
-
-    .sensor-unit {
-
-        font-size: 11px;
-
-        font-weight: 500;
-
-        color: #6b7280;
-
-    }
-
-
-    /* ==================================================
-       STATUS COLORS
-    ================================================== */
-
-    .status-normal {
-
-        color: #15803d;
-
-    }
-
-
-    .status-warning {
-
-        color: #ca8a04;
-
-    }
-
-
-    .status-danger {
-
-        color: #dc2626;
-
-    }
-
-
-    .status-neutral {
-
-        color: #64748b;
-
-    }
-
-
-    /* ==================================================
-       RAW EMPTY
-    ================================================== */
-
-    .no-data {
-
-        padding: 16px;
-
-        text-align: center;
-
-        border:
-            1px dashed #d6ddd8;
-
-        border-radius: 9px;
-
-        color: #8a948d;
-
-        font-size: 12px;
-
-        background: #fafbfa;
-
-    }
-
-
-    /* ==================================================
-       FOOTER
-    ================================================== */
-
-    .footer {
-
-        margin-top: 30px;
-
-        padding-top: 18px;
-
-        border-top:
-            1px solid #dfe6e1;
-
-        text-align: center;
-
-        color: #8a948d;
-
-        font-size: 12px;
-
-    }
-
-
-    /* ==================================================
-       ERROR
-    ================================================== */
-
-    #error {
-
-        display: none;
-
-        margin-bottom: 20px;
-
-        padding: 14px 16px;
-
-        border-radius: 10px;
-
-        background: #fee2e2;
-
-        border: 1px solid #fecaca;
-
-        color: #991b1b;
-
-        font-size: 13px;
-
-    }
-
-
-    /* ==================================================
-       RESPONSIVE
-    ================================================== */
-
-    @media (max-width: 1000px) {
-
-        .nodes-grid {
-
-            grid-template-columns:
-                1fr;
-
+        * {
+            box-sizing: border-box;
         }
 
 
-        .system-panel {
+        body {
 
-            grid-template-columns:
-                repeat(2, 1fr);
+            margin: 0;
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7f5;
+
+            color: #1f2933;
 
         }
 
-    }
-
-
-    @media (max-width: 600px) {
 
         .container {
 
-            padding: 16px;
+            width: 100%;
+
+            max-width: 1450px;
+
+            margin: 0 auto;
+
+            padding: 24px;
+
+        }
+
+
+        /* ==================================================
+           HEADER
+        ================================================== */
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 24px;
+
+            flex-wrap: wrap;
 
         }
 
 
         .title-area h1 {
 
-            font-size: 22px;
+            margin: 0;
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            color: #17251d;
+
+        }
+
+
+        .title-area p {
+
+            margin: 6px 0 0;
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+        }
+
+
+        .header-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .live-box {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            background: #ffffff;
+
+            border: 1px solid #dfe6e1;
+
+            border-radius: 10px;
+
+            padding: 10px 14px;
+
+            font-size: 13px;
+
+            color: #66736a;
+
+        }
+
+
+        .live-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #16a34a;
+
+            animation: pulse 1.4s infinite;
+
+        }
+
+
+        @keyframes pulse {
+
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+
+            100% {
+                opacity: 1;
+            }
+
+        }
+
+
+        .reset-button {
+
+            border: none;
+
+            background: #dc2626;
+
+            color: #ffffff;
+
+            padding: 11px 15px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .reset-button:hover {
+
+            background: #b91c1c;
+
+        }
+
+
+        .reset-button:disabled {
+
+            opacity: 0.5;
+
+            cursor: not-allowed;
+
+        }
+
+
+        /* ==================================================
+           ERROR
+        ================================================== */
+
+        #error {
+
+            display: none;
+
+            margin-bottom: 20px;
+
+            padding: 14px 16px;
+
+            border-radius: 10px;
+
+            background: #fee2e2;
+
+            border: 1px solid #fecaca;
+
+            color: #991b1b;
+
+            font-size: 13px;
+
+        }
+
+
+        /* ==================================================
+           SYSTEM INFORMATION
+        ================================================== */
+
+        .section {
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .section-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .section-title {
+
+            margin: 0;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            color: #17251d;
+
+        }
+
+
+        .section-subtitle {
+
+            color: #7b857d;
+
+            font-size: 13px;
+
+            margin-top: 4px;
 
         }
 
 
         .system-panel {
 
+            display: grid;
+
             grid-template-columns:
-                1fr;
+                repeat(4, 1fr);
+
+            gap: 14px;
 
         }
 
 
-        .sensor-grid {
+        .system-card {
+
+            background: #ffffff;
+
+            border: 1px solid #dfe6e1;
+
+            border-radius: 12px;
+
+            padding: 16px;
+
+        }
+
+
+        .system-label {
+
+            font-size: 11px;
+
+            color: #7b857d;
+
+            margin-bottom: 7px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+
+        }
+
+
+        .system-value {
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            color: #1f2933;
+
+        }
+
+
+        .system-value.online {
+
+            color: #15803d;
+
+        }
+
+
+        .system-value.error {
+
+            color: #dc2626;
+
+        }
+
+
+        .system-value.zero {
+
+            color: #64748b;
+
+        }
+
+
+        /* ==================================================
+           NODE GRID
+        ================================================== */
+
+        .nodes-grid {
+
+            display: grid;
 
             grid-template-columns:
                 repeat(2, 1fr);
 
+            gap: 18px;
+
         }
 
+
+        /* ==================================================
+           NODE CARD
+        ================================================== */
+
+        .node-card {
+
+            background: #ffffff;
+
+            border: 1px solid #dfe6e1;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0, 0, 0, 0.04);
+
+        }
+
+
+        /* ==================================================
+           NODE HEADER
+        ================================================== */
+
+        .node-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 16px 18px;
+
+            border-bottom:
+                1px solid #edf1ee;
+
+            background: #fafcfb;
+
+        }
+
+
+        .node-name {
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            color: #17251d;
+
+        }
+
+
+        .node-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.4px;
+
+        }
+
+
+        .node-status::before {
+
+            content: "";
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+        }
+
+
+        .node-status.online {
+
+            color: #166534;
+
+            background: #dcfce7;
+
+        }
+
+
+        .node-status.online::before {
+
+            background: #16a34a;
+
+        }
+
+
+        .node-status.offline {
+
+            color: #991b1b;
+
+            background: #fee2e2;
+
+        }
+
+
+        .node-status.offline::before {
+
+            background: #dc2626;
+
+        }
+
+
+        /* ==================================================
+           NODE META
+        ================================================== */
 
         .node-meta {
 
-            flex-direction:
-                column;
+            padding: 11px 18px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            border-bottom:
+                1px solid #edf1ee;
+
+            font-size: 12px;
+
+            color: #6b7280;
 
         }
 
-    }
 
-</style>
-```
+        .node-meta strong {
+
+            color: #374151;
+
+        }
+
+
+        /* ==================================================
+           DATA SECTION
+        ================================================== */
+
+        .data-section {
+
+            padding: 18px;
+
+        }
+
+
+        .data-section + .data-section {
+
+            border-top:
+                1px solid #edf1ee;
+
+        }
+
+
+        .data-title {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 13px;
+
+        }
+
+
+        .data-title h3 {
+
+            margin: 0;
+
+            font-size: 14px;
+
+            color: #374151;
+
+            letter-spacing: 0.3px;
+
+        }
+
+
+        .data-title small {
+
+            color: #8a948d;
+
+            font-size: 11px;
+
+        }
+
+
+        .data-badge {
+
+            font-size: 10px;
+
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            background: #eef2f7;
+
+            color: #64748b;
+
+            font-weight: 800;
+
+        }
+
+
+        /* ==================================================
+           SENSOR GRID
+        ================================================== */
+
+        .sensor-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 10px;
+
+        }
+
+
+        .sensor-item {
+
+            background: #f8faf9;
+
+            border: 1px solid #edf1ee;
+
+            border-radius: 9px;
+
+            padding: 12px;
+
+            min-height: 75px;
+
+        }
+
+
+        .sensor-label {
+
+            font-size: 11px;
+
+            color: #7b857d;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .sensor-value {
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            color: #1f2933;
+
+            word-break: break-word;
+
+        }
+
+
+        .sensor-unit {
+
+            font-size: 11px;
+
+            font-weight: 500;
+
+            color: #6b7280;
+
+        }
+
+
+        .sensor-zero {
+
+            color: #64748b;
+
+        }
+
+
+        /* ==================================================
+           PRIMARY SENSOR READING
+        ================================================== */
+
+        .raw-section {
+
+            background: #ffffff;
+
+        }
+
+
+        .raw-highlight {
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+        }
+
+
+        .raw-highlight .sensor-value {
+
+            font-size: 22px;
+
+        }
+
+
+        /* ==================================================
+           STATUS COLORS
+        ================================================== */
+
+        .status-normal {
+
+            color: #15803d;
+
+        }
+
+
+        .status-warning {
+
+            color: #ca8a04;
+
+        }
+
+
+        .status-danger {
+
+            color: #dc2626;
+
+        }
+
+
+        .status-neutral {
+
+            color: #64748b;
+
+        }
+
+
+        /* ==================================================
+           DATA FOOTER
+        ================================================== */
+
+        .recorded-time {
+
+            margin-top: 12px;
+
+            font-size: 11px;
+
+            color: #8a948d;
+
+        }
+
+
+        /* ==================================================
+           NO DATA
+        ================================================== */
+
+        .no-data {
+
+            padding: 18px;
+
+            text-align: center;
+
+            border:
+                1px dashed #d6ddd8;
+
+            border-radius: 9px;
+
+            color: #8a948d;
+
+            font-size: 12px;
+
+            background: #fafbfa;
+
+        }
+
+
+        /* ==================================================
+           RESET MODAL
+        ================================================== */
+
+        .modal {
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(15, 23, 42, 0.45);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 9999;
+
+        }
+
+
+        .modal.show {
+
+            display: flex;
+
+        }
+
+
+        .modal-card {
+
+            width: 100%;
+
+            max-width: 420px;
+
+            background: #ffffff;
+
+            border-radius: 14px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.2);
+
+        }
+
+
+        .modal-card h3 {
+
+            margin: 0 0 8px;
+
+            color: #17251d;
+
+        }
+
+
+        .modal-card p {
+
+            margin: 0 0 20px;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            color: #6b7280;
+
+        }
+
+
+        .modal-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+        }
+
+
+        .modal-button {
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 10px 14px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        .cancel-button {
+
+            background: #eef2f7;
+
+            color: #475569;
+
+        }
+
+
+        .confirm-button {
+
+            background: #dc2626;
+
+            color: #ffffff;
+
+        }
+
+
+        /* ==================================================
+           FOOTER
+        ================================================== */
+
+        .footer {
+
+            margin-top: 30px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid #dfe6e1;
+
+            text-align: center;
+
+            color: #8a948d;
+
+            font-size: 12px;
+
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media (max-width: 1000px) {
+
+            .nodes-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .system-panel {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                padding: 16px;
+
+            }
+
+
+            .title-area h1 {
+
+                font-size: 22px;
+
+            }
+
+
+            .system-panel {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .sensor-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .node-meta {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .header-actions {
+
+                width: 100%;
+
+            }
+
+
+            .live-box {
+
+                flex: 1;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-```
-<!-- ==================================================
-     HEADER
-================================================== -->
 
-<header class="header">
+    <!-- ==================================================
+         HEADER
+    ================================================== -->
 
-    <div class="title-area">
+    <header class="header">
 
-        <h1>
-            SMART MONITORING COMPOST
-        </h1>
+        <div class="title-area">
 
-        <p>
-            Real-time compost monitoring system
-        </p>
+            <h1>
+                SMART MONITORING COMPOST
+            </h1>
 
-    </div>
+            <p>
+                Real-time compost monitoring system
+            </p>
 
-
-    <div class="refresh-box">
-
-        <span class="refresh-dot"></span>
-
-        Auto refresh setiap 5 detik
-
-    </div>
-
-</header>
+        </div>
 
 
-<!-- ==================================================
-     ERROR
-================================================== -->
+        <div class="header-actions">
 
-<div id="error"></div>
+            <div class="live-box">
 
+                <span
+                    id="live-dot"
+                    class="live-dot"
+                ></span>
 
-<!-- ==================================================
-     SYSTEM INFORMATION
-================================================== -->
+                <span id="live-text">
+                    LIVE • Refresh 1 detik
+                </span>
 
-<section>
-
-    <div class="section-header">
-
-        <h2 class="section-title">
-            System Information
-        </h2>
-
-    </div>
-
-
-    <div class="system-panel">
-
-
-        <div class="system-card">
-
-            <div class="system-label">
-                Server Status
             </div>
 
-            <div
-                id="server-status"
-                class="system-value online"
+
+            <button
+                id="reset-button"
+                class="reset-button"
+                onclick="openResetModal()"
             >
-                ONLINE
+                RESET ALL HISTORY
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ==================================================
+         ERROR
+    ================================================== -->
+
+    <div id="error"></div>
+
+
+    <!-- ==================================================
+         SYSTEM INFORMATION
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2 class="section-title">
+                    System Information
+                </h2>
+
+                <div class="section-subtitle">
+                    API connection and monitoring status
+                </div>
+
             </div>
 
         </div>
 
 
-        <div class="system-card">
+        <div class="system-panel">
 
-            <div class="system-label">
-                Server Time
+
+            <div class="system-card">
+
+                <div class="system-label">
+                    Server Status
+                </div>
+
+                <div
+                    id="server-status"
+                    class="system-value online"
+                >
+                    ONLINE
+                </div>
+
             </div>
 
-            <div
-                id="server-time"
-                class="system-value"
-            >
-                --
+
+            <div class="system-card">
+
+                <div class="system-label">
+                    Server Time
+                </div>
+
+                <div
+                    id="server-time"
+                    class="system-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="system-card">
+
+                <div class="system-label">
+                    Heartbeat Timeout
+                </div>
+
+                <div
+                    id="heartbeat"
+                    class="system-value"
+                >
+                    0 sec
+                </div>
+
+            </div>
+
+
+            <div class="system-card">
+
+                <div class="system-label">
+                    Last Web Update
+                </div>
+
+                <div
+                    id="last-update"
+                    class="system-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         NODE MONITORING
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2 class="section-title">
+                    Compost Nodes
+                </h2>
+
+                <div class="section-subtitle">
+                    5 ESP32 sensor nodes
+                </div>
+
             </div>
 
         </div>
 
 
-        <div class="system-card">
+        <div
+            id="nodes"
+            class="nodes-grid"
+        ></div>
 
-            <div class="system-label">
-                Heartbeat Timeout
-            </div>
-
-            <div
-                id="heartbeat"
-                class="system-value"
-            >
-                --
-            </div>
-
-        </div>
+    </section>
 
 
-        <div class="system-card">
+    <!-- ==================================================
+         FOOTER
+    ================================================== -->
 
-            <div class="system-label">
-                Last Update
-            </div>
+    <footer class="footer">
 
-            <div
-                id="last-update"
-                class="system-value"
-            >
-                --
-            </div>
+        Smart Monitoring Compost
+        &nbsp;•&nbsp;
+        ESP32 Sensor Network
+        &nbsp;•&nbsp;
+        Railway API
 
-        </div>
+    </footer>
 
-
-    </div>
-
-</section>
-
-
-<!-- ==================================================
-     NODE MONITORING
-================================================== -->
-
-<section>
-
-    <div class="section-header">
-
-        <div>
-
-            <h2 class="section-title">
-                Compost Nodes
-            </h2>
-
-            <div class="section-subtitle">
-                Monitoring 5 compost sensor nodes
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="nodes"
-        class="nodes-grid"
-    >
-
-        <!-- Javascript -->
-
-    </div>
-
-</section>
-
-
-<!-- ==================================================
-     FOOTER
-================================================== -->
-
-<footer class="footer">
-
-    Smart Monitoring Compost
-    &nbsp;•&nbsp;
-    ESP32 Sensor Network
-    &nbsp;•&nbsp;
-    API Monitoring
-
-</footer>
-```
 
 </div>
+
+
+<!-- ==================================================
+     RESET MODAL
+================================================== -->
+
+<div
+    id="reset-modal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+        <h3>
+            Reset All History?
+        </h3>
+
+        <p>
+
+            Semua data pada
+            <strong>compost_raw</strong>
+            dan
+            <strong>compost_data</strong>
+            akan dihapus.
+
+            Setelah reset, tampilan web akan kembali
+            menjadi 0 sampai ESP32 mengirim data baru.
+
+        </p>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeResetModal()"
+            >
+                CANCEL
+            </button>
+
+
+            <button
+                id="confirm-reset"
+                class="modal-button confirm-button"
+                onclick="resetAllHistory()"
+            >
+                DELETE ALL DATA
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
 
@@ -915,11 +1261,22 @@
 
 
     // ==================================================
-    // REFRESH INTERVAL
+    // RESET API
+    // ==================================================
+    //
+    // Endpoint ini harus dibuat di backend.
+    //
     // ==================================================
 
-    const REFRESH_INTERVAL =
-        5000;
+    const RESET_API_URL =
+        "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/reset.php";
+
+
+    // ==================================================
+    // REFRESH
+    // ==================================================
+
+    const REFRESH_INTERVAL = 1000;
 
 
     // ==================================================
@@ -944,12 +1301,21 @@
     const lastUpdateElement =
         document.getElementById("last-update");
 
+    const liveTextElement =
+        document.getElementById("live-text");
+
+    const liveDotElement =
+        document.getElementById("live-dot");
+
+    const resetButton =
+        document.getElementById("reset-button");
+
 
     // ==================================================
-    // FORMAT VALUE
+    // VALUE
     // ==================================================
 
-    function valueOrDash(value) {
+    function valueOrZero(value) {
 
         if (
             value === null ||
@@ -957,11 +1323,44 @@
             value === ""
         ) {
 
-            return "--";
+            return "0";
 
         }
 
         return value;
+
+    }
+
+
+    // ==================================================
+    // TEMPERATURE
+    // ==================================================
+
+    function formatTemperature(value) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+
+            return "0";
+
+        }
+
+
+        const number =
+            Number(value);
+
+
+        if (Number.isNaN(number)) {
+
+            return "0";
+
+        }
+
+
+        return number.toFixed(2);
 
     }
 
@@ -987,7 +1386,8 @@
         if (
             value === "NORMAL" ||
             value === "ONLINE" ||
-            value === "MESOPHILIC"
+            value === "MESOPHILIC" ||
+            value === "ACTIVE"
         ) {
 
             return "status-normal";
@@ -1023,28 +1423,7 @@
 
 
     // ==================================================
-    // FORMAT TEMPERATURE
-    // ==================================================
-
-    function formatTemperature(value) {
-
-        if (
-            value === null ||
-            value === undefined
-        ) {
-
-            return "--";
-
-        }
-
-
-        return Number(value).toFixed(2);
-
-    }
-
-
-    // ==================================================
-    // RAW DATA HTML
+    // RAW DATA
     // ==================================================
 
     function renderRawData(raw) {
@@ -1054,10 +1433,25 @@
 
             return `
 
+                <div class="data-title">
+
+                    <h3>
+                        RAW SENSOR DATA
+                    </h3>
+
+                    <span class="data-badge">
+                        SAMPLE 0
+                    </span>
+
+                </div>
+
+
                 <div class="no-data">
 
-                    Belum ada raw sensor data
-                    untuk node ini.
+                    Belum ada raw sensor data.
+
+                    Semua pembacaan:
+                    <strong>0</strong>
 
                 </div>
 
@@ -1070,12 +1464,24 @@
 
             <div class="data-title">
 
-                <h3>
-                    RAW SENSOR DATA
-                </h3>
+                <div>
+
+                    <h3>
+                        RAW SENSOR DATA
+                    </h3>
+
+                    <small>
+                        Pembacaan sensor terbaru
+                    </small>
+
+                </div>
+
 
                 <span class="data-badge">
-                    SAMPLE ${valueOrDash(raw.sample_index)}
+
+                    SAMPLE
+                    ${valueOrZero(raw.sample_index)}
+
                 </span>
 
             </div>
@@ -1084,7 +1490,7 @@
             <div class="sensor-grid">
 
 
-                <div class="sensor-item">
+                <div class="sensor-item raw-highlight">
 
                     <div class="sensor-label">
                         Temperature
@@ -1092,7 +1498,9 @@
 
                     <div class="sensor-value">
 
-                        ${formatTemperature(raw.temperature)}
+                        ${formatTemperature(
+                            raw.temperature
+                        )}
 
                         <span class="sensor-unit">
                             °C
@@ -1103,7 +1511,7 @@
                 </div>
 
 
-                <div class="sensor-item">
+                <div class="sensor-item raw-highlight">
 
                     <div class="sensor-label">
                         Moisture
@@ -1111,7 +1519,9 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(raw.moisture)}
+                        ${valueOrZero(
+                            raw.moisture
+                        )}
 
                         <span class="sensor-unit">
                             %
@@ -1130,7 +1540,9 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(raw.soil_adc)}
+                        ${valueOrZero(
+                            raw.soil_adc
+                        )}
 
                     </div>
 
@@ -1145,7 +1557,9 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(raw.mq4_adc)}
+                        ${valueOrZero(
+                            raw.mq4_adc
+                        )}
 
                     </div>
 
@@ -1159,11 +1573,17 @@
                     </div>
 
                     <div
-                        class="sensor-value
-                        ${getStatusClass(raw.temp_status)}"
+                        class="
+                            sensor-value
+                            ${getStatusClass(
+                                raw.temp_status
+                            )}
+                        "
                     >
 
-                        ${valueOrDash(raw.temp_status)}
+                        ${valueOrZero(
+                            raw.temp_status
+                        )}
 
                     </div>
 
@@ -1177,11 +1597,17 @@
                     </div>
 
                     <div
-                        class="sensor-value
-                        ${getStatusClass(raw.mq4_status)}"
+                        class="
+                            sensor-value
+                            ${getStatusClass(
+                                raw.mq4_status
+                            )}
+                        "
                     >
 
-                        ${valueOrDash(raw.mq4_status)}
+                        ${valueOrZero(
+                            raw.mq4_status
+                        )}
 
                     </div>
 
@@ -1191,16 +1617,10 @@
             </div>
 
 
-            <div
-                style="
-                    margin-top:12px;
-                    font-size:11px;
-                    color:#8a948d;
-                "
-            >
+            <div class="recorded-time">
 
-                Recorded:
-                ${valueOrDash(raw.recorded_at)}
+                Sensor reading:
+                ${valueOrZero(raw.recorded_at)}
 
             </div>
 
@@ -1210,7 +1630,7 @@
 
 
     // ==================================================
-    // AGGREGATED DATA HTML
+    // AGGREGATED DATA
     // ==================================================
 
     function renderAggregatedData(aggregated) {
@@ -1220,10 +1640,25 @@
 
             return `
 
+                <div class="data-title">
+
+                    <h3>
+                        AGGREGATED DATA
+                    </h3>
+
+                    <span class="data-badge">
+                        SAMPLE 0
+                    </span>
+
+                </div>
+
+
                 <div class="no-data">
 
-                    Belum ada aggregated data
-                    untuk node ini.
+                    Belum ada hasil aggregation.
+
+                    Semua nilai:
+                    <strong>0</strong>
 
                 </div>
 
@@ -1236,13 +1671,26 @@
 
             <div class="data-title">
 
-                <h3>
-                    AGGREGATED DATA
-                </h3>
+                <div>
+
+                    <h3>
+                        AGGREGATED DATA
+                    </h3>
+
+                    <small>
+                        Hasil pengolahan 100 sample
+                    </small>
+
+                </div>
+
 
                 <span class="data-badge">
-                    ${valueOrDash(aggregated.sample_count)}
+
+                    ${valueOrZero(
+                        aggregated.sample_count
+                    )}
                     SAMPLES
+
                 </span>
 
             </div>
@@ -1280,7 +1728,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.moisture
                         )}
 
@@ -1301,7 +1749,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.soil_adc
                         )}
 
@@ -1318,7 +1766,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.mq4_adc
                         )}
 
@@ -1335,7 +1783,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.ch4_index
                         )}
 
@@ -1351,33 +1799,21 @@
                     </div>
 
                     <div
-                        class="sensor-value
-                        ${getStatusClass(
-                            aggregated.compost_status
-                        )}"
+                        class="
+                            sensor-value
+                            ${getStatusClass(
+                                aggregated.compost_status
+                            )}
+                        "
                     >
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.compost_status
                         )}
 
                     </div>
 
                 </div>
-
-
-            </div>
-
-
-            <div
-                style="
-                    display:grid;
-                    grid-template-columns:
-                        repeat(3,1fr);
-                    gap:10px;
-                    margin-top:10px;
-                "
-            >
 
 
                 <div class="sensor-item">
@@ -1388,7 +1824,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.sample_index
                         )}
 
@@ -1405,7 +1841,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.daily_sample
                         )}
 
@@ -1422,7 +1858,7 @@
 
                     <div class="sensor-value">
 
-                        ${valueOrDash(
+                        ${valueOrZero(
                             aggregated.sample_count
                         )}
 
@@ -1434,16 +1870,10 @@
             </div>
 
 
-            <div
-                style="
-                    margin-top:12px;
-                    font-size:11px;
-                    color:#8a948d;
-                "
-            >
+            <div class="recorded-time">
 
-                Recorded:
-                ${valueOrDash(
+                Aggregated:
+                ${valueOrZero(
                     aggregated.recorded_at
                 )}
 
@@ -1455,7 +1885,7 @@
 
 
     // ==================================================
-    // NODE CARD
+    // NODE
     // ==================================================
 
     function renderNode(node, index) {
@@ -1473,10 +1903,12 @@
                             Node ${index}
                         </div>
 
-                        <div class="
-                            node-status
-                            offline
-                        ">
+                        <div
+                            class="
+                                node-status
+                                offline
+                            "
+                        >
 
                             OFFLINE
 
@@ -1485,13 +1917,16 @@
                     </div>
 
 
-                    <div class="no-data"
-                        style="
-                            margin:18px;
-                        "
-                    >
+                    <div class="data-section">
 
-                        Node data tidak tersedia.
+                        <div class="no-data">
+
+                            Node data tidak tersedia.
+
+                            Semua nilai:
+                            <strong>0</strong>
+
+                        </div>
 
                     </div>
 
@@ -1504,7 +1939,7 @@
 
         const status =
             String(
-                valueOrDash(node.status)
+                valueOrZero(node.status)
             ).toUpperCase();
 
 
@@ -1525,15 +1960,19 @@
 
                     <div class="node-name">
 
-                        Node ${node.node_id}
+                        Node ${valueOrZero(
+                            node.node_id
+                        )}
 
                     </div>
 
 
-                    <div class="
-                        node-status
-                        ${statusClass}
-                    ">
+                    <div
+                        class="
+                            node-status
+                            ${statusClass}
+                        "
+                    >
 
                         ${status}
 
@@ -1549,8 +1988,9 @@
                     <div>
 
                         Last Seen:
+
                         <strong>
-                            ${valueOrDash(
+                            ${valueOrZero(
                                 node.last_seen
                             )}
                         </strong>
@@ -1561,8 +2001,9 @@
                     <div>
 
                         Node ID:
+
                         <strong>
-                            ${valueOrDash(
+                            ${valueOrZero(
                                 node.node_id
                             )}
                         </strong>
@@ -1572,9 +2013,14 @@
                 </div>
 
 
-                <!-- RAW -->
+                <!-- RAW SENSOR -->
 
-                <div class="data-section">
+                <div
+                    class="
+                        data-section
+                        raw-section
+                    "
+                >
 
                     ${renderRawData(
                         node.raw
@@ -1585,13 +2031,7 @@
 
                 <!-- AGGREGATED -->
 
-                <div
-                    class="data-section"
-                    style="
-                        border-top:
-                        1px solid #edf1ee;
-                    "
-                >
+                <div class="data-section">
 
                     ${renderAggregatedData(
                         node.aggregated
@@ -1624,9 +2064,9 @@
         ) {
 
             const node =
-                nodes[
-                    "node_" + i
-                ];
+                nodes
+                ? nodes["node_" + i]
+                : null;
 
 
             html +=
@@ -1645,6 +2085,60 @@
 
 
     // ==================================================
+    // RESET DISPLAY
+    // ==================================================
+
+    function renderZeroState() {
+
+
+        const zeroNodes = {};
+
+
+        for (
+            let i = 1;
+            i <= 5;
+            i++
+        ) {
+
+            zeroNodes[
+                "node_" + i
+            ] = {
+
+                node_id: i,
+
+                status: "OFFLINE",
+
+                last_seen: "0",
+
+                raw: null,
+
+                aggregated: null
+
+            };
+
+        }
+
+
+        renderNodes(
+            zeroNodes
+        );
+
+
+        serverTimeElement.textContent =
+            "0";
+
+
+        heartbeatElement.textContent =
+            "0 sec";
+
+
+        lastUpdateElement.textContent =
+            "0";
+
+    }
+
+
+    // ==================================================
     // LOAD DATA
     // ==================================================
 
@@ -1656,11 +2150,18 @@
 
             const response =
                 await fetch(
-                    API_URL,
+                    API_URL +
+                    "?_=" +
+                    Date.now(),
                     {
                         method: "GET",
 
-                        cache: "no-store"
+                        cache: "no-store",
+
+                        headers: {
+                            "Cache-Control":
+                                "no-cache"
+                        }
                     }
                 );
 
@@ -1701,7 +2202,7 @@
 
 
             // ==========================================
-            // SERVER STATUS
+            // LIVE STATUS
             // ==========================================
 
             serverStatusElement.textContent =
@@ -1711,12 +2212,20 @@
                 "system-value online";
 
 
+            liveTextElement.textContent =
+                "LIVE • Data diterima";
+
+
+            liveDotElement.style.background =
+                "#16a34a";
+
+
             // ==========================================
             // SERVER TIME
             // ==========================================
 
             serverTimeElement.textContent =
-                valueOrDash(
+                valueOrZero(
                     data.server_time
                 );
 
@@ -1726,7 +2235,7 @@
             // ==========================================
 
             heartbeatElement.textContent =
-                valueOrDash(
+                valueOrZero(
                     data.heartbeat_timeout
                 ) +
                 " sec";
@@ -1745,7 +2254,9 @@
                     "id-ID",
                     {
                         hour: "2-digit",
+
                         minute: "2-digit",
+
                         second: "2-digit"
                     }
                 );
@@ -1765,20 +2276,21 @@
         catch (error) {
 
 
-            // ==========================================
-            // SERVER ERROR
-            // ==========================================
-
             serverStatusElement.textContent =
                 "ERROR";
+
 
             serverStatusElement.className =
                 "system-value error";
 
 
-            // ==========================================
-            // ERROR MESSAGE
-            // ==========================================
+            liveTextElement.textContent =
+                "API CONNECTION ERROR";
+
+
+            liveDotElement.style.background =
+                "#dc2626";
+
 
             errorElement.style.display =
                 "block";
@@ -1788,6 +2300,178 @@
                 "Cannot connect to API: " +
                 error.message;
 
+        }
+
+    }
+
+
+    // ==================================================
+    // RESET MODAL
+    // ==================================================
+
+    function openResetModal() {
+
+        document
+            .getElementById("reset-modal")
+            .classList
+            .add("show");
+
+    }
+
+
+    function closeResetModal() {
+
+        document
+            .getElementById("reset-modal")
+            .classList
+            .remove("show");
+
+    }
+
+
+    // ==================================================
+    // RESET ALL HISTORY
+    // ==================================================
+
+    async function resetAllHistory() {
+
+
+        const confirmButton =
+            document.getElementById(
+                "confirm-reset"
+            );
+
+
+        confirmButton.disabled =
+            true;
+
+
+        confirmButton.textContent =
+            "DELETING...";
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    RESET_API_URL +
+                    "?_=" +
+                    Date.now(),
+                    {
+
+                        method: "DELETE",
+
+                        cache: "no-store",
+
+                        headers: {
+
+                            "Cache-Control":
+                                "no-cache"
+
+                        }
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok ||
+                !data.success
+            ) {
+
+                throw new Error(
+                    data.message ||
+                    "Reset failed"
+                );
+
+            }
+
+
+            // ==========================================
+            // CLOSE MODAL
+            // ==========================================
+
+            closeResetModal();
+
+
+            // ==========================================
+            // SHOW ZERO
+            // ==========================================
+
+            renderZeroState();
+
+
+            // ==========================================
+            // SHOW SUCCESS
+            // ==========================================
+
+            errorElement.style.display =
+                "block";
+
+            errorElement.style.background =
+                "#dcfce7";
+
+            errorElement.style.borderColor =
+                "#bbf7d0";
+
+            errorElement.style.color =
+                "#166534";
+
+            errorElement.textContent =
+                "Semua history berhasil dihapus. " +
+                "Menunggu data baru dari ESP32...";
+
+
+            // ==========================================
+            // RELOAD API
+            // ==========================================
+
+            setTimeout(
+                loadData,
+                1000
+            );
+
+        }
+
+
+        catch (error) {
+
+
+            closeResetModal();
+
+
+            errorElement.style.display =
+                "block";
+
+            errorElement.style.background =
+                "#fee2e2";
+
+            errorElement.style.borderColor =
+                "#fecaca";
+
+            errorElement.style.color =
+                "#991b1b";
+
+            errorElement.textContent =
+                "Gagal menghapus history: " +
+                error.message;
+
+        }
+
+
+        finally {
+
+
+            confirmButton.disabled =
+                false;
+
+
+            confirmButton.textContent =
+                "DELETE ALL DATA";
 
         }
 
@@ -1795,7 +2479,14 @@
 
 
     // ==================================================
-    // INITIAL LOAD
+    // INITIAL ZERO STATE
+    // ==================================================
+
+    renderZeroState();
+
+
+    // ==================================================
+    // FIRST LOAD
     // ==================================================
 
     loadData();
@@ -1812,6 +2503,7 @@
 
 
 </script>
+
 
 </body>
 

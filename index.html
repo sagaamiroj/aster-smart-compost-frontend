@@ -249,6 +249,8 @@
             color: #166534;
 
             font-size: 13px;
+
+            line-height: 1.5;
         }
 
 
@@ -707,6 +709,28 @@
 
 
         /* ==================================================
+           RESET ZERO STATE
+        ================================================== */
+
+        .reset-zero {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            text-align: center;
+
+            padding: 12px;
+
+            background: #f8faf9;
+
+            border: 1px dashed #d6ddd8;
+
+            border-radius: 9px;
+        }
+
+
+        /* ==================================================
            FOOTER
         ================================================== */
 
@@ -1051,6 +1075,13 @@ const REFRESH_INTERVAL = 1000;
 
 
 // ==================================================
+// RESET STATE
+// ==================================================
+
+let isResetting = false;
+
+
+// ==================================================
 // ELEMENTS
 // ==================================================
 
@@ -1094,6 +1125,7 @@ function valueOrZero(value) {
         return "0";
     }
 
+
     return value;
 }
 
@@ -1134,7 +1166,10 @@ function formatTemperature(value) {
 // NUMBER
 // ==================================================
 
-function formatNumber(value, decimals = 2) {
+function formatNumber(
+    value,
+    decimals = 2
+) {
 
     if (
         value === null ||
@@ -1214,15 +1249,6 @@ function getStatusClass(status) {
     }
 
 
-    if (
-        value === "0" ||
-        value === "LOW"
-    ) {
-
-        return "status-neutral";
-    }
-
-
     return "status-neutral";
 }
 
@@ -1234,11 +1260,9 @@ function getStatusClass(status) {
 function getNodeStatusClass(status) {
 
     const value =
-        String(
-            status || ""
-        )
-        .trim()
-        .toUpperCase();
+        String(status || "")
+            .trim()
+            .toUpperCase();
 
 
     if (
@@ -1254,7 +1278,7 @@ function getNodeStatusClass(status) {
 
 
 // ==================================================
-// RENDER EMPTY DATA
+// EMPTY DATA
 // ==================================================
 
 function renderEmptyData(title) {
@@ -1274,9 +1298,9 @@ function renderEmptyData(title) {
         </div>
 
 
-        <div class="no-data">
+        <div class="reset-zero">
 
-            Belum ada data.
+            0 &nbsp;•&nbsp; Belum ada data monitoring
 
         </div>
 
@@ -1289,7 +1313,6 @@ function renderEmptyData(title) {
 // ==================================================
 
 function renderRawData(raw) {
-
 
     if (!raw) {
 
@@ -1501,8 +1524,9 @@ function renderRawData(raw) {
 // AGGREGATED DATA
 // ==================================================
 
-function renderAggregatedData(aggregated) {
-
+function renderAggregatedData(
+    aggregated
+) {
 
     if (!aggregated) {
 
@@ -1535,8 +1559,6 @@ function renderAggregatedData(aggregated) {
         <div class="sensor-grid">
 
 
-            <!-- SAMPLE INDEX -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1553,8 +1575,6 @@ function renderAggregatedData(aggregated) {
 
             </div>
 
-
-            <!-- TEMPERATURE -->
 
             <div class="sensor-item">
 
@@ -1576,8 +1596,6 @@ function renderAggregatedData(aggregated) {
 
             </div>
 
-
-            <!-- MOISTURE -->
 
             <div class="sensor-item">
 
@@ -1601,8 +1619,6 @@ function renderAggregatedData(aggregated) {
             </div>
 
 
-            <!-- SOIL ADC -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1619,8 +1635,6 @@ function renderAggregatedData(aggregated) {
 
             </div>
 
-
-            <!-- MQ4 ADC -->
 
             <div class="sensor-item">
 
@@ -1639,8 +1653,6 @@ function renderAggregatedData(aggregated) {
             </div>
 
 
-            <!-- CH4 INDEX -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1657,8 +1669,6 @@ function renderAggregatedData(aggregated) {
 
             </div>
 
-
-            <!-- TEMPERATURE STATUS -->
 
             <div class="sensor-item">
 
@@ -1684,8 +1694,6 @@ function renderAggregatedData(aggregated) {
             </div>
 
 
-            <!-- COMPOST STATUS -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1710,8 +1718,6 @@ function renderAggregatedData(aggregated) {
             </div>
 
 
-            <!-- DAILY SAMPLE -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1729,8 +1735,6 @@ function renderAggregatedData(aggregated) {
             </div>
 
 
-            <!-- SAMPLE COUNT -->
-
             <div class="sensor-item">
 
                 <div class="sensor-label">
@@ -1747,8 +1751,6 @@ function renderAggregatedData(aggregated) {
 
             </div>
 
-
-            <!-- RECORD ID -->
 
             <div class="sensor-item">
 
@@ -1784,27 +1786,42 @@ function renderAggregatedData(aggregated) {
 
 
 // ==================================================
+// EMPTY NODE
+// ==================================================
+
+function createEmptyNode(index) {
+
+    return {
+
+        node_id: index,
+
+        status: "OFFLINE",
+
+        last_seen: null,
+
+        raw: null,
+
+        aggregated: null
+
+    };
+}
+
+
+// ==================================================
 // NODE CARD
 // ==================================================
 
-function renderNode(node, index) {
-
+function renderNode(
+    node,
+    index
+) {
 
     if (!node) {
 
-        node = {
-
-            node_id: index,
-
-            status: "OFFLINE",
-
-            last_seen: null,
-
-            raw: null,
-
-            aggregated: null
-
-        };
+        node =
+            createEmptyNode(
+                index
+            );
     }
 
 
@@ -1835,12 +1852,7 @@ function renderNode(node, index) {
         <article class="node-card">
 
 
-            <!-- ==========================================
-                 NODE HEADER
-            =========================================== -->
-
             <div class="node-header">
-
 
                 <div class="node-name">
 
@@ -1861,13 +1873,8 @@ function renderNode(node, index) {
 
                 </div>
 
-
             </div>
 
-
-            <!-- ==========================================
-                 NODE META
-            =========================================== -->
 
             <div class="node-meta">
 
@@ -1903,10 +1910,6 @@ function renderNode(node, index) {
             </div>
 
 
-            <!-- ==========================================
-                 RAW DATA
-            =========================================== -->
-
             <div class="data-section">
 
                 ${renderRawData(
@@ -1915,10 +1918,6 @@ function renderNode(node, index) {
 
             </div>
 
-
-            <!-- ==========================================
-                 AGGREGATED DATA
-            =========================================== -->
 
             <div class="data-section">
 
@@ -1936,11 +1935,10 @@ function renderNode(node, index) {
 
 
 // ==================================================
-// RENDER NODES
+// RENDER ALL NODES
 // ==================================================
 
 function renderNodes(nodes) {
-
 
     let html = "";
 
@@ -1950,7 +1948,6 @@ function renderNodes(nodes) {
         i <= 5;
         i++
     ) {
-
 
         const node =
             nodes &&
@@ -1967,6 +1964,41 @@ function renderNodes(nodes) {
 
     nodesContainer.innerHTML =
         html;
+}
+
+
+// ==================================================
+// CLEAR ALL DISPLAY
+// ==================================================
+
+function clearAllDisplay() {
+
+    // --------------------------------------------------
+    // SYSTEM
+    // --------------------------------------------------
+
+    serverTimeElement.textContent =
+        "0";
+
+    heartbeatElement.textContent =
+        "0 sec";
+
+    lastUpdateElement.textContent =
+        "0";
+
+
+    // --------------------------------------------------
+    // NODES
+    // --------------------------------------------------
+
+    renderNodes({});
+
+
+    // --------------------------------------------------
+    // ERROR
+    // --------------------------------------------------
+
+    clearError();
 }
 
 
@@ -1999,10 +2031,78 @@ function clearError() {
 
 
 // ==================================================
+// SHOW RESET SUCCESS
+// ==================================================
+
+function showResetSuccess(data) {
+
+    resetMessageElement.style.display =
+        "block";
+
+
+    let message =
+        "RESET ALL HISTORY BERHASIL. " +
+        "Seluruh data monitoring telah dihapus dari database.";
+
+
+    if (
+        data &&
+        data.remaining
+    ) {
+
+        message +=
+            " RAW: " +
+            valueOrZero(
+                data.remaining.compost_raw
+            ) +
+
+            " | AGGREGATED: " +
+            valueOrZero(
+                data.remaining.compost_data
+            ) +
+
+            " | HEARTBEAT: " +
+            valueOrZero(
+                data.remaining.node_status
+            ) +
+            ".";
+
+    }
+
+
+    resetMessageElement.textContent =
+        message;
+}
+
+
+// ==================================================
+// HIDE RESET MESSAGE
+// ==================================================
+
+function hideResetMessage() {
+
+    resetMessageElement.style.display =
+        "none";
+
+    resetMessageElement.textContent =
+        "";
+}
+
+
+// ==================================================
 // LOAD DATA
 // ==================================================
 
 async function loadData() {
+
+    // ==================================================
+    // JANGAN REFRESH SAAT RESET SEDANG BERJALAN
+    // ==================================================
+
+    if (isResetting) {
+
+        return;
+    }
 
 
     try {
@@ -2018,7 +2118,17 @@ async function loadData() {
             await fetch(
                 url,
                 {
-                    cache: "no-store"
+                    method: "GET",
+
+                    cache: "no-store",
+
+                    headers: {
+
+                        "Accept":
+                            "application/json"
+
+                    }
+
                 }
             );
 
@@ -2051,16 +2161,16 @@ async function loadData() {
         }
 
 
-        // ==============================================
+        // ==================================================
         // CLEAR ERROR
-        // ==============================================
+        // ==================================================
 
         clearError();
 
 
-        // ==============================================
+        // ==================================================
         // SERVER STATUS
-        // ==============================================
+        // ==================================================
 
         serverStatusElement.textContent =
             "ONLINE";
@@ -2069,9 +2179,9 @@ async function loadData() {
             "system-value online";
 
 
-        // ==============================================
+        // ==================================================
         // SERVER TIME
-        // ==============================================
+        // ==================================================
 
         serverTimeElement.textContent =
             valueOrZero(
@@ -2079,9 +2189,9 @@ async function loadData() {
             );
 
 
-        // ==============================================
+        // ==================================================
         // HEARTBEAT
-        // ==============================================
+        // ==================================================
 
         heartbeatElement.textContent =
             valueOrZero(
@@ -2090,9 +2200,9 @@ async function loadData() {
             " sec";
 
 
-        // ==============================================
+        // ==================================================
         // LAST WEB UPDATE
-        // ==============================================
+        // ==================================================
 
         lastUpdateElement.textContent =
             new Date()
@@ -2111,18 +2221,16 @@ async function loadData() {
                 );
 
 
-        // ==============================================
+        // ==================================================
         // NODES
-        // ==============================================
+        // ==================================================
 
         renderNodes(
-            data.nodes
+            data.nodes || {}
         );
 
 
     }
-
-
     catch (error) {
 
 
@@ -2147,12 +2255,198 @@ async function loadData() {
 
 
         /*
-         * Data node tidak dihapus.
-         *
-         * Tampilan terakhir tetap dipertahankan
-         * ketika koneksi API mengalami gangguan.
+         * Sengaja tidak menghapus data tampilan
+         * jika hanya terjadi gangguan koneksi.
          */
 
+    }
+
+}
+
+
+// ==================================================
+// VERIFY DATABASE EMPTY
+// ==================================================
+
+async function verifyDatabaseCleared() {
+
+    try {
+
+
+        const url =
+            API_URL +
+            "?_=" +
+            Date.now();
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "GET",
+
+                    cache: "no-store",
+
+                    headers: {
+
+                        "Accept":
+                            "application/json"
+
+                    }
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Verification HTTP Error " +
+                response.status
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "VERIFY AFTER RESET:",
+            data
+        );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Verification failed"
+            );
+        }
+
+
+        /*
+         * Jika reset berhasil dan database kosong,
+         * latest.php seharusnya mengembalikan raw
+         * dan aggregated = null untuk semua node.
+         */
+
+        let hasData =
+            false;
+
+
+        if (
+            data.nodes
+        ) {
+
+            for (
+                let i = 1;
+                i <= 5;
+                i++
+            ) {
+
+                const node =
+                    data.nodes[
+                        "node_" + i
+                    ];
+
+
+                if (!node) {
+                    continue;
+                }
+
+
+                if (
+                    node.raw !== null &&
+                    node.raw !== undefined
+                ) {
+
+                    hasData = true;
+
+                    break;
+                }
+
+
+                if (
+                    node.aggregated !== null &&
+                    node.aggregated !== undefined
+                ) {
+
+                    hasData = true;
+
+                    break;
+                }
+
+            }
+
+        }
+
+
+        if (hasData) {
+
+            console.warn(
+                "Database masih mengembalikan data setelah reset."
+            );
+
+            return false;
+        }
+
+
+        /*
+         * Database dianggap kosong.
+         */
+
+        clearAllDisplay();
+
+
+        /*
+         * Server tetap ONLINE karena latest.php
+         * berhasil diakses.
+         */
+
+        serverStatusElement.textContent =
+            "ONLINE";
+
+        serverStatusElement.className =
+            "system-value online";
+
+
+        if (
+            data.server_time
+        ) {
+
+            serverTimeElement.textContent =
+                data.server_time;
+
+        }
+
+
+        if (
+            data.heartbeat_timeout !==
+            undefined &&
+            data.heartbeat_timeout !==
+            null
+        ) {
+
+            heartbeatElement.textContent =
+                data.heartbeat_timeout +
+                " sec";
+
+        }
+
+
+        return true;
+
+    }
+    catch (error) {
+
+        console.error(
+            "verifyDatabaseCleared ERROR:",
+            error
+        );
+
+        return false;
     }
 
 }
@@ -2164,64 +2458,149 @@ async function loadData() {
 
 async function resetAllHistory() {
 
+
     const confirmation =
         confirm(
+
             "RESET ALL HISTORY?\n\n" +
+
             "SEMUA DATA MONITORING AKAN DIHAPUS.\n\n" +
+
             "Yang akan dihapus:\n" +
+
             "• RAW SENSOR DATA\n" +
+
             "• AGGREGATED DATA\n" +
+
             "• NODE HEARTBEAT / STATUS\n" +
+
             "• SELURUH HISTORY DATABASE\n\n" +
+
             "Data yang sudah dihapus TIDAK dapat dikembalikan.\n\n" +
+
             "Lanjutkan?"
+
         );
 
 
     if (!confirmation) {
+
         return;
     }
 
 
-    resetButton.disabled = true;
+    // ==================================================
+    // LOCK RESET
+    // ==================================================
+
+    isResetting =
+        true;
+
+
+    resetButton.disabled =
+        true;
+
 
     resetButton.textContent =
         "CLEARING ALL DATA...";
 
 
-    resetMessageElement.style.display =
-        "none";
+    hideResetMessage();
 
 
     clearError();
 
 
+    /*
+     * Langsung hilangkan data dari layar.
+     *
+     * Jadi walaupun request membutuhkan waktu,
+     * data lama tidak tetap terlihat.
+     */
+
+    clearAllDisplay();
+
+
     try {
+
+
+        // ==================================================
+        // RESET REQUEST
+        // ==================================================
 
         const response =
             await fetch(
                 RESET_URL,
                 {
-                    method: "GET",
+
+                    /*
+                     * PERBAIKAN UTAMA:
+                     *
+                     * sebelumnya GET
+                     * sekarang POST
+                     */
+
+                    method: "POST",
+
+                    cache: "no-store",
 
                     headers: {
+
+                        "Accept":
+                            "application/json",
+
                         "Content-Type":
                             "application/json"
+
                     },
 
-                    cache: "no-store"
+                    /*
+                     * Tidak membutuhkan payload.
+                     *
+                     * Endpoint reset cukup menerima
+                     * HTTP POST.
+                     */
+
+                    body:
+                        JSON.stringify({})
+
                 }
             );
 
 
+        console.log(
+            "RESET HTTP STATUS:",
+            response.status
+        );
+
+
         if (!response.ok) {
 
-            throw new Error(
+            let errorMessage =
                 "HTTP Error " +
-                response.status
+                response.status;
+
+
+            if (
+                response.status === 405
+            ) {
+
+                errorMessage =
+                    "RESET API masih menolak POST (HTTP 405). " +
+                    "Pastikan reset.php menerima method POST.";
+
+            }
+
+
+            throw new Error(
+                errorMessage
             );
         }
 
+
+        // ==================================================
+        // READ RESET RESPONSE
+        // ==================================================
 
         const data =
             await response.json();
@@ -2233,6 +2612,10 @@ async function resetAllHistory() {
         );
 
 
+        // ==================================================
+        // SUCCESS CHECK
+        // ==================================================
+
         if (!data.success) {
 
             throw new Error(
@@ -2243,67 +2626,122 @@ async function resetAllHistory() {
 
 
         // ==================================================
-        // RESET MESSAGE
+        // DATABASE CLEARED CHECK
         // ==================================================
 
-        resetMessageElement.style.display =
-            "block";
+        if (
+            data.database_cleared === false
+        ) {
 
-
-        resetMessageElement.textContent =
-            "ALL HISTORY CLEARED. " +
-            "Database RAW, AGGREGATED, dan NODE STATUS " +
-            "telah dikosongkan. Menunggu data ESP32 berikutnya.";
-
-
-        // ==================================================
-        // CLEAR CURRENT NODE DISPLAY
-        // ==================================================
-        //
-        // Jangan menunggu refresh berikutnya.
-        // Setelah reset, tampilan langsung menjadi
-        // NO DATA.
-        //
-        // ==================================================
-
-        renderNodes({});
+            throw new Error(
+                "Server tidak mengonfirmasi database telah dikosongkan."
+            );
+        }
 
 
         // ==================================================
-        // UPDATE SYSTEM INFORMATION
+        // REMAINING DATA CHECK
         // ==================================================
 
-        lastUpdateElement.textContent =
-            new Date()
-                .toLocaleTimeString(
-                    "id-ID",
-                    {
-                        hour:
-                            "2-digit",
+        if (
+            data.remaining
+        ) {
 
-                        minute:
-                            "2-digit",
 
-                        second:
-                            "2-digit"
-                    }
+            const rawRemaining =
+                Number(
+                    data.remaining.compost_raw
                 );
 
 
+            const aggregatedRemaining =
+                Number(
+                    data.remaining.compost_data
+                );
+
+
+            const heartbeatRemaining =
+                Number(
+                    data.remaining.node_status
+                );
+
+
+            if (
+                rawRemaining !== 0 ||
+                aggregatedRemaining !== 0 ||
+                heartbeatRemaining !== 0
+            ) {
+
+                throw new Error(
+
+                    "Reset belum benar-benar kosong. " +
+
+                    "RAW=" +
+                    rawRemaining +
+
+                    ", AGGREGATED=" +
+                    aggregatedRemaining +
+
+                    ", HEARTBEAT=" +
+                    heartbeatRemaining
+
+                );
+
+            }
+
+        }
+
+
         // ==================================================
-        // LOAD DATA AGAIN
-        // ==================================================
-        //
-        // Tujuannya memastikan database benar-benar
-        // kosong dari sisi frontend.
-        //
+        // RESET BERHASIL
         // ==================================================
 
-        await loadData();
+        showResetSuccess(
+            data
+        );
 
+
+        // ==================================================
+        // VERIFIKASI DARI LATEST API
+        // ==================================================
+
+        const verified =
+            await verifyDatabaseCleared();
+
+
+        if (!verified) {
+
+            throw new Error(
+                "Database berhasil menerima reset, " +
+                "tetapi verifikasi data terbaru belum kosong."
+            );
+        }
+
+
+        // ==================================================
+        // FINAL CLEAR DISPLAY
+        // ==================================================
+
+        clearAllDisplay();
+
+
+        // Server tetap online
+        serverStatusElement.textContent =
+            "ONLINE";
+
+        serverStatusElement.className =
+            "system-value online";
+
+
+        /*
+         * Setelah reset sukses,
+         * tampilan tetap kosong sampai ESP32
+         * mengirim data baru.
+         */
 
     }
     catch (error) {
+
 
         console.error(
             "RESET ERROR:",
@@ -2312,23 +2750,35 @@ async function resetAllHistory() {
 
 
         showError(
-            "Reset failed: " +
+            "RESET ALL HISTORY FAILED: " +
             error.message
         );
+
 
     }
     finally {
 
+
+        // ==================================================
+        // UNLOCK
+        // ==================================================
+
+        isResetting =
+            false;
+
+
         resetButton.disabled =
             false;
+
 
         resetButton.textContent =
             "RESET ALL HISTORY";
 
     }
+
 }
 
-    
+
 // ==================================================
 // RESET BUTTON
 // ==================================================

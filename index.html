@@ -2141,54 +2141,101 @@
     // ==================================================
     // LOAD DATA
     // ==================================================
+const API_URL =
+    "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
 
-    async function loadData() {
+const REFRESH_INTERVAL = 5000;
 
+async function loadData() {
 
-        try {
+    try {
 
+        const response = await fetch(API_URL);
 
-            const response =
-                await fetch(
-                    API_URL +
-                    "?_=" +
-                    Date.now(),
-                    {
-                        method: "GET",
+        if (!response.ok) {
 
-                        cache: "no-store",
+            throw new Error(
+                "HTTP Error " + response.status
+            );
 
-                        headers: {
-                            "Cache-Control":
-                                "no-cache"
-                        }
-                    }
-                );
+        }
 
+        const data = await response.json();
 
-            if (!response.ok) {
+        console.log("API DATA:", data);
 
-                throw new Error(
-                    "HTTP Error " +
-                    response.status
-                );
+        if (!data.success) {
 
-            }
+            throw new Error(
+                data.message ||
+                "API returned success=false"
+            );
 
+        }
 
-            const data =
-                await response.json();
+        document.getElementById("error").style.display =
+            "none";
 
+        document.getElementById("server-status").textContent =
+            "ONLINE";
 
-            if (!data.success) {
+        document.getElementById("server-status").className =
+            "system-value online";
 
-                throw new Error(
-                    data.message ||
-                    "API returned success=false"
-                );
+        document.getElementById("server-time").textContent =
+            data.server_time ?? "--";
 
-            }
+        document.getElementById("heartbeat").textContent =
+            (data.heartbeat_timeout ?? "--") + " sec";
 
+        document.getElementById("last-update").textContent =
+            new Date().toLocaleTimeString(
+                "id-ID",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                }
+            );
+
+        renderNodes(data.nodes);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "loadData ERROR:",
+            error
+        );
+
+        document.getElementById("server-status").textContent =
+            "ERROR";
+
+        document.getElementById("server-status").className =
+            "system-value error";
+
+        const errorElement =
+            document.getElementById("error");
+
+        errorElement.style.display =
+            "block";
+
+        errorElement.textContent =
+            "Cannot connect to API: " +
+            error.message;
+
+    }
+
+}
+
+loadData();
+
+setInterval(
+    loadData,
+    REFRESH_INTERVAL
+);
+    
 
             // ==========================================
             // CLEAR ERROR

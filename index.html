@@ -2164,45 +2164,52 @@ async function loadData() {
 
 async function resetAllHistory() {
 
-
     const confirmation =
         confirm(
             "RESET ALL HISTORY?\n\n" +
-            "Semua data RAW dan AGGREGATED " +
-            "akan dihapus dari database.\n\n" +
-            "Tindakan ini tidak dapat dibatalkan."
+            "SEMUA DATA MONITORING AKAN DIHAPUS.\n\n" +
+            "Yang akan dihapus:\n" +
+            "• RAW SENSOR DATA\n" +
+            "• AGGREGATED DATA\n" +
+            "• NODE HEARTBEAT / STATUS\n" +
+            "• SELURUH HISTORY DATABASE\n\n" +
+            "Data yang sudah dihapus TIDAK dapat dikembalikan.\n\n" +
+            "Lanjutkan?"
         );
 
 
     if (!confirmation) {
-
         return;
     }
 
 
-    resetButton.disabled =
-        true;
+    resetButton.disabled = true;
 
     resetButton.textContent =
-        "RESETTING...";
+        "CLEARING ALL DATA...";
 
 
     resetMessageElement.style.display =
         "none";
 
 
-    try {
+    clearError();
 
+
+    try {
 
         const response =
             await fetch(
                 RESET_URL,
                 {
-                    method:
-                        "GET",
+                    method: "POST",
 
-                    cache:
-                        "no-store"
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    cache: "no-store"
                 }
             );
 
@@ -2235,23 +2242,68 @@ async function resetAllHistory() {
         }
 
 
+        // ==================================================
+        // RESET MESSAGE
+        // ==================================================
+
         resetMessageElement.style.display =
             "block";
 
 
         resetMessageElement.textContent =
-            "Semua history berhasil dihapus. " +
-            "Menunggu data ESP32 berikutnya.";
+            "ALL HISTORY CLEARED. " +
+            "Database RAW, AGGREGATED, dan NODE STATUS " +
+            "telah dikosongkan. Menunggu data ESP32 berikutnya.";
 
+
+        // ==================================================
+        // CLEAR CURRENT NODE DISPLAY
+        // ==================================================
+        //
+        // Jangan menunggu refresh berikutnya.
+        // Setelah reset, tampilan langsung menjadi
+        // NO DATA.
+        //
+        // ==================================================
+
+        renderNodes({});
+
+
+        // ==================================================
+        // UPDATE SYSTEM INFORMATION
+        // ==================================================
+
+        lastUpdateElement.textContent =
+            new Date()
+                .toLocaleTimeString(
+                    "id-ID",
+                    {
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit",
+
+                        second:
+                            "2-digit"
+                    }
+                );
+
+
+        // ==================================================
+        // LOAD DATA AGAIN
+        // ==================================================
+        //
+        // Tujuannya memastikan database benar-benar
+        // kosong dari sisi frontend.
+        //
+        // ==================================================
 
         await loadData();
 
 
     }
-
-
     catch (error) {
-
 
         console.error(
             "RESET ERROR:",
@@ -2265,8 +2317,6 @@ async function resetAllHistory() {
         );
 
     }
-
-
     finally {
 
         resetButton.disabled =
@@ -2276,10 +2326,9 @@ async function resetAllHistory() {
             "RESET ALL HISTORY";
 
     }
-
 }
 
-
+    
 // ==================================================
 // RESET BUTTON
 // ==================================================

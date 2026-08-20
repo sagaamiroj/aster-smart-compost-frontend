@@ -575,6 +575,50 @@
 
 
         /* ==================================================
+           OFFLINE DATA LABEL
+        ================================================== */
+
+        .history-label {
+
+            margin-bottom: 12px;
+
+            padding: 9px 11px;
+
+            border-radius: 8px;
+
+            background: #fff7ed;
+
+            border: 1px solid #fed7aa;
+
+            color: #9a3412;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        .online-label {
+
+            margin-bottom: 12px;
+
+            padding: 9px 11px;
+
+            border-radius: 8px;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            color: #166534;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ==================================================
            SENSOR GRID
         ================================================== */
 
@@ -1049,7 +1093,8 @@ const RESET_URL =
 // REFRESH
 // ==================================================
 
-const REFRESH_INTERVAL = 1000;
+const REFRESH_INTERVAL =
+    1000;
 
 
 // ==================================================
@@ -1173,11 +1218,18 @@ function getStatusClass(status) {
     if (
         value === "DANGER" ||
         value === "HIGH" ||
-        value === "TINGGI" ||
-        value === "LOW"
+        value === "TINGGI"
     ) {
 
         return "status-danger";
+    }
+
+
+    if (
+        value === "LOW"
+    ) {
+
+        return "status-neutral";
     }
 
 
@@ -1186,7 +1238,7 @@ function getStatusClass(status) {
 
 
 // ==================================================
-// NODE STATUS
+// NODE STATUS CLASS
 // ==================================================
 
 function getNodeStatusClass(status) {
@@ -1213,7 +1265,7 @@ function renderEmptyData(title) {
             </h3>
 
             <span class="data-badge">
-                0
+                NO DATA
             </span>
 
         </div>
@@ -1221,7 +1273,62 @@ function renderEmptyData(title) {
 
         <div class="no-data">
 
-            Belum ada data.
+            Belum ada data yang diterima
+            dari node ini.
+
+        </div>
+
+    `;
+}
+
+
+// ==================================================
+// DATA INFORMATION LABEL
+// ==================================================
+
+function renderDataInformation(
+    nodeStatus,
+    recordedAt
+) {
+
+    if (
+        nodeStatus === "ONLINE"
+    ) {
+
+        return `
+
+            <div class="online-label">
+
+                ● NODE ONLINE
+
+                <br>
+
+                Data sensor ditampilkan
+                berdasarkan sample terbaru
+                yang diterima server.
+
+            </div>
+
+        `;
+    }
+
+
+    return `
+
+        <div class="history-label">
+
+            ● NODE OFFLINE
+
+            <br>
+
+            Data sensor di bawah adalah
+            <strong>data terakhir yang pernah diterima</strong>
+            server, bukan pembacaan realtime.
+
+            <br>
+
+            Last recorded:
+            ${valueOrZero(recordedAt)}
 
         </div>
 
@@ -1233,7 +1340,10 @@ function renderEmptyData(title) {
 // RAW DATA
 // ==================================================
 
-function renderRawData(raw) {
+function renderRawData(
+    raw,
+    nodeStatus
+) {
 
 
     if (!raw) {
@@ -1262,6 +1372,12 @@ function renderRawData(raw) {
             </span>
 
         </div>
+
+
+        ${renderDataInformation(
+            nodeStatus,
+            raw.recorded_at
+        )}
 
 
         <div class="sensor-grid">
@@ -1411,7 +1527,10 @@ function renderRawData(raw) {
 // AGGREGATED DATA
 // ==================================================
 
-function renderAggregatedData(aggregated) {
+function renderAggregatedData(
+    aggregated,
+    nodeStatus
+) {
 
 
     if (!aggregated) {
@@ -1440,6 +1559,12 @@ function renderAggregatedData(aggregated) {
             </span>
 
         </div>
+
+
+        ${renderDataInformation(
+            nodeStatus,
+            aggregated.recorded_at
+        )}
 
 
         <div class="sensor-grid">
@@ -1531,6 +1656,30 @@ function renderAggregatedData(aggregated) {
 
                     ${valueOrZero(
                         aggregated.ch4_index
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="sensor-item">
+
+                <div class="sensor-label">
+                    Temperature Status
+                </div>
+
+                <div
+                    class="
+                        sensor-value
+                        ${getStatusClass(
+                            aggregated.temp_status
+                        )}
+                    "
+                >
+
+                    ${valueOrZero(
+                        aggregated.temp_status
                     )}
 
                 </div>
@@ -1642,25 +1791,39 @@ function renderAggregatedData(aggregated) {
 // NODE CARD
 // ==================================================
 
-function renderNode(node, index) {
+function renderNode(
+    node,
+    index
+) {
 
 
     if (!node) {
 
         node = {
 
-            node_id: index,
+            node_id:
+                index,
 
-            status: "OFFLINE",
+            status:
+                "OFFLINE",
 
-            last_seen: null,
+            last_seen:
+                null,
 
-            raw: null,
+            raw:
+                null,
 
-            aggregated: null
+            aggregated:
+                null
 
         };
     }
+
+
+    const nodeID =
+        valueOrZero(
+            node.node_id
+        );
 
 
     const status =
@@ -1668,11 +1831,14 @@ function renderNode(node, index) {
             valueOrZero(
                 node.status
             )
-        ).toUpperCase();
+        )
+        .toUpperCase();
 
 
     const statusClass =
-        getNodeStatusClass(status);
+        getNodeStatusClass(
+            status
+        );
 
 
     return `
@@ -1680,7 +1846,9 @@ function renderNode(node, index) {
         <article class="node-card">
 
 
-            <!-- NODE HEADER -->
+            <!-- ==================================================
+                 NODE HEADER
+                 ================================================== -->
 
             <div class="node-header">
 
@@ -1688,9 +1856,7 @@ function renderNode(node, index) {
                 <div class="node-name">
 
                     Node
-                    ${valueOrZero(
-                        node.node_id
-                    )}
+                    ${nodeID}
 
                 </div>
 
@@ -1710,14 +1876,16 @@ function renderNode(node, index) {
             </div>
 
 
-            <!-- NODE META -->
+            <!-- ==================================================
+                 NODE META
+                 ================================================== -->
 
             <div class="node-meta">
 
 
                 <div>
 
-                    Last Seen
+                    Last Heartbeat
 
                     <strong>
 
@@ -1736,9 +1904,7 @@ function renderNode(node, index) {
 
                     <strong>
 
-                        ${valueOrZero(
-                            node.node_id
-                        )}
+                        ${nodeID}
 
                     </strong>
 
@@ -1748,23 +1914,29 @@ function renderNode(node, index) {
             </div>
 
 
-            <!-- RAW -->
+            <!-- ==================================================
+                 RAW
+                 ================================================== -->
 
             <div class="data-section">
 
                 ${renderRawData(
-                    node.raw
+                    node.raw,
+                    status
                 )}
 
             </div>
 
 
-            <!-- AGGREGATED -->
+            <!-- ==================================================
+                 AGGREGATED
+                 ================================================== -->
 
             <div class="data-section">
 
                 ${renderAggregatedData(
-                    node.aggregated
+                    node.aggregated,
+                    status
                 )}
 
             </div>
@@ -1783,7 +1955,8 @@ function renderNode(node, index) {
 function renderNodes(nodes) {
 
 
-    let html = "";
+    let html =
+        "";
 
 
     for (
@@ -1792,9 +1965,12 @@ function renderNodes(nodes) {
         i++
     ) {
 
+
         const node =
             nodes &&
-            nodes["node_" + i];
+            nodes[
+                "node_" + i
+            ];
 
 
         html +=
@@ -1814,7 +1990,9 @@ function renderNodes(nodes) {
 // SHOW ERROR
 // ==================================================
 
-function showError(message) {
+function showError(
+    message
+) {
 
     errorElement.style.display =
         "block";
@@ -1851,8 +2029,8 @@ async function loadData() {
         /*
          * Cache busting.
          *
-         * Parameter ini hanya memastikan
-         * browser meminta response terbaru.
+         * Browser selalu meminta
+         * response API terbaru.
          */
 
         const url =
@@ -1863,7 +2041,11 @@ async function loadData() {
 
         const response =
             await fetch(
-                url
+                url,
+                {
+                    cache:
+                        "no-store"
+                }
             );
 
 
@@ -1963,7 +2145,6 @@ async function loadData() {
             data.nodes
         );
 
-
     }
 
 
@@ -1991,10 +2172,8 @@ async function loadData() {
 
 
         /*
-         * Jangan menghapus node terakhir
-         * ketika koneksi sesaat gagal.
-         *
-         * Website tetap menampilkan data terakhir.
+         * Node terakhir tidak dihapus
+         * ketika API gagal sesaat.
          */
 
     }
@@ -2043,7 +2222,10 @@ async function resetAllHistory() {
                 RESET_URL,
                 {
                     method:
-                        "GET"
+                        "GET",
+
+                    cache:
+                        "no-store"
                 }
             );
 
@@ -2091,7 +2273,6 @@ async function resetAllHistory() {
 
         await loadData();
 
-
     }
 
 
@@ -2113,6 +2294,7 @@ async function resetAllHistory() {
 
 
     finally {
+
 
         resetButton.disabled =
             false;

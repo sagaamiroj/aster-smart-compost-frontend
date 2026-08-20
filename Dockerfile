@@ -8,15 +8,6 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html/
 
-RUN echo "=== DOCUMENT ROOT ===" \
-    && ls -la /var/www/html \
-    && echo "=== API DIRECTORY ===" \
-    && ls -la /var/www/html/api \
-    && echo "=== V1 DIRECTORY ===" \
-    && ls -la /var/www/html/api/v1 \
-    && echo "=== COMPOST DIRECTORY ===" \
-    && ls -la /var/www/html/api/v1/compost
-
 RUN chown -R www-data:www-data /var/www/html
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

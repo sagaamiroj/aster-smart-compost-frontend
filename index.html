@@ -191,6 +191,7 @@ button{font-family:inherit;}
 /* ---- toast (bottom-right, auto-hide) ---- */
 #toast-stack{position:fixed;bottom:20px;right:20px;z-index:600;display:flex;flex-direction:column;gap:10px;max-width:340px;}
 .toast{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--moss);border-radius:var(--radius-m);padding:13px 15px;box-shadow:var(--shadow);font-size:12.5px;animation:toastIn 200ms ease;}
+.toast.err{border-left-color:var(--rust);}
 .toast b{display:block;font-size:13px;margin-bottom:2px;}
 @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
@@ -229,9 +230,7 @@ button{font-family:inherit;}
 .sh-item .v.small{font-size:12px;font-weight:500;color:var(--text-dim);}
 
 /* ==========================================================================
-   DEVICE GRID — flexbox + justify-content:center so an incomplete last row
-   (e.g. NODE ID 4 / NODE ID 5) centers itself at any viewport width, with
-   no hardcoded margins or fixed column math.
+   DEVICE GRID
    ========================================================================== */
 
 .section-title-row{display:flex;justify-content:space-between;align-items:center;margin:26px 0 14px;}
@@ -302,7 +301,7 @@ button{font-family:inherit;}
 .timeline-item .d{color:var(--text-dim);}
 
 /* ==========================================================================
-   ACCESS-RESTRICTED VIEW (guest hitting a locked route)
+   ACCESS-RESTRICTED VIEW
    ========================================================================== */
 
 .locked-view{padding:60px 20px;text-align:center;}
@@ -317,11 +316,9 @@ button{font-family:inherit;}
 .table-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
 .select,.tinput{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-s);color:var(--text);font-size:12.5px;padding:8px 10px;}
 .table-wrap{border:1px solid var(--border);border-radius:var(--radius-l);overflow:hidden;background:var(--surface);}
-.table-scroll{overflow-x:auto;}
+.table-scroll{overflow-x:auto;min-height:120px;position:relative;}
 table{width:100%;border-collapse:collapse;min-width:820px;}
-thead th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-faint);padding:11px 14px;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
-thead th:hover{color:var(--text);}
-thead th .arrow{opacity:.5;margin-left:3px;}
+thead th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-faint);padding:11px 14px;border-bottom:1px solid var(--border);white-space:nowrap;}
 tbody td{padding:11px 14px;font-size:12.5px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--font-mono);}
 tbody td.device-col{font-family:var(--font-body);font-weight:600;}
 tbody td.trace-col{font-family:var(--font-body);}
@@ -336,9 +333,13 @@ tbody tr:hover{background:var(--surface-hover);}
 .pager .pageinfo{font-family:var(--font-mono);font-size:11.5px;padding:0 4px;}
 
 .history-note{font-size:11.5px;color:var(--text-faint);background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--radius-s);padding:10px 12px;margin-bottom:14px;line-height:1.5;}
+.table-state-row td{text-align:center;color:var(--text-faint);font-family:var(--font-body);padding:40px 16px;}
+.table-state-row.err td{color:var(--rust);}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-strong);border-top-color:var(--loam);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 /* ==========================================================================
-   ANALYTICS
+   ANALYTICS / CHARTS
    ========================================================================== */
 
 .analytics-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
@@ -347,15 +348,24 @@ tbody tr:hover{background:var(--surface-hover);}
 .chip{padding:6px 11px;border-radius:5px;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;}
 .chip.active{background:var(--loam);color:#fff;}
 .chart-card{padding:20px 22px;margin-bottom:16px;}
-.chart-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.chart-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
 .chart-head h4{font-family:var(--font-display);font-size:14px;margin:0 0 3px;}
 .chart-head .sub{font-size:11.5px;color:var(--text-faint);}
-.legend-line{display:flex;gap:14px;font-size:11px;color:var(--text-dim);}
-.legend-line span{display:flex;align-items:center;gap:5px;}
-.legend-line i{width:10px;height:2px;border-radius:2px;}
-svg.linechart{width:100%;height:220px;display:block;}
-.chart-empty{padding:50px 20px;text-align:center;color:var(--text-faint);font-size:12.5px;}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px;}
+.chart-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.chart-stat{font-size:11px;color:var(--text-faint);}
+.chart-stat b{color:var(--text);font-family:var(--font-mono);margin-left:4px;}
+.zoom-controls{display:flex;gap:6px;}
+.zoom-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1;}
+.zoom-btn:hover{border-color:var(--border-strong);color:var(--text);}
+.chart-container{position:relative;user-select:none;}
+svg.linechart{width:100%;height:230px;display:block;cursor:grab;touch-action:none;}
+svg.linechart:active{cursor:grabbing;}
+.chart-empty,.chart-error,.chart-loading{padding:50px 20px;text-align:center;color:var(--text-faint);font-size:12.5px;}
+.chart-error{color:var(--rust);}
 .axis-label{font-size:9px;fill:var(--text-faint);font-family:'JetBrains Mono';}
+.chart-tooltip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border-strong);border-radius:6px;padding:8px 10px;font-size:11px;box-shadow:var(--shadow);white-space:nowrap;z-index:10;display:none;line-height:1.6;}
+.chart-tooltip b{color:var(--text);}
 
 /* ==========================================================================
    ALERTS
@@ -402,6 +412,11 @@ svg.linechart{width:100%;height:220px;display:block;}
 .switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--text-faint);transition:transform var(--transition),background var(--transition);}
 .switch.on{background:var(--loam-dim);border-color:var(--loam);}
 .switch.on::after{transform:translateX(18px);background:var(--loam);}
+.endpoint-status{font-weight:700;font-size:11px;letter-spacing:.04em;display:inline-flex;align-items:center;gap:6px;}
+.endpoint-status .d2{width:7px;height:7px;border-radius:50%;background:currentColor;}
+.endpoint-status.connected{color:var(--moss);}
+.endpoint-status.error{color:var(--rust);}
+.endpoint-status.checking{color:var(--amber);}
 
 /* ==========================================================================
    EMPTY STATES / RESET MODAL
@@ -588,19 +603,19 @@ svg.linechart{width:100%;height:220px;display:block;}
       <!-- RAW DATA -->
       <section class="view" id="view-raw">
         <div class="page-head">
-          <div><h2>Raw Sensor Data</h2><p class="sub">1 RAW sample every ~8.64s · 1,000 samples = 1 monitoring day.</p></div>
+          <div><h2>Raw Sensor Data</h2><p class="sub">1 RAW sample every ~8.64s · 1,000 samples = 1 monitoring day. Continuous Sample Index, sourced live from the database.</p></div>
           <div class="page-actions" id="raw-export-action"><button class="btn brand" onclick="navigateTo('export')">Export CSV</button></div>
         </div>
-        <div class="history-note">Showing samples accumulated during this session (they build up as new data arrives). This isn't yet a permanent multi-day archive — that requires a backend history endpoint; see Settings for the proposed contract.</div>
+        <div class="history-note">Data ini dimuat langsung dari database melalui <b>history.php</b> dan tetap tersedia setelah refresh, logout/login, atau dibuka dari perangkat lain.</div>
         <div class="table-toolbar">
           <select class="select" id="raw-device-filter"><option value="all">All nodes</option></select>
           <select class="select" id="raw-day-filter"><option value="all">All days</option></select>
-          <input class="tinput" placeholder="Search sample #…" id="raw-search">
+          <select class="select" id="raw-limit"><option value="25">25 / page</option><option value="50" selected>50 / page</option><option value="100">100 / page</option></select>
         </div>
         <div class="table-wrap">
           <div class="table-scroll">
             <table>
-              <thead><tr><th data-sort="t">Timestamp<span class="arrow">▾</span></th><th>Device</th><th>Day · Sample</th><th>Temperature</th><th>Temp Status</th><th>Soil ADC</th><th>Moisture</th><th>MQ-4 ADC</th><th>Methane Status</th></tr></thead>
+              <thead><tr><th>Timestamp</th><th>Device</th><th>Day · Sample</th><th>Temperature</th><th>Temp Status</th><th>Soil ADC</th><th>Moisture</th><th>MQ-4 ADC</th><th>Methane Status</th></tr></thead>
               <tbody id="raw-table-body"></tbody>
             </table>
           </div>
@@ -614,18 +629,19 @@ svg.linechart{width:100%;height:220px;display:block;}
       <!-- AGGREGATED DATA -->
       <section class="view" id="view-aggregated">
         <div class="page-head">
-          <div><h2>Aggregated Data</h2><p class="sub">100 RAW samples = 1 AGGREGATED record · 10 aggregated = 1 monitoring day.</p></div>
+          <div><h2>Aggregated Data</h2><p class="sub">100 RAW samples = 1 AGGREGATED record · 10 aggregated = 1 monitoring day. Continuous Aggregated Index from the database.</p></div>
           <div class="page-actions" id="agg-export-action"><button class="btn brand" onclick="navigateTo('export')">Export CSV</button></div>
         </div>
-        <div class="history-note">Session-accumulated aggregated records. Persistent day-by-day archives need a backend history endpoint.</div>
+        <div class="history-note">Data ini dimuat langsung dari database melalui <b>history.php</b> — permanen dan tidak reset per hari atau saat ESP32 restart.</div>
         <div class="table-toolbar">
           <select class="select" id="agg-device-filter"><option value="all">All nodes</option></select>
           <select class="select" id="agg-day-filter"><option value="all">All days</option></select>
+          <select class="select" id="agg-limit"><option value="25">25 / page</option><option value="50" selected>50 / page</option><option value="100">100 / page</option></select>
         </div>
         <div class="table-wrap">
           <div class="table-scroll">
             <table>
-              <thead><tr><th data-sort="t">Recorded At<span class="arrow">▾</span></th><th>Device</th><th>Day · Agg #</th><th>Raw Range</th><th>Temperature</th><th>Moisture</th><th>Soil ADC</th><th>MQ-4 ADC</th><th>CH4 Index</th><th>Compost Status</th></tr></thead>
+              <thead><tr><th>Recorded At</th><th>Device</th><th>Day · Agg #</th><th>Raw Range</th><th>Temperature</th><th>Moisture</th><th>Soil ADC</th><th>MQ-4 ADC</th><th>CH4 Index</th><th>Compost Status</th></tr></thead>
               <tbody id="agg-table-body"></tbody>
             </table>
           </div>
@@ -638,7 +654,7 @@ svg.linechart{width:100%;height:220px;display:block;}
 
       <!-- ANALYTICS -->
       <section class="view" id="view-analytics">
-        <div class="page-head"><div><h2>Analytics</h2><p class="sub">Session trend built from RAW or AGGREGATED telemetry as it arrives.</p></div></div>
+        <div class="page-head"><div><h2>Analytics</h2><p class="sub">Trend built from database history via history.php — zoom, pan, and inspect any point.</p></div></div>
         <div class="analytics-controls">
           <div class="chip-group" id="analytics-source-chips">
             <div class="chip active" data-source="aggregated">Aggregated Data</div>
@@ -651,20 +667,55 @@ svg.linechart{width:100%;height:220px;display:block;}
         </div>
 
         <div class="card chart-card">
-          <div class="chart-head"><div><h4>Temperature</h4><div class="sub">Threshold zones at 40°C / 60°C</div></div><div class="legend-line"><span><i style="background:var(--loam)"></i>°C</span></div></div>
-          <div id="chart-temp-wrap"></div>
+          <div class="chart-head"><div><h4>Temperature</h4><div class="sub">Threshold zones at 40°C / 60°C</div></div><div class="legend-line"></div></div>
+          <div class="chart-toolbar">
+            <div class="chart-stats" id="chart-temp-stats"></div>
+            <div class="zoom-controls">
+              <button class="zoom-btn" data-chart="temp" data-act="in" title="Zoom in">+</button>
+              <button class="zoom-btn" data-chart="temp" data-act="out" title="Zoom out">−</button>
+              <button class="zoom-btn" data-chart="temp" data-act="reset" title="Reset zoom">⟳</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-temp-container"><div id="chart-temp-wrap"></div><div class="chart-tooltip" id="chart-temp-tooltip"></div></div>
         </div>
+
         <div class="card chart-card">
-          <div class="chart-head"><div><h4>Moisture</h4><div class="sub">Converted from soil ADC</div></div><div class="legend-line"><span><i style="background:var(--moss)"></i>%</span></div></div>
-          <div id="chart-moisture-wrap"></div>
+          <div class="chart-head"><div><h4>Moisture</h4><div class="sub">Converted from soil ADC</div></div><div class="legend-line"></div></div>
+          <div class="chart-toolbar">
+            <div class="chart-stats" id="chart-moisture-stats"></div>
+            <div class="zoom-controls">
+              <button class="zoom-btn" data-chart="moisture" data-act="in">+</button>
+              <button class="zoom-btn" data-chart="moisture" data-act="out">−</button>
+              <button class="zoom-btn" data-chart="moisture" data-act="reset">⟳</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-moisture-container"><div id="chart-moisture-wrap"></div><div class="chart-tooltip" id="chart-moisture-tooltip"></div></div>
         </div>
+
         <div class="card chart-card">
-          <div class="chart-head"><div><h4>Soil ADC</h4><div class="sub">Raw capacitive soil reading</div></div><div class="legend-line"><span><i style="background:#7C93AE"></i>ADC</span></div></div>
-          <div id="chart-soil-wrap"></div>
+          <div class="chart-head"><div><h4>Soil ADC</h4><div class="sub">Raw capacitive soil reading</div></div><div class="legend-line"></div></div>
+          <div class="chart-toolbar">
+            <div class="chart-stats" id="chart-soil-stats"></div>
+            <div class="zoom-controls">
+              <button class="zoom-btn" data-chart="soil" data-act="in">+</button>
+              <button class="zoom-btn" data-chart="soil" data-act="out">−</button>
+              <button class="zoom-btn" data-chart="soil" data-act="reset">⟳</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-soil-container"><div id="chart-soil-wrap"></div><div class="chart-tooltip" id="chart-soil-tooltip"></div></div>
         </div>
+
         <div class="card chart-card">
-          <div class="chart-head"><div><h4>Methane (MQ-4)</h4><div class="sub">Threshold zones at 1000 / 2000 / 3000 ADC</div></div><div class="legend-line"><span><i style="background:var(--rust)"></i>ADC</span></div></div>
-          <div id="chart-methane-wrap"></div>
+          <div class="chart-head"><div><h4>Methane (MQ-4)</h4><div class="sub">Threshold zones at 1000 / 2000 / 3000 ADC</div></div><div class="legend-line"></div></div>
+          <div class="chart-toolbar">
+            <div class="chart-stats" id="chart-methane-stats"></div>
+            <div class="zoom-controls">
+              <button class="zoom-btn" data-chart="methane" data-act="in">+</button>
+              <button class="zoom-btn" data-chart="methane" data-act="out">−</button>
+              <button class="zoom-btn" data-chart="methane" data-act="reset">⟳</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-methane-container"><div id="chart-methane-wrap"></div><div class="chart-tooltip" id="chart-methane-tooltip"></div></div>
         </div>
       </section>
 
@@ -676,7 +727,7 @@ svg.linechart{width:100%;height:220px;display:block;}
 
       <!-- EXPORT (admin only) -->
       <section class="view" id="view-export">
-        <div class="page-head"><div><h2>Export Data</h2><p class="sub">Download the complete session-accumulated dataset matching your filters.</p></div></div>
+        <div class="page-head"><div><h2>Export Data</h2><p class="sub">Download the full database-backed dataset matching your filters (server-side streaming).</p></div></div>
         <div class="export-panel">
           <div class="card export-card">
             <div class="export-section">
@@ -693,7 +744,7 @@ svg.linechart{width:100%;height:220px;display:block;}
             </div>
             <div class="export-section">
               <div class="label">Period</div>
-              <select class="select" id="export-day-filter" style="width:100%;"><option value="all">All data (this session)</option></select>
+              <select class="select" id="export-day-filter" style="width:100%;"><option value="all">All data (database)</option></select>
             </div>
             <div class="export-section">
               <div class="label">Format</div>
@@ -702,7 +753,7 @@ svg.linechart{width:100%;height:220px;display:block;}
                 <div class="opt-btn" data-export-format="excel">Excel-compatible CSV</div>
               </div>
             </div>
-            <div class="export-preview"><div class="count" id="export-preview-count">0</div><div class="desc">records match your current filters</div></div>
+            <div class="export-preview"><div class="count" id="export-preview-count">0</div><div class="desc">records match your current filters (from database)</div></div>
             <button class="btn brand" style="width:100%;justify-content:center;" id="export-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Export</button>
           </div>
         </div>
@@ -719,9 +770,10 @@ svg.linechart{width:100%;height:220px;display:block;}
           </div>
           <div class="card settings-card">
             <h4>Connection</h4>
-            <div class="row-between"><div><div class="k">Data endpoint</div><div class="d">latest.php</div></div><div class="d num">Configured</div></div>
+            <div class="row-between"><div><div class="k">Realtime endpoint</div><div class="d">latest.php</div></div><div class="d num">Configured</div></div>
             <div class="row-between"><div><div class="k">Reset endpoint</div><div class="d">reset.php</div></div><div class="d num">Configured</div></div>
-            <div class="row-between"><div><div class="k">History endpoint</div><div class="d">Not yet connected</div></div><div class="d num" style="color:var(--amber)">Proposed only</div></div>
+            <div class="row-between"><div><div class="k">History endpoint</div><div class="d">history.php</div></div><div class="endpoint-status checking" id="history-endpoint-status"><span class="d2"></span><span id="history-endpoint-text">Checking…</span></div></div>
+            <div class="row-between"><div><div class="k">Export endpoint</div><div class="d">export.php</div></div><div class="d num" id="export-endpoint-label">Configured</div></div>
           </div>
           <div class="card settings-card">
             <h4>Account</h4>
@@ -730,7 +782,7 @@ svg.linechart{width:100%;height:220px;display:block;}
           </div>
           <div class="card settings-card">
             <h4>Danger Zone</h4>
-            <div class="row-between"><div><div class="k">Reset all history</div><div class="d">Permanently delete raw, aggregated &amp; heartbeat data</div></div></div>
+            <div class="row-between"><div><div class="k">Reset all history</div><div class="d">Permanently delete raw, aggregated &amp; heartbeat data from the database</div></div></div>
             <button class="btn danger" style="width:100%;justify-content:center;margin-top:8px;" id="open-reset-modal">Reset All History</button>
           </div>
         </div>
@@ -761,7 +813,7 @@ svg.linechart{width:100%;height:220px;display:block;}
   <div class="modal-panel">
     <div class="modal-head"><h2>Reset All History</h2><button class="modal-close" id="reset-modal-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
     <div class="modal-body">
-      <p style="font-size:13.5px;color:var(--text-dim);margin:0;">This action will permanently delete:</p>
+      <p style="font-size:13.5px;color:var(--text-dim);margin:0;">This action will permanently delete from the database:</p>
       <div class="reset-warn-box"><div class="lead">This action cannot be undone.</div><ul><li>Raw sensor data</li><li>Aggregated data</li><li>Heartbeat history</li><li>All monitoring history</li></ul></div>
       <div class="banner error" id="reset-modal-error" style="margin-top:0;"></div>
     </div>
@@ -777,12 +829,16 @@ svg.linechart{width:100%;height:220px;display:block;}
    CONFIG
    ========================================================================== */
 
-const API_URL   = "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/latest.php";
-const RESET_URL = "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/reset.php";
+const API_BASE  = "https://aster-smart-compost-api-production.up.railway.app/api/v1/compost/";
+const LATEST_URL   = API_BASE + "latest.php";
+const RESET_URL    = API_BASE + "reset.php";
+const HISTORY_URL  = API_BASE + "history.php";
+const EXPORT_URL   = API_BASE + "export.php";
+
 const POLL_INTERVAL_MS = 5000;
 const CLOCK_INTERVAL_MS = 1000;
 const RESET_TOAST_MS = 10000;
-const PAGE_SIZE = 50;
+const ANALYTICS_WINDOW = 400; /* max points fetched per chart render (server-side limited window) */
 
 const DEVICE_NAMES = { 1:"NODE ID 1", 2:"NODE ID 2", 3:"NODE ID 3", 4:"NODE ID 4", 5:"NODE ID 5" };
 
@@ -804,18 +860,23 @@ let state = {
   lastGoodData:null,
   lastSyncAt:null,
   nodes:{},
-  rawHistory:{1:[],2:[],3:[],4:[],5:[]},
-  aggHistory:{1:[],2:[],3:[],4:[],5:[]},
-  dayIndex:{},        // "2026-08-29" -> 1
-  dayCounter:0,
+  maxRawDay:1,
+  maxAggDay:1,
   alerts:[],
+
+  rawTable:{ page:1, limit:50, total:0, total_pages:1, device:"all", day:"all", rows:[], loading:false, error:null },
+  aggTable:{ page:1, limit:50, total:0, total_pages:1, device:"all", day:"all", rows:[], loading:false, error:null },
+
   analyticsSource:"aggregated",
   analyticsDevice:"all",
   analyticsDay:"all",
+
   exportType:"raw",
   exportFormat:"csv",
-  rawPage:1, aggPage:1,
-  rawSortDir:"desc", aggSortDir:"desc",
+  exportPreviewCount:0,
+
+  historyEndpointStatus:"checking", /* checking | connected | error */
+
   resetToastTimer:null
 };
 
@@ -851,25 +912,17 @@ function relativeTime(dateLike){
 }
 function wibTime(d){ return d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",timeZone:"Asia/Jakarta"}) + " WIB"; }
 
-/* ---- day grouping: distinct calendar dates (Asia/Jakarta) seen this session ---- */
-function dayLabelFor(recordedAtLike, clientTs){
-  const d = recordedAtLike ? new Date(recordedAtLike) : new Date(clientTs);
-  const key = isNaN(d.getTime()) ? new Date(clientTs).toLocaleDateString("en-CA",{timeZone:"Asia/Jakarta"}) : d.toLocaleDateString("en-CA",{timeZone:"Asia/Jakarta"});
-  if(!state.dayIndex[key]){ state.dayCounter++; state.dayIndex[key]=state.dayCounter; }
-  return state.dayIndex[key];
-}
-function knownDays(){ return Object.keys(state.dayIndex).map(k=>state.dayIndex[k]).sort((a,b)=>a-b); }
+/* ---- CONTINUOUS DAY DERIVATION — pure function of the continuous index,
+        never resets, never depends on session state or wall-clock date ---- */
+function rawDayOf(sampleIndex){ const n=Number(sampleIndex); if(!n||n<1) return 1; return Math.floor((n-1)/1000)+1; }
+function aggDayOf(aggIndex){ const n=Number(aggIndex); if(!n||n<1) return 1; return Math.floor((n-1)/10)+1; }
 
 /* ==========================================================================
    AUTH / ROLE GUARD
    ========================================================================== */
 
 function isAdmin(){ return state.currentUser && state.currentUser.role==="ADMIN"; }
-
-function canAccess(view){
-  if(!ADMIN_ONLY_VIEWS.includes(view)) return true;
-  return isAdmin();
-}
+function canAccess(view){ if(!ADMIN_ONLY_VIEWS.includes(view)) return true; return isAdmin(); }
 
 function applyRoleUI(){
   const u = state.currentUser;
@@ -881,10 +934,7 @@ function applyRoleUI(){
   $("#profile-role").textContent = u.role==="ADMIN" ? "Full Access" : "Read Only";
   $("#settings-username").textContent = u.label;
   $("#settings-role").textContent = u.role==="ADMIN" ? "ADMIN • Full Access" : "GUEST • Read Only";
-
-  $all(".nav-item[data-admin-only]").forEach(item=>{
-    item.classList.toggle("hidden", !isAdmin());
-  });
+  $all(".nav-item[data-admin-only]").forEach(item=> item.classList.toggle("hidden", !isAdmin()));
   $("#raw-export-action").classList.toggle("hidden", !isAdmin());
   $("#agg-export-action").classList.toggle("hidden", !isAdmin());
 }
@@ -893,6 +943,29 @@ function showAccessDenied(msg){
   $("#access-banner-text").textContent = msg || "This page requires ADMIN access.";
   $("#access-banner").classList.add("show");
   setTimeout(()=> $("#access-banner").classList.remove("show"), 4000);
+}
+
+/* ==========================================================================
+   GENERIC BACKEND FETCH HELPER
+   ========================================================================== */
+
+function buildUrl(base, params){
+  const usp = new URLSearchParams();
+  Object.keys(params||{}).forEach(k=>{ if(params[k]!==undefined && params[k]!==null && params[k]!=="") usp.set(k, params[k]); });
+  usp.set("_", Date.now());
+  return base + "?" + usp.toString();
+}
+
+async function apiGet(base, params, timeoutMs){
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), timeoutMs||15000);
+  try{
+    const res = await fetch(buildUrl(base, params), { method:"GET", cache:"no-store", headers:{Accept:"application/json"}, signal:controller.signal });
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const data = await res.json();
+    if(!data || data.success !== true) throw new Error((data && data.message) || "success=false");
+    return data;
+  } finally { clearTimeout(timer); }
 }
 
 /* ==========================================================================
@@ -911,7 +984,7 @@ function renderThresholdBar(value, zones, max){
 }
 
 /* ==========================================================================
-   DEVICE CARDS
+   DEVICE CARDS  (realtime — latest.php only)
    ========================================================================== */
 
 function sensorReadout(k,v,unit,tag,tagClass){
@@ -927,8 +1000,8 @@ function renderDeviceCard(idx, node){
   const tempStatus = raw ? or0(raw.temp_status) : "—";
   const mq4Status = raw ? or0(raw.mq4_status) : "—";
   const sampleIdx = raw ? Number(raw.sample_index)||0 : 0;
-  const sampleTotal = agg && agg.sample_count ? Number(agg.sample_count) : 100;
-  const dashes = Array.from({length:20}).map((_,i)=> '<i class="'+(((i/20*sampleTotal)<sampleIdx)?"filled":"")+'"></i>').join("");
+  const inCycle = sampleIdx>0 ? (((sampleIdx-1)%100)+1) : 0;
+  const dashes = Array.from({length:20}).map((_,i)=> '<i class="'+(((i/20*100)<inCycle)?"filled":"")+'"></i>').join("");
 
   return (
     '<article class="device-card" data-node="'+idx+'">'+
@@ -937,7 +1010,7 @@ function renderDeviceCard(idx, node){
         '<div class="readout-row">'+sensorReadout("Temperature", raw?fmtNum(raw.temperature,1):"0.0", "°C", tempStatus, statusClass(tempStatus))+sensorReadout("Methane · MQ-4", raw?or0(raw.mq4_adc):"0", "ADC", mq4Status, statusClass(mq4Status))+'</div>'+
         (raw? renderThresholdBar(raw.temperature, TEMP_ZONES, 80) : '') +
         '<div class="readout-row" style="margin-top:14px;">'+sensorReadout("Moisture", raw?fmtNum(raw.moisture,1):"0.0", "%")+sensorReadout("Soil ADC", raw?or0(raw.soil_adc):"0", "")+'</div>'+
-        '<div class="sampling-block"><div class="sampling-head"><span>Sampling progress</span><span class="v">'+sampleIdx+' / '+sampleTotal+'</span></div><div class="dash-gauge">'+dashes+'</div></div>'+
+        '<div class="sampling-block"><div class="sampling-head"><span>Sampling progress (cycle)</span><span class="v">'+inCycle+' / 100</span></div><div class="dash-gauge">'+dashes+'</div></div>'+
         '<div class="mini-meta-row"><span>Last seen <span class="v">'+relativeTime(node?node.last_seen:null)+'</span></span><span>Compost <span class="v">'+(agg?or0(agg.compost_status):"—")+'</span></span></div>'+
       '</div>'+
     '</article>'
@@ -971,16 +1044,16 @@ function openDeviceDetail(idx){
     ["Temperature", fmtNum(raw.temperature,1)+" °C"],["Temp Status", or0(raw.temp_status)],
     ["Moisture", fmtNum(raw.moisture,1)+" %"],["Soil ADC", or0(raw.soil_adc)],
     ["Methane (MQ-4)", or0(raw.mq4_adc)+" ADC"],["Methane Status", or0(raw.mq4_status)],
-    ["Day · Sample", "DAY "+dayLabelFor(raw.recorded_at, Date.now())+" • #"+or0(raw.sample_index)],
+    ["Day · Sample", "DAY "+rawDayOf(raw.sample_index)+" • #"+or0(raw.sample_index)],
     ["Recorded At", or0(raw.recorded_at)]
   ].map(pairToDetailItem).join("") : emptyDetailNote("No raw sample received yet.");
 
   const sampleIdx = raw ? Number(raw.sample_index)||0 : 0;
-  const sampleTotal = agg && agg.sample_count ? Number(agg.sample_count) : 100;
-  $("#detail-sampling").innerHTML = '<div class="sampling-head"><span>Current aggregation cycle</span><span class="v">'+sampleIdx+' / '+sampleTotal+' · '+Math.round(sampleIdx/sampleTotal*100)+'%</span></div><div class="dash-gauge">'+Array.from({length:30}).map((_,i)=>'<i class="'+((i/30*sampleTotal)<sampleIdx?"filled":"")+'"></i>').join("")+'</div>';
+  const inCycle = sampleIdx>0 ? (((sampleIdx-1)%100)+1) : 0;
+  $("#detail-sampling").innerHTML = '<div class="sampling-head"><span>Current aggregation cycle</span><span class="v">'+inCycle+' / 100 · '+Math.round(inCycle/100*100)+'%</span></div><div class="dash-gauge">'+Array.from({length:30}).map((_,i)=>'<i class="'+((i/30*100)<inCycle?"filled":"")+'"></i>').join("")+'</div>';
 
   $("#detail-agg-grid").innerHTML = agg ? [
-    ["Day · Aggregation", "DAY "+dayLabelFor(agg.recorded_at, Date.now())+" • #"+or0(agg.sample_index)],
+    ["Day · Aggregation", "DAY "+aggDayOf(agg.sample_index)+" • #"+or0(agg.sample_index)],
     ["Sample Count", or0(agg.sample_count)],["Temperature", fmtNum(agg.temperature,1)+" °C"],
     ["Moisture", fmtNum(agg.moisture,1)+" %"],["CH4 Index", or0(agg.ch4_index)],
     ["Compost Status", or0(agg.compost_status)],["Daily Sample", or0(agg.daily_sample)],["Recorded At", or0(agg.recorded_at)]
@@ -998,7 +1071,7 @@ $("#detail-close").addEventListener("click", ()=> $("#detail-modal").classList.r
 $("#detail-modal").addEventListener("click", e=>{ if(e.target.id==="detail-modal") $("#detail-modal").classList.remove("show"); });
 
 /* ==========================================================================
-   SYSTEM HEALTH / FLEET HERO
+   SYSTEM HEALTH / FLEET HERO (realtime — latest.php)
    ========================================================================== */
 
 function renderSystemHealth(apiOk, data){
@@ -1030,114 +1103,153 @@ function renderSystemHealth(apiOk, data){
 }
 
 /* ==========================================================================
-   HISTORY ACCUMULATION
+   DAY FILTER OPTIONS (derived from max continuous index seen via latest.php)
    ========================================================================== */
 
-function pushRawIfNew(idx, raw){
-  if(!raw) return;
-  const arr = state.rawHistory[idx];
-  const last = arr[arr.length-1];
-  if(last && last.id===raw.id && last.sample_index===raw.sample_index) return;
-  const t = Date.now();
-  arr.push({ id:raw.id, node:idx, sample_index:Number(raw.sample_index), temperature:Number(raw.temperature), moisture:Number(raw.moisture), soil_adc:Number(raw.soil_adc), mq4_adc:Number(raw.mq4_adc), temp_status:raw.temp_status, mq4_status:raw.mq4_status, recorded_at:raw.recorded_at, t, day:dayLabelFor(raw.recorded_at,t) });
-  if(arr.length>5000) arr.shift();
-}
-function pushAggIfNew(idx, agg){
-  if(!agg) return;
-  const arr = state.aggHistory[idx];
-  const last = arr[arr.length-1];
-  if(last && last.id===agg.id) return;
-  const t = Date.now();
-  arr.push({ id:agg.id, node:idx, sample_index:Number(agg.sample_index), sample_count:agg.sample_count, temperature:Number(agg.temperature), moisture:Number(agg.moisture), soil_adc:Number(agg.soil_adc), mq4_adc:Number(agg.mq4_adc), ch4_index:agg.ch4_index, compost_status:agg.compost_status, daily_sample:agg.daily_sample, recorded_at:agg.recorded_at, t, day:dayLabelFor(agg.recorded_at,t) });
-  if(arr.length>500) arr.shift();
+function recomputeMaxDaysFromLatest(){
+  let maxSample = 0, maxAgg = 0;
+  Object.values(state.nodes).forEach(n=>{
+    if(n && n.raw && n.raw.sample_index) maxSample = Math.max(maxSample, Number(n.raw.sample_index)||0);
+    if(n && n.aggregated && n.aggregated.sample_index) maxAgg = Math.max(maxAgg, Number(n.aggregated.sample_index)||0);
+  });
+  state.maxRawDay = Math.max(1, rawDayOf(maxSample||1));
+  state.maxAggDay = Math.max(1, aggDayOf(maxAgg||1));
 }
 
-function allRaw(){ let out=[]; for(let i=1;i<=5;i++) out=out.concat(state.rawHistory[i]); return out; }
-function allAgg(){ let out=[]; for(let i=1;i<=5;i++) out=out.concat(state.aggHistory[i]); return out; }
-
-/* ==========================================================================
-   RAW / AGGREGATED HISTORY TABLES — filter, sort, paginate
-   ========================================================================== */
-
-function populateDayFilter(selectEl, extraAll){
+function populateDayFilter(selectEl, maxDay, extraAllLabel){
   const cur = selectEl.value;
-  const opts = ['<option value="all">'+(extraAll||"All days")+'</option>'];
-  knownDays().forEach(d=> opts.push('<option value="'+d+'">Day '+d+'</option>'));
+  const opts = ['<option value="all">'+(extraAllLabel||"All days")+'</option>'];
+  for(let d=1; d<=maxDay; d++) opts.push('<option value="'+d+'">Day '+d+'</option>');
   selectEl.innerHTML = opts.join("");
   if([...selectEl.options].some(o=>o.value===cur)) selectEl.value = cur;
 }
 
-function filteredRaw(){
-  const dev = $("#raw-device-filter").value, day = $("#raw-day-filter").value, q = $("#raw-search").value.trim();
-  let rows = allRaw();
-  if(dev!=="all") rows = rows.filter(r=> String(r.node)===dev);
-  if(day!=="all") rows = rows.filter(r=> String(r.day)===day);
-  if(q) rows = rows.filter(r=> String(r.sample_index).includes(q));
-  rows.sort((a,b)=> state.rawSortDir==="desc" ? b.t-a.t : a.t-b.t);
-  return rows;
+/* ==========================================================================
+   RAW / AGGREGATED HISTORY — 100% FROM DATABASE via history.php
+   ========================================================================== */
+
+function tableStateRow(colspan, kind, text){
+  if(kind==="loading") return '<tr class="table-state-row"><td colspan="'+colspan+'"><span class="spinner"></span>'+text+'</td></tr>';
+  if(kind==="error") return '<tr class="table-state-row err"><td colspan="'+colspan+'">'+text+'</td></tr>';
+  return '<tr class="table-state-row"><td colspan="'+colspan+'">'+text+'</td></tr>';
 }
-function filteredAgg(){
-  const dev = $("#agg-device-filter").value, day = $("#agg-day-filter").value;
-  let rows = allAgg();
-  if(dev!=="all") rows = rows.filter(r=> String(r.node)===dev);
-  if(day!=="all") rows = rows.filter(r=> String(r.day)===day);
-  rows.sort((a,b)=> state.aggSortDir==="desc" ? b.t-a.t : a.t-b.t);
-  return rows;
+
+async function loadRawHistory(){
+  const t = state.rawTable;
+  t.loading = true; t.error = null;
+  $("#raw-table-body").innerHTML = tableStateRow(9,"loading","Loading raw history from database…");
+  try{
+    const data = await apiGet(HISTORY_URL, { type:"raw", node_id:t.device, day:t.day, page:t.page, limit:t.limit });
+    t.rows = Array.isArray(data.data) ? data.data : [];
+    t.total = Number(data.total)||0;
+    t.total_pages = Number(data.total_pages)|| Math.max(1, Math.ceil(t.total/t.limit));
+    t.page = Number(data.page)||t.page;
+    t.limit = Number(data.limit)||t.limit;
+    onHistoryEndpointOk();
+  } catch(err){
+    console.error("loadRawHistory error:", err);
+    t.rows = []; t.error = err.message || "Failed to load raw history";
+    onHistoryEndpointFail();
+  } finally {
+    t.loading = false;
+    renderRawTable();
+  }
+}
+
+async function loadAggregatedHistory(){
+  const t = state.aggTable;
+  t.loading = true; t.error = null;
+  $("#agg-table-body").innerHTML = tableStateRow(10,"loading","Loading aggregated history from database…");
+  try{
+    const data = await apiGet(HISTORY_URL, { type:"aggregated", node_id:t.device, day:t.day, page:t.page, limit:t.limit });
+    t.rows = Array.isArray(data.data) ? data.data : [];
+    t.total = Number(data.total)||0;
+    t.total_pages = Number(data.total_pages)|| Math.max(1, Math.ceil(t.total/t.limit));
+    t.page = Number(data.page)||t.page;
+    t.limit = Number(data.limit)||t.limit;
+    onHistoryEndpointOk();
+  } catch(err){
+    console.error("loadAggregatedHistory error:", err);
+    t.rows = []; t.error = err.message || "Failed to load aggregated history";
+    onHistoryEndpointFail();
+  } finally {
+    t.loading = false;
+    renderAggTable();
+  }
 }
 
 function renderRawTable(){
-  populateDayFilter($("#raw-day-filter"));
-  const rows = filteredRaw();
-  const totalPages = Math.max(1, Math.ceil(rows.length/PAGE_SIZE));
-  state.rawPage = clamp(state.rawPage,1,totalPages);
-  const pageRows = rows.slice((state.rawPage-1)*PAGE_SIZE, state.rawPage*PAGE_SIZE);
+  const t = state.rawTable;
+  populateDayFilter($("#raw-day-filter"), state.maxRawDay);
+  $("#raw-day-filter").value = t.day;
+  $("#raw-device-filter").value = t.device;
 
-  $("#raw-table-body").innerHTML = pageRows.length ? pageRows.map(r=>
-    '<tr><td class="num">'+or0(r.recorded_at)+'</td><td class="device-col">'+DEVICE_NAMES[r.node]+'</td>'+
-    '<td class="trace-col"><span class="day">DAY '+r.day+'</span> · #'+r.sample_index+'</td>'+
-    '<td class="num">'+fmtNum(r.temperature,2)+' °C</td><td class="num">'+or0(r.temp_status)+'</td>'+
-    '<td class="num">'+or0(r.soil_adc)+'</td><td class="num">'+fmtNum(r.moisture,2)+' %</td>'+
-    '<td class="num">'+or0(r.mq4_adc)+'</td><td class="num">'+or0(r.mq4_status)+'</td></tr>'
-  ).join("") : '<tr><td colspan="9" style="text-align:center;color:var(--text-faint);font-family:var(--font-body);">No raw samples collected yet this session.</td></tr>';
+  if(t.error){
+    $("#raw-table-body").innerHTML = tableStateRow(9,"error","Failed to load raw data: "+t.error);
+  } else if(!t.rows.length){
+    $("#raw-table-body").innerHTML = tableStateRow(9,"empty","No raw samples found for the selected filters.");
+  } else {
+    $("#raw-table-body").innerHTML = t.rows.map(r=>{
+      const day = r.day!==undefined && r.day!==null ? r.day : rawDayOf(r.sample_index);
+      return '<tr><td class="num">'+or0(r.recorded_at)+'</td><td class="device-col">'+(DEVICE_NAMES[r.node_id]||("NODE ID "+or0(r.node_id)))+'</td>'+
+        '<td class="trace-col"><span class="day">DAY '+day+'</span> · #'+or0(r.sample_index)+'</td>'+
+        '<td class="num">'+fmtNum(r.temperature,2)+' °C</td><td class="num">'+or0(r.temp_status)+'</td>'+
+        '<td class="num">'+or0(r.soil_adc)+'</td><td class="num">'+fmtNum(r.moisture,2)+' %</td>'+
+        '<td class="num">'+or0(r.mq4_adc)+'</td><td class="num">'+or0(r.mq4_status)+'</td></tr>';
+    }).join("");
+  }
 
-  $("#raw-table-count").textContent = rows.length+" records"+(rows.length? " · showing "+((state.rawPage-1)*PAGE_SIZE+1)+"–"+Math.min(state.rawPage*PAGE_SIZE,rows.length):"");
-  $("#raw-pageinfo").textContent = state.rawPage+" / "+totalPages;
-  $("#raw-prev").disabled = state.rawPage<=1; $("#raw-next").disabled = state.rawPage>=totalPages;
+  $("#raw-table-count").textContent = t.total+" records"+(t.rows.length? " · page "+t.page+" of "+t.total_pages:"");
+  $("#raw-pageinfo").textContent = t.page+" / "+t.total_pages;
+  $("#raw-prev").disabled = t.page<=1 || t.loading;
+  $("#raw-next").disabled = t.page>=t.total_pages || t.loading;
 }
+
 function renderAggTable(){
-  populateDayFilter($("#agg-day-filter"));
-  const rows = filteredAgg();
-  const totalPages = Math.max(1, Math.ceil(rows.length/PAGE_SIZE));
-  state.aggPage = clamp(state.aggPage,1,totalPages);
-  const pageRows = rows.slice((state.aggPage-1)*PAGE_SIZE, state.aggPage*PAGE_SIZE);
+  const t = state.aggTable;
+  populateDayFilter($("#agg-day-filter"), state.maxAggDay);
+  $("#agg-day-filter").value = t.day;
+  $("#agg-device-filter").value = t.device;
 
-  $("#agg-table-body").innerHTML = pageRows.length ? pageRows.map(a=>{
-    const rangeEnd = a.sample_index*100, rangeStart = rangeEnd-99;
-    return '<tr><td class="num">'+or0(a.recorded_at)+'</td><td class="device-col">'+DEVICE_NAMES[a.node]+'</td>'+
-      '<td class="trace-col"><span class="day">DAY '+a.day+'</span> · #'+a.sample_index+'</td>'+
-      '<td class="num">#'+rangeStart+'–'+rangeEnd+'</td>'+
-      '<td class="num">'+fmtNum(a.temperature,2)+' °C</td><td class="num">'+fmtNum(a.moisture,2)+' %</td>'+
-      '<td class="num">'+or0(a.soil_adc)+'</td><td class="num">'+or0(a.mq4_adc)+'</td>'+
-      '<td class="num">'+or0(a.ch4_index)+'</td><td class="num">'+or0(a.compost_status)+'</td></tr>';
-  }).join("") : '<tr><td colspan="10" style="text-align:center;color:var(--text-faint);font-family:var(--font-body);">No aggregated records collected yet this session.</td></tr>';
+  if(t.error){
+    $("#agg-table-body").innerHTML = tableStateRow(10,"error","Failed to load aggregated data: "+t.error);
+  } else if(!t.rows.length){
+    $("#agg-table-body").innerHTML = tableStateRow(10,"empty","No aggregated records found for the selected filters.");
+  } else {
+    $("#agg-table-body").innerHTML = t.rows.map(a=>{
+      const day = a.day!==undefined && a.day!==null ? a.day : aggDayOf(a.sample_index);
+      const rangeEnd = a.raw_range_end!==undefined ? a.raw_range_end : Number(a.sample_index)*100;
+      const rangeStart = a.raw_range_start!==undefined ? a.raw_range_start : rangeEnd-99;
+      return '<tr><td class="num">'+or0(a.recorded_at)+'</td><td class="device-col">'+(DEVICE_NAMES[a.node_id]||("NODE ID "+or0(a.node_id)))+'</td>'+
+        '<td class="trace-col"><span class="day">DAY '+day+'</span> · #'+or0(a.sample_index)+'</td>'+
+        '<td class="num">#'+rangeStart+'–'+rangeEnd+'</td>'+
+        '<td class="num">'+fmtNum(a.temperature,2)+' °C</td><td class="num">'+fmtNum(a.moisture,2)+' %</td>'+
+        '<td class="num">'+or0(a.soil_adc)+'</td><td class="num">'+or0(a.mq4_adc)+'</td>'+
+        '<td class="num">'+or0(a.ch4_index)+'</td><td class="num">'+or0(a.compost_status)+'</td></tr>';
+    }).join("");
+  }
 
-  $("#agg-table-count").textContent = rows.length+" records"+(rows.length? " · showing "+((state.aggPage-1)*PAGE_SIZE+1)+"–"+Math.min(state.aggPage*PAGE_SIZE,rows.length):"");
-  $("#agg-pageinfo").textContent = state.aggPage+" / "+totalPages;
-  $("#agg-prev").disabled = state.aggPage<=1; $("#agg-next").disabled = state.aggPage>=totalPages;
+  $("#agg-table-count").textContent = t.total+" records"+(t.rows.length? " · page "+t.page+" of "+t.total_pages:"");
+  $("#agg-pageinfo").textContent = t.page+" / "+t.total_pages;
+  $("#agg-prev").disabled = t.page<=1 || t.loading;
+  $("#agg-next").disabled = t.page>=t.total_pages || t.loading;
 }
 
-$("#raw-prev").addEventListener("click", ()=>{ state.rawPage--; renderRawTable(); });
-$("#raw-next").addEventListener("click", ()=>{ state.rawPage++; renderRawTable(); });
-$("#agg-prev").addEventListener("click", ()=>{ state.aggPage--; renderAggTable(); });
-$("#agg-next").addEventListener("click", ()=>{ state.aggPage++; renderAggTable(); });
-["raw-device-filter","raw-day-filter"].forEach(id=> $("#"+id).addEventListener("change", ()=>{ state.rawPage=1; renderRawTable(); }));
-$("#raw-search").addEventListener("input", ()=>{ state.rawPage=1; renderRawTable(); });
-["agg-device-filter","agg-day-filter"].forEach(id=> $("#"+id).addEventListener("change", ()=>{ state.aggPage=1; renderAggTable(); }));
-$('thead th[data-sort="t"]', $("#view-raw")).addEventListener("click", ()=>{ state.rawSortDir = state.rawSortDir==="desc"?"asc":"desc"; renderRawTable(); });
-$('thead th[data-sort="t"]', $("#view-aggregated")).addEventListener("click", ()=>{ state.aggSortDir = state.aggSortDir==="desc"?"asc":"desc"; renderAggTable(); });
+$("#raw-prev").addEventListener("click", ()=>{ if(state.rawTable.page>1){ state.rawTable.page--; loadRawHistory(); } });
+$("#raw-next").addEventListener("click", ()=>{ if(state.rawTable.page<state.rawTable.total_pages){ state.rawTable.page++; loadRawHistory(); } });
+$("#agg-prev").addEventListener("click", ()=>{ if(state.aggTable.page>1){ state.aggTable.page--; loadAggregatedHistory(); } });
+$("#agg-next").addEventListener("click", ()=>{ if(state.aggTable.page<state.aggTable.total_pages){ state.aggTable.page++; loadAggregatedHistory(); } });
+
+$("#raw-device-filter").addEventListener("change", function(){ state.rawTable.device=this.value; state.rawTable.page=1; loadRawHistory(); });
+$("#raw-day-filter").addEventListener("change", function(){ state.rawTable.day=this.value; state.rawTable.page=1; loadRawHistory(); });
+$("#raw-limit").addEventListener("change", function(){ state.rawTable.limit=Number(this.value); state.rawTable.page=1; loadRawHistory(); });
+
+$("#agg-device-filter").addEventListener("change", function(){ state.aggTable.device=this.value; state.aggTable.page=1; loadAggregatedHistory(); });
+$("#agg-day-filter").addEventListener("change", function(){ state.aggTable.day=this.value; state.aggTable.page=1; loadAggregatedHistory(); });
+$("#agg-limit").addEventListener("change", function(){ state.aggTable.limit=Number(this.value); state.aggTable.page=1; loadAggregatedHistory(); });
 
 /* ==========================================================================
-   ALERTS
+   ALERTS (derived from realtime latest.php)
    ========================================================================== */
 
 function computeAlerts(){
@@ -1170,71 +1282,258 @@ function renderAlerts(){
 }
 
 /* ==========================================================================
-   ANALYTICS
+   ANALYTICS — data fetched from history.php per Type/Node/Day filter
    ========================================================================== */
-
-function activeDeviceIndexes(){ return state.analyticsDevice==="all" ? [1,2,3,4,5] : [Number(state.analyticsDevice)]; }
-
-function analyticsPoints(){
-  const idxs = activeDeviceIndexes();
-  const source = state.analyticsSource==="raw" ? state.rawHistory : state.aggHistory;
-  let pts = []; idxs.forEach(i=> pts = pts.concat(source[i]));
-  if(state.analyticsDay!=="all") pts = pts.filter(p=> String(p.day)===state.analyticsDay);
-  pts.sort((a,b)=>a.t-b.t);
-  return pts;
-}
-
-function drawLineChart(containerId, key, color, thresholds, unit){
-  const points = analyticsPoints();
-  const wrap = $("#"+containerId);
-  if(points.length<2){
-    wrap.innerHTML = '<div class="chart-empty">Collecting '+(state.analyticsSource==="raw"?"RAW":"AGGREGATED")+' session data — this chart fills in as new records arrive.</div>';
-    return;
-  }
-  const W=680,H=200,PAD=30;
-  const values = points.map(p=>p[key]);
-  const dataMin = Math.min(...values), dataMax = Math.max(...values);
-  const thMin = thresholds ? Math.min(...thresholds,dataMin) : dataMin;
-  const thMax = thresholds ? Math.max(...thresholds,dataMax) : dataMax;
-  const min = thMin - (thMax-thMin||10)*0.15, max = thMax + (thMax-thMin||10)*0.15;
-  const xStep = (W-PAD*2)/(points.length-1);
-  const y = v => H-PAD - ((v-min)/(max-min||1))*(H-PAD*2);
-  const path = points.map((p,i)=> (i===0?"M":"L")+(PAD+i*xStep).toFixed(1)+","+y(p[key]).toFixed(1)).join(" ");
-  const thLines = (thresholds||[]).map(t=> '<line x1="'+PAD+'" y1="'+y(t).toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y(t).toFixed(1)+'" stroke="var(--border-strong)" stroke-dasharray="3 3" stroke-width="1"/>'+'<text x="'+(W-PAD+4)+'" y="'+(y(t)+3).toFixed(1)+'" class="axis-label">'+t+'</text>').join("");
-  wrap.innerHTML = '<svg class="linechart" viewBox="0 0 '+W+' '+H+'">'+
-    '<text x="4" y="12" class="axis-label">'+max.toFixed(0)+' '+unit+'</text><text x="4" y="'+(H-PAD+4)+'" class="axis-label">'+min.toFixed(0)+' '+unit+'</text>'+
-    thLines+'<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2"/>'+
-    points.map((p,i)=>{
-      const idxLabel = state.analyticsSource==="raw" ? ("DAY "+p.day+" #"+p.sample_index) : ("DAY "+p.day+" AGG#"+p.sample_index);
-      return '<circle cx="'+(PAD+i*xStep).toFixed(1)+'" cy="'+y(p[key]).toFixed(1)+'" r="2.5" fill="'+color+'"><title>'+idxLabel+' · '+p[key].toFixed(1)+' '+unit+' · '+or0(p.recorded_at)+'</title></circle>';
-    }).join("")+
-  '</svg>';
-}
 
 function renderAnalyticsChips(){
   const chips = ['<div class="chip '+(state.analyticsDevice==="all"?"active":"")+'" data-dev="all">All nodes</div>'];
   for(let i=1;i<=5;i++) chips.push('<div class="chip '+(state.analyticsDevice==String(i)?"active":"")+'" data-dev="'+i+'">'+DEVICE_NAMES[i]+'</div>');
   $("#analytics-device-chips").innerHTML = chips.join("");
-  $all("#analytics-device-chips .chip").forEach(c=> c.addEventListener("click", ()=>{ state.analyticsDevice=c.dataset.dev; renderAnalytics(); }));
+  $all("#analytics-device-chips .chip").forEach(c=> c.addEventListener("click", ()=>{ state.analyticsDevice=c.dataset.dev; loadAnalyticsData(); }));
 }
 
-function renderAnalytics(){
-  renderAnalyticsChips();
-  populateDayFilter($("#analytics-day-filter"));
-  drawLineChart("chart-temp-wrap","temperature","var(--loam)",[40,60],"°C");
-  drawLineChart("chart-moisture-wrap","moisture","var(--moss)",null,"%");
-  drawLineChart("chart-soil-wrap","soil_adc","#7C93AE",null,"ADC");
-  drawLineChart("chart-methane-wrap","mq4_adc","var(--rust)",[1000,2000,3000],"ADC");
+async function loadAnalyticsData(){
+  const maxDay = state.analyticsSource==="raw" ? state.maxRawDay : state.maxAggDay;
+  populateDayFilter($("#analytics-day-filter"), maxDay);
+  $("#analytics-day-filter").value = state.analyticsDay;
+
+  CHARTS.forEach(c=> c.setLoading());
+
+  try{
+    const data = await apiGet(HISTORY_URL, {
+      type: state.analyticsSource,
+      node_id: state.analyticsDevice,
+      day: state.analyticsDay,
+      page: 1,
+      limit: ANALYTICS_WINDOW,
+      order: "desc" /* most recent window; reversed below for chronological order */
+    });
+    onHistoryEndpointOk();
+    let rows = Array.isArray(data.data) ? data.data.slice() : [];
+    rows.reverse(); /* chronological, oldest -> newest */
+    const points = rows.map(r=>{
+      const idx = Number(r.sample_index)||0;
+      const day = r.day!==undefined && r.day!==null ? r.day : (state.analyticsSource==="raw" ? rawDayOf(idx) : aggDayOf(idx));
+      return {
+        idx, day,
+        recorded_at: r.recorded_at,
+        temperature: Number(r.temperature),
+        moisture: Number(r.moisture),
+        soil_adc: Number(r.soil_adc),
+        mq4_adc: Number(r.mq4_adc),
+        label: (state.analyticsSource==="raw" ? ("DAY "+day+" #"+idx) : ("DAY "+day+" AGG#"+idx))
+      };
+    }).filter(p=> !Number.isNaN(p.temperature) || !Number.isNaN(p.moisture));
+
+    const truncated = Number(data.total)>rows.length;
+    CHARTS.forEach(c=> c.setData(points, truncated, Number(data.total)||rows.length));
+  } catch(err){
+    console.error("loadAnalyticsData error:", err);
+    onHistoryEndpointFail();
+    CHARTS.forEach(c=> c.setError(err.message || "Failed to load analytics data"));
+  }
 }
 
 $all("#analytics-source-chips .chip").forEach(c=> c.addEventListener("click", ()=>{
   $all("#analytics-source-chips .chip").forEach(x=>x.classList.remove("active")); c.classList.add("active");
-  state.analyticsSource = c.dataset.source; renderAnalytics();
+  state.analyticsSource = c.dataset.source; state.analyticsDay="all"; loadAnalyticsData();
 }));
-$("#analytics-day-filter").addEventListener("change", ()=>{ state.analyticsDay = $("#analytics-day-filter").value; renderAnalytics(); });
+$("#analytics-day-filter").addEventListener("change", ()=>{ state.analyticsDay = $("#analytics-day-filter").value; loadAnalyticsData(); });
+
+/* -------------------- Interactive chart module -------------------- */
+
+function makeChart(opts){
+  /* opts: {containerId, wrapId, tooltipId, statsId, key, color, thresholds, unit, chartName} */
+  const self = {
+    opts,
+    points: [],
+    zoomStart: 0,
+    zoomEnd: 0,
+    state: "loading", /* loading | error | empty | ready */
+    errorMsg: "",
+    truncatedInfo: null,
+    W: 680, H: 220, PAD: 34,
+
+    setLoading(){ this.state="loading"; this.points=[]; this.render(); },
+    setError(msg){ this.state="error"; this.errorMsg=msg; this.points=[]; this.render(); },
+    setData(points, truncated, total){
+      this.points = points || [];
+      this.truncatedInfo = truncated ? { shown:this.points.length, total } : null;
+      this.zoomStart = 0; this.zoomEnd = Math.max(0, this.points.length-1);
+      this.state = this.points.length>=2 ? "ready" : "empty";
+      this.render();
+    },
+
+    visiblePoints(){
+      if(!this.points.length) return [];
+      return this.points.slice(this.zoomStart, this.zoomEnd+1);
+    },
+
+    computeStats(){
+      if(!this.points.length) return null;
+      const vals = this.points.map(p=>p[this.opts.key]).filter(v=>!Number.isNaN(v));
+      if(!vals.length) return null;
+      const latest = vals[vals.length-1];
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+      return {latest,min,max,avg};
+    },
+
+    renderStats(){
+      const el = $("#"+this.opts.statsId);
+      const s = this.computeStats();
+      if(!s){ el.innerHTML = ""; return; }
+      const u = this.opts.unit;
+      el.innerHTML =
+        '<span class="chart-stat">Latest<b>'+s.latest.toFixed(1)+' '+u+'</b></span>'+
+        '<span class="chart-stat">Min<b>'+s.min.toFixed(1)+' '+u+'</b></span>'+
+        '<span class="chart-stat">Max<b>'+s.max.toFixed(1)+' '+u+'</b></span>'+
+        '<span class="chart-stat">Avg<b>'+s.avg.toFixed(1)+' '+u+'</b></span>'+
+        (this.truncatedInfo ? '<span class="chart-stat" title="Server-limited window for performance">Window<b>'+this.truncatedInfo.shown+' / '+this.truncatedInfo.total+'</b></span>' : '');
+    },
+
+    render(){
+      this.renderStats();
+      const wrap = $("#"+this.opts.wrapId);
+      const tooltip = $("#"+this.opts.tooltipId);
+      if(this.state==="loading"){ wrap.innerHTML = '<div class="chart-loading"><span class="spinner"></span>Loading '+this.opts.chartName+' data from database…</div>'; tooltip.style.display="none"; return; }
+      if(this.state==="error"){ wrap.innerHTML = '<div class="chart-error">Failed to load '+this.opts.chartName+' data: '+this.errorMsg+'</div>'; tooltip.style.display="none"; return; }
+      if(this.state==="empty"){ wrap.innerHTML = '<div class="chart-empty">No '+this.opts.chartName+' data available for the selected filters yet.</div>'; tooltip.style.display="none"; return; }
+
+      const pts = this.visiblePoints();
+      const {W,H,PAD} = this;
+      const key = this.opts.key, thresholds = this.opts.thresholds, unit = this.opts.unit, color = this.opts.color;
+      const values = pts.map(p=>p[key]);
+      const dataMin = Math.min(...values), dataMax = Math.max(...values);
+      const thMin = thresholds ? Math.min(...thresholds,dataMin) : dataMin;
+      const thMax = thresholds ? Math.max(...thresholds,dataMax) : dataMax;
+      const span = (thMax-thMin) || 10;
+      const min = thMin - span*0.15, max = thMax + span*0.15;
+      const xStep = pts.length>1 ? (W-PAD*2)/(pts.length-1) : 0;
+      const y = v => H-PAD - ((v-min)/((max-min)||1))*(H-PAD*2);
+      const path = pts.map((p,i)=> (i===0?"M":"L")+(PAD+i*xStep).toFixed(1)+","+y(p[key]).toFixed(1)).join(" ");
+      const areaPath = path + ' L '+(PAD+(pts.length-1)*xStep).toFixed(1)+','+(H-PAD)+' L '+PAD+','+(H-PAD)+' Z';
+      const thLines = (thresholds||[]).map(t=> '<line x1="'+PAD+'" y1="'+y(t).toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y(t).toFixed(1)+'" stroke="var(--border-strong)" stroke-dasharray="3 3" stroke-width="1"/>'+'<text x="'+(W-PAD+4)+'" y="'+(y(t)+3).toFixed(1)+'" class="axis-label">'+t+'</text>').join("");
+
+      wrap.innerHTML = '<svg class="linechart" viewBox="0 0 '+W+' '+H+'" data-chart="'+this.opts.chartKey+'">'+
+        '<defs><linearGradient id="grad-'+this.opts.chartKey+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+color+'" stop-opacity="0.28"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+
+        '<text x="4" y="12" class="axis-label">'+max.toFixed(0)+' '+unit+'</text><text x="4" y="'+(H-PAD+4)+'" class="axis-label">'+min.toFixed(0)+' '+unit+'</text>'+
+        thLines+
+        '<path d="'+areaPath+'" fill="url(#grad-'+this.opts.chartKey+')" stroke="none"/>'+
+        '<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2"/>'+
+        '<g id="hover-guide-'+this.opts.chartKey+'" style="display:none;"><line x1="0" y1="'+PAD+'" x2="0" y2="'+(H-PAD)+'" stroke="var(--border-strong)" stroke-width="1"/><circle r="4" fill="'+color+'" stroke="var(--surface)" stroke-width="2"/></g>'+
+      '</svg>';
+
+      this._geom = {pts, xStep, PAD, W, H, y, key, unit};
+      this.attachInteraction();
+    },
+
+    attachInteraction(){
+      const svg = $("#"+this.opts.wrapId+" svg");
+      const tooltip = $("#"+this.opts.tooltipId);
+      const guide = svg.querySelector("#hover-guide-"+this.opts.chartKey);
+      const self2 = this;
+      let dragging=false, dragStartX=0, dragStartZoom=[0,0];
+
+      function svgPointFromEvent(evt){
+        const rect = svg.getBoundingClientRect();
+        const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+        const relX = (clientX-rect.left)/rect.width;
+        return relX * self2.W;
+      }
+
+      function nearestIndex(svgX){
+        const {pts, xStep, PAD} = self2._geom;
+        if(!pts.length) return -1;
+        let idx = Math.round((svgX-PAD)/(xStep||1));
+        return clamp(idx,0,pts.length-1);
+      }
+
+      svg.addEventListener("mousemove", function(evt){
+        if(dragging) return;
+        const svgX = svgPointFromEvent(evt);
+        const idx = nearestIndex(svgX);
+        if(idx<0) return;
+        const {pts, xStep, PAD, y, key, unit} = self2._geom;
+        const p = pts[idx];
+        const cx = PAD + idx*xStep, cy = y(p[key]);
+        guide.style.display = "block";
+        guide.setAttribute("transform","translate("+cx+",0)");
+        guide.querySelector("circle").setAttribute("cy", cy);
+
+        const rect = svg.getBoundingClientRect();
+        const px = (cx/self2.W)*rect.width, py=(cy/self2.H)*rect.height;
+        tooltip.style.display = "block";
+        tooltip.style.left = clamp(px+10,0,rect.width-160)+"px";
+        tooltip.style.top = clamp(py-10,0,rect.height-60)+"px";
+        tooltip.innerHTML = '<b>'+p.label+'</b><br>'+(p[key]!==undefined ? p[key].toFixed(2)+' '+unit : '—')+'<br><span style="color:var(--text-faint)">'+or0(p.recorded_at)+'</span>';
+      });
+      svg.addEventListener("mouseleave", function(){ guide.style.display="none"; tooltip.style.display="none"; });
+
+      svg.addEventListener("wheel", function(evt){
+        evt.preventDefault();
+        self2.zoomAt(evt.deltaY<0 ? -1 : 1, svgPointFromEvent(evt));
+      }, {passive:false});
+
+      svg.addEventListener("mousedown", function(evt){ dragging=true; dragStartX=evt.clientX; dragStartZoom=[self2.zoomStart,self2.zoomEnd]; svg.style.cursor="grabbing"; });
+      window.addEventListener("mouseup", function(){ if(dragging){ dragging=false; svg.style.cursor="grab"; } });
+      window.addEventListener("mousemove", function(evt){
+        if(!dragging) return;
+        const rect = svg.getBoundingClientRect();
+        const dxRatio = (evt.clientX-dragStartX)/rect.width;
+        const windowSize = dragStartZoom[1]-dragStartZoom[0];
+        const shift = Math.round(-dxRatio * windowSize);
+        let ns = dragStartZoom[0]+shift, ne = dragStartZoom[1]+shift;
+        const total = self2.points.length-1;
+        if(ns<0){ ne-=ns; ns=0; }
+        if(ne>total){ ns-=(ne-total); ne=total; }
+        ns=Math.max(0,ns);
+        self2.zoomStart=ns; self2.zoomEnd=ne; self2.render();
+      });
+    },
+
+    zoomAt(direction, svgX){
+      if(this.points.length<4) return;
+      const total = this.points.length-1;
+      const range = this.zoomEnd-this.zoomStart;
+      const minRange = Math.min(4,total);
+      const factor = 0.2;
+      let newRange = direction<0 ? Math.max(minRange, Math.round(range*(1-factor))) : Math.min(total, Math.round(range*(1+factor)));
+      if(newRange===range) return;
+      const {PAD,W} = this;
+      const focusRatio = clamp((svgX-PAD)/(W-PAD*2),0,1);
+      const focusIdx = this.zoomStart + focusRatio*range;
+      let ns = Math.round(focusIdx - focusRatio*newRange);
+      let ne = ns+newRange;
+      if(ns<0){ ne-=ns; ns=0; }
+      if(ne>total){ ns-=(ne-total); ne=total; }
+      this.zoomStart = Math.max(0,ns); this.zoomEnd = Math.min(total,ne);
+      this.render();
+    },
+
+    zoomButton(act){
+      if(act==="reset"){ this.zoomStart=0; this.zoomEnd=this.points.length-1; this.render(); return; }
+      this.zoomAt(act==="in" ? -1 : 1, this.W/2);
+    }
+  };
+  return self;
+}
+
+const CHARTS = [
+  makeChart({containerId:"chart-temp-container", wrapId:"chart-temp-wrap", tooltipId:"chart-temp-tooltip", statsId:"chart-temp-stats", key:"temperature", color:"var(--loam)", thresholds:[40,60], unit:"°C", chartName:"temperature", chartKey:"temp"}),
+  makeChart({containerId:"chart-moisture-container", wrapId:"chart-moisture-wrap", tooltipId:"chart-moisture-tooltip", statsId:"chart-moisture-stats", key:"moisture", color:"var(--moss)", thresholds:null, unit:"%", chartName:"moisture", chartKey:"moisture"}),
+  makeChart({containerId:"chart-soil-container", wrapId:"chart-soil-wrap", tooltipId:"chart-soil-tooltip", statsId:"chart-soil-stats", key:"soil_adc", color:"#7C93AE", thresholds:null, unit:"ADC", chartName:"soil ADC", chartKey:"soil"}),
+  makeChart({containerId:"chart-methane-container", wrapId:"chart-methane-wrap", tooltipId:"chart-methane-tooltip", statsId:"chart-methane-stats", key:"mq4_adc", color:"var(--rust)", thresholds:[1000,2000,3000], unit:"ADC", chartName:"methane", chartKey:"methane"})
+];
+CHARTS.forEach(c=> c.setLoading());
+
+$all(".zoom-btn").forEach(btn=> btn.addEventListener("click", function(){
+  const chart = CHARTS.find(c=>c.opts.chartKey===this.dataset.chart);
+  if(chart) chart.zoomButton(this.dataset.act);
+}));
 
 /* ==========================================================================
-   FILTERS SETUP
+   FILTERS SETUP (device dropdowns)
    ========================================================================== */
 
 function populateDeviceFilters(){
@@ -1246,56 +1545,53 @@ function populateDeviceFilters(){
 }
 
 /* ==========================================================================
-   EXPORT
+   EXPORT — server-side, database-backed, streaming via export.php
    ========================================================================== */
 
-function exportMatchSet(kind){
+async function refreshExportPreview(){
   const dev = $("#export-device-filter").value, day = $("#export-day-filter").value;
-  let rows = kind==="raw" ? allRaw() : allAgg();
-  if(dev!=="all") rows = rows.filter(r=> String(r.node)===dev);
-  if(day!=="all") rows = rows.filter(r=> String(r.day)===day);
-  return rows;
+  let count = 0;
+  try{
+    if(state.exportType==="raw"||state.exportType==="both"){
+      const d = await apiGet(HISTORY_URL, {type:"raw", node_id:dev, day:day, page:1, limit:1});
+      count += Number(d.total)||0;
+    }
+    if(state.exportType==="aggregated"||state.exportType==="both"){
+      const d = await apiGet(HISTORY_URL, {type:"aggregated", node_id:dev, day:day, page:1, limit:1});
+      count += Number(d.total)||0;
+    }
+    onHistoryEndpointOk();
+  } catch(err){
+    console.error("refreshExportPreview error:", err);
+    onHistoryEndpointFail();
+  }
+  state.exportPreviewCount = count;
+  $("#export-preview-count").textContent = count.toLocaleString();
 }
-function computeExportCount(){
-  let n = 0;
-  if(state.exportType==="raw"||state.exportType==="both") n += exportMatchSet("raw").length;
-  if(state.exportType==="aggregated"||state.exportType==="both") n += exportMatchSet("aggregated").length;
-  return n;
-}
-function refreshExportPreview(){ $("#export-preview-count").textContent = computeExportCount(); }
 
-function toCsv(rows){ return rows.map(r=> r.map(c=>{ const s=String(c===null||c===undefined?"":c); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(",")).join("\r\n"); }
-function downloadCsv(filename, csv){
-  const blob = new Blob(["\ufeff"+csv], {type:"text/csv;charset=utf-8;"});
-  const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=filename;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+function triggerExportDownload(type, format, dev, day){
+  const usp = new URLSearchParams({ type, node_id:dev, day, format });
+  const url = EXPORT_URL + "?" + usp.toString();
+  const a = document.createElement("a");
+  a.href = url; a.target = "_blank"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-function showToast(title, body){
+function showToast(title, body, isErr){
   const el = document.createElement("div");
-  el.className = "toast"; el.innerHTML = "<b>"+title+"</b>"+body;
+  el.className = "toast"+(isErr?" err":""); el.innerHTML = "<b>"+title+"</b>"+body;
   $("#toast-stack").appendChild(el);
   setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity 300ms"; setTimeout(()=>el.remove(),300); }, 4500);
 }
 
 function runExport(){
   if(!isAdmin()){ showAccessDenied("Export requires ADMIN access."); return; }
-  const dateStr = new Date().toISOString().slice(0,10);
-  let totalExported = 0;
+  const dev = $("#export-device-filter").value, day = $("#export-day-filter").value, fmt = state.exportFormat;
 
-  if(state.exportType==="raw" || state.exportType==="both"){
-    const rows = exportMatchSet("raw");
-    const csvRows = [["day","timestamp","device","sample_index","temperature","temp_status","soil_adc","moisture","mq4_adc","mq4_status"]];
-    rows.forEach(r=> csvRows.push([r.day,r.recorded_at,DEVICE_NAMES[r.node],r.sample_index,r.temperature,r.temp_status,r.soil_adc,r.moisture,r.mq4_adc,r.mq4_status]));
-    if(rows.length){ downloadCsv("ASTERCOMP_RAW_"+dateStr+".csv", toCsv(csvRows)); totalExported += rows.length; }
-  }
-  if(state.exportType==="aggregated" || state.exportType==="both"){
-    const rows = exportMatchSet("aggregated");
-    const csvRows = [["day","recorded_at","device","aggregation_index","sample_count","temperature","moisture","soil_adc","mq4_adc","ch4_index","compost_status"]];
-    rows.forEach(a=> csvRows.push([a.day,a.recorded_at,DEVICE_NAMES[a.node],a.sample_index,a.sample_count,a.temperature,a.moisture,a.soil_adc,a.mq4_adc,a.ch4_index,a.compost_status]));
-    if(rows.length){ downloadCsv("ASTERCOMP_AGGREGATED_"+dateStr+".csv", toCsv(csvRows)); totalExported += rows.length; }
-  }
-  showToast("EXPORT COMPLETE", totalExported.toLocaleString()+" records exported successfully.");
+  if(state.exportType==="raw" || state.exportType==="both") triggerExportDownload("raw", fmt, dev, day);
+  if(state.exportType==="aggregated" || state.exportType==="both") triggerExportDownload("aggregated", fmt, dev, day);
+
+  showToast("EXPORT STARTED", "Your file is being generated by the server and should download shortly.");
 }
 
 $all(".opt-btn[data-export-type]").forEach(b=> b.addEventListener("click", ()=>{ $all(".opt-btn[data-export-type]").forEach(x=>x.classList.remove("active")); b.classList.add("active"); state.exportType=b.dataset.exportType; refreshExportPreview(); }));
@@ -1305,36 +1601,47 @@ $("#export-day-filter").addEventListener("change", refreshExportPreview);
 $("#export-btn").addEventListener("click", runExport);
 
 /* ==========================================================================
-   API SYNC
+   HISTORY ENDPOINT STATUS (Settings) — dynamic, never static text
+   ========================================================================== */
+
+function setHistoryEndpointUI(status, label){
+  state.historyEndpointStatus = status;
+  const el = $("#history-endpoint-status");
+  el.className = "endpoint-status "+status;
+  $("#history-endpoint-text").textContent = label;
+}
+function onHistoryEndpointOk(){ if(state.historyEndpointStatus!=="connected") setHistoryEndpointUI("connected","Connected"); }
+function onHistoryEndpointFail(){ setHistoryEndpointUI("error","Disconnected / Error"); }
+
+async function checkHistoryEndpoint(){
+  setHistoryEndpointUI("checking","Checking…");
+  try{
+    const data = await apiGet(HISTORY_URL, { type:"raw", node_id:"all", day:"all", page:1, limit:1 }, 8000);
+    if(data && data.success===true) setHistoryEndpointUI("connected","Connected");
+    else setHistoryEndpointUI("error","Disconnected / Error");
+  } catch(err){
+    console.error("checkHistoryEndpoint error:", err);
+    setHistoryEndpointUI("error","Disconnected / Error");
+  }
+}
+
+/* ==========================================================================
+   API SYNC — realtime (latest.php) drives Dashboard / Fleet / Alerts only
    ========================================================================== */
 
 async function loadData(){
   if(state.isResetting) return;
   try{
-    const res = await fetch(API_URL+"?_="+Date.now(), {method:"GET", cache:"no-store", headers:{Accept:"application/json"}});
-    if(!res.ok) throw new Error("HTTP Error "+res.status);
-    const data = await res.json();
-    if(!data.success) throw new Error(data.message || "API returned success=false");
-
+    const data = await apiGet(LATEST_URL, {}, 12000);
     state.nodes = data.nodes || {};
     state.lastGoodData = data; state.lastSyncAt = new Date();
-
-    for(let i=1;i<=5;i++){
-      const n = state.nodes["node_"+i];
-      if(n && n.raw) pushRawIfNew(i, n.raw);
-      if(n && n.aggregated) pushAggIfNew(i, n.aggregated);
-    }
+    recomputeMaxDaysFromLatest();
 
     $("#server-clock").textContent = data.server_time ? String(data.server_time).split(" ").pop() : "--:--:--";
 
     renderAllDeviceGrids();
     renderSystemHealth(true, data);
-    renderRawTable(); renderAggTable();
     renderAlerts();
-    renderAnalytics();
-    populateDeviceFilters();
-    refreshExportPreview();
-    populateDayFilter($("#export-day-filter"), "All data (this session)");
   } catch(err){
     console.error("loadData error:", err);
     renderSystemHealth(false, state.lastGoodData);
@@ -1346,7 +1653,7 @@ async function loadData(){
 }
 
 /* ==========================================================================
-   RESET ALL HISTORY (10s auto-hide toast, timer restarts on repeat resets)
+   RESET ALL HISTORY — deletes from database, then re-reads from backend
    ========================================================================== */
 
 function openResetModal(){
@@ -1366,6 +1673,14 @@ function showResetBanner(text){
   }, RESET_TOAST_MS);
 }
 
+async function refreshAllFromBackend(){
+  state.rawTable.page=1; state.rawTable.device="all"; state.rawTable.day="all";
+  state.aggTable.page=1; state.aggTable.device="all"; state.aggTable.day="all";
+  state.analyticsDevice="all"; state.analyticsDay="all";
+  await loadData();
+  await Promise.all([ loadRawHistory(), loadAggregatedHistory(), loadAnalyticsData(), refreshExportPreview() ]);
+}
+
 async function confirmReset(){
   if(!isAdmin()){ showAccessDenied("Reset requires ADMIN access."); return; }
   state.isResetting = true;
@@ -1382,13 +1697,10 @@ async function confirmReset(){
       if(r!==0||a!==0||h!==0) throw new Error("Reset incomplete — RAW="+r+", AGGREGATED="+a+", HEARTBEAT="+h);
     }
 
-    state.nodes = {}; state.rawHistory={1:[],2:[],3:[],4:[],5:[]}; state.aggHistory={1:[],2:[],3:[],4:[],5:[]};
-    state.dayIndex={}; state.dayCounter=0; state.lastGoodData=null;
-    renderAllDeviceGrids(); renderSystemHealth(true,null); renderRawTable(); renderAggTable(); renderAlerts(); renderAnalytics();
-
     $("#reset-modal").classList.remove("show");
-    showResetBanner("RAW: "+(data.remaining?or0(data.remaining.compost_raw):"0")+" · AGGREGATED: "+(data.remaining?or0(data.remaining.compost_data):"0")+" · HEARTBEAT: "+(data.remaining?or0(data.remaining.node_status):"0")+" remaining.");
-    setTimeout(loadData, 400);
+    showResetBanner("RAW: "+(data.remaining?or0(data.remaining.compost_raw):"0")+" · AGGREGATED: "+(data.remaining?or0(data.remaining.compost_data):"0")+" · HEARTBEAT: "+(data.remaining?or0(data.remaining.node_status):"0")+" remaining in database.");
+
+    await refreshAllFromBackend();
   } catch(err){
     console.error("reset error:", err);
     $("#reset-modal-error").classList.add("show");
@@ -1410,17 +1722,17 @@ $("#reset-modal").addEventListener("click", e=>{ if(e.target.id==="reset-modal")
 function tickClock(){ $("#system-clock").textContent = wibTime(new Date()); }
 
 /* ==========================================================================
-   NAVIGATION (hash-routed + role guarded)
+   NAVIGATION (hash-routed + role guarded) — fetches from backend on entry
    ========================================================================== */
 
 const VIEW_TITLES = {
   dashboard:["Dashboard","Overall condition of the fleet."],
   fleet:["Fleet Monitoring","Live readings across all devices."],
-  raw:["Raw Sensor Data","Session-accumulated raw telemetry."],
-  aggregated:["Aggregated Data","Session-accumulated analytical results."],
-  analytics:["Analytics","RAW vs AGGREGATED session trend."],
+  raw:["Raw Sensor Data","Persistent raw telemetry from the database."],
+  aggregated:["Aggregated Data","Persistent analytical results from the database."],
+  analytics:["Analytics","Database-backed RAW vs AGGREGATED trend."],
   alerts:["Alert Center","Active system alerts."],
-  export:["Export Data","Download telemetry as CSV."],
+  export:["Export Data","Download telemetry as CSV from the database."],
   settings:["Settings","Platform preferences."]
 };
 
@@ -1430,8 +1742,12 @@ function renderView(name){
   $all(".nav-item[data-view]").forEach(n=> n.classList.toggle("active", n.dataset.view===name));
   $("#page-title").textContent = VIEW_TITLES[name][0];
   closeMobileSidebar();
-  if(name==="analytics") renderAnalytics();
+
+  if(name==="raw") loadRawHistory();
+  if(name==="aggregated") loadAggregatedHistory();
+  if(name==="analytics"){ renderAnalyticsChips(); loadAnalyticsData(); }
   if(name==="export") refreshExportPreview();
+  if(name==="settings") checkHistoryEndpoint();
 }
 
 function navigateTo(name){
@@ -1497,6 +1813,9 @@ function doLogout(){
   $("#login-screen").style.display = "flex";
   $("#login-email").value=""; $("#login-pass").value="";
   history.replaceState(null,"","#dashboard");
+  /* NOTE: no localStorage/session is used to persist data — the database
+     (via history.php / latest.php) remains the single source of truth,
+     so logging back in re-hydrates everything from the backend again. */
 }
 
 /* ==========================================================================
@@ -1529,7 +1848,7 @@ $("#login-pass").addEventListener("keydown", e=>{ if(e.key==="Enter") attemptLog
 $("#login-email").addEventListener("keydown", e=>{ if(e.key==="Enter") attemptLogin(); });
 
 /* ==========================================================================
-   BOOT
+   BOOT — every view is hydrated from the backend, nothing from localStorage
    ========================================================================== */
 
 let booted = false;
@@ -1539,6 +1858,7 @@ function boot(){
   populateDeviceFilters();
   setTheme("dark");
   tickClock();
+  checkHistoryEndpoint();
   renderView_orGuard();
   loadData();
   setInterval(tickClock, CLOCK_INTERVAL_MS);

@@ -359,6 +359,22 @@ svg.linechart{width:100%;height:220px;display:block;}
 .chart-stats span{display:flex;align-items:center;gap:6px;}
 .chart-stats b{color:var(--text);font-weight:700;font-family:var(--font-mono);font-size:13px;}
 .axis-label{font-size:9px;fill:var(--text-faint);font-family:'JetBrains Mono';}
+.chart-container{position:relative;}
+.chart-legend{display:flex;flex-wrap:wrap;gap:14px;padding:0 0 10px;font-size:11.5px;color:var(--text-dim);}
+.chart-legend span{display:flex;align-items:center;gap:6px;}
+.chart-legend i{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.chart-grid-line{stroke:var(--border);stroke-width:1;}
+.chart-tooltip{position:absolute;pointer-events:none;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius-s);padding:8px 10px;font-size:11px;line-height:1.6;box-shadow:var(--shadow);opacity:0;transition:opacity 100ms;z-index:20;white-space:nowrap;}
+.chart-tooltip.show{opacity:1;}
+.chart-tooltip .tt-time{color:var(--text-faint);font-family:var(--font-mono);font-size:10px;margin-bottom:4px;}
+.chart-tooltip .tt-row{display:flex;align-items:center;gap:6px;}
+.chart-tooltip .tt-row i{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.chart-tooltip .tt-val{font-family:var(--font-mono);font-weight:700;color:var(--text);margin-left:auto;padding-left:10px;}
+.chart-crosshair{stroke:var(--text-faint);stroke-width:1;stroke-dasharray:3 3;opacity:0;pointer-events:none;}
+.chart-hoverdot{opacity:0;pointer-events:none;}
+.chart-hit-area{fill:transparent;cursor:crosshair;}
+.chart-livedot{animation:chartPulse 2s ease-in-out infinite;}
+@keyframes chartPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 
 /* ==========================================================================
    ALERTS
@@ -476,9 +492,11 @@ svg.linechart{width:100%;height:220px;display:block;}
     </div>
     <button class="btn-primary" id="login-btn">Sign in</button>
     <div class="demo-creds">
+      <div class="row"><span>Guest (read-only)</span><span><b>guestastercomp</b> / <b>12345</b></span></div>
+      <div class="row"><span>Admin (full access)</span><span><b>adminastercomp</b> / <b>54321</b></span></div>
     </div>
     <div class="login-foot">
-      ASTERION MANUFACTURE - ASTERCOMPV1
+      These credentials are checked in the browser — there is no authentication server behind them yet. Treat this as a UI-layer role gate, not real security, until it's backed by a server-validated session.
     </div>
   </div>
 </div>
@@ -492,7 +510,7 @@ svg.linechart{width:100%;height:220px;display:block;}
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <svg class="core-mark" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#B4713C" stroke-width="2"/><circle cx="16" cy="16" r="10" stroke="#5C9271" stroke-width="2"/><circle cx="16" cy="16" r="3.5" fill="#B4713C"/></svg>
-      <div class="sidebar-brand-text"><div class="name">SMART MONITORING<br>COMPOST</div></div>
+      <div class="sidebar-brand-text"><div class="name">SMART MONITORING COMPOST</div></div>
     </div>
 
     <nav class="sidebar-nav">
@@ -533,6 +551,7 @@ svg.linechart{width:100%;height:220px;display:block;}
         <div class="profile-avatar" id="profile-avatar">GU</div>
         <div><div class="name" id="profile-name">Guest</div><div class="role" id="profile-role">Read Only</div></div>
       </div>
+      <button class="icon-btn" id="topbar-logout-btn" title="Log out"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
     </header>
 
     <div class="content">
@@ -741,7 +760,7 @@ svg.linechart{width:100%;height:220px;display:block;}
       </section>
 
     </div>
-    <footer style="text-align:center;padding:20px;color:var(--text-faint);font-size:11.5px;">ASTERION MANUFACTURE - ASTERCOMPV1</footer>
+    <footer style="text-align:center;padding:20px;color:var(--text-faint);font-size:11.5px;">ASTERION MANUFACTURE - ASTERCOMP-V1</footer>
   </div>
 </div>
 
@@ -793,6 +812,20 @@ const PAGE_SIZE = 50;
 const HEALTHCHECK_INTERVAL_MS = 30000;
 
 const DEVICE_NAMES = { 1:"NODE ID 1", 2:"NODE ID 2", 3:"NODE ID 3", 4:"NODE ID 4", 5:"NODE ID 5" };
+const AGG_WINDOW = 100; // raw samples per aggregation cycle — must match backend ingest.php's AGGREGATION_WINDOW
+const NODE_COLORS = { 1:"#B4713C", 2:"#5C9271", 3:"#D6A13B", 4:"#7C93AE", 5:"#C1503A" };
+
+// Continuous sample_index never resets, so "sampling progress" is expressed
+// as a repeating cycle: which cycle we're in + progress within that cycle.
+// e.g. sample_index=100 -> Cycle 1 · 100/100 · 100%; sample_index=101 -> Cycle 2 · 1/100 · 1%
+function cycleProgress(sampleIdx, windowSize){
+  windowSize = windowSize || AGG_WINDOW;
+  if(sampleIdx <= 0) return {cycle:1, within:0, total:windowSize, percent:0};
+  const cycle = Math.floor((sampleIdx-1)/windowSize) + 1;
+  const within = ((sampleIdx-1) % windowSize) + 1;
+  const percent = Math.round((within/windowSize)*100);
+  return {cycle, within, total:windowSize, percent};
+}
 
 /* credentials — client-side gate only, see login screen disclaimer */
 const ACCOUNTS = {
@@ -944,8 +977,8 @@ function renderDeviceCard(idx, node){
   const tempStatus = raw ? or0(raw.temp_status) : "—";
   const mq4Status = raw ? or0(raw.mq4_status) : "—";
   const sampleIdx = raw ? Number(raw.sample_index)||0 : 0;
-  const sampleTotal = agg && agg.sample_count ? Number(agg.sample_count) : 100;
-  const dashes = Array.from({length:20}).map((_,i)=> '<i class="'+(((i/20*sampleTotal)<sampleIdx)?"filled":"")+'"></i>').join("");
+  const cp = cycleProgress(sampleIdx, AGG_WINDOW);
+  const dashes = Array.from({length:20}).map((_,i)=> '<i class="'+(((i/20*cp.total)<cp.within)?"filled":"")+'"></i>').join("");
 
   return (
     '<article class="device-card" data-node="'+idx+'">'+
@@ -954,7 +987,7 @@ function renderDeviceCard(idx, node){
         '<div class="readout-row">'+sensorReadout("Temperature", raw?fmtNum(raw.temperature,1):"0.0", "°C", tempStatus, statusClass(tempStatus))+sensorReadout("Methane · MQ-4", raw?or0(raw.mq4_adc):"0", "ADC", mq4Status, statusClass(mq4Status))+'</div>'+
         (raw? renderThresholdBar(raw.temperature, TEMP_ZONES, 80) : '') +
         '<div class="readout-row" style="margin-top:14px;">'+sensorReadout("Moisture", raw?fmtNum(raw.moisture,1):"0.0", "%")+sensorReadout("Soil ADC", raw?or0(raw.soil_adc):"0", "")+'</div>'+
-        '<div class="sampling-block"><div class="sampling-head"><span>Sampling progress</span><span class="v">'+sampleIdx+' / '+sampleTotal+'</span></div><div class="dash-gauge">'+dashes+'</div></div>'+
+        '<div class="sampling-block"><div class="sampling-head"><span>Sampling progress</span><span class="v">Cycle '+cp.cycle+' · '+cp.within+' / '+cp.total+' · '+cp.percent+'%</span></div><div class="dash-gauge">'+dashes+'</div></div>'+
         '<div class="mini-meta-row"><span>Last seen <span class="v">'+relativeTime(node?node.last_seen:null)+'</span></span><span>Compost <span class="v">'+(agg?or0(agg.compost_status):"—")+'</span></span></div>'+
       '</div>'+
     '</article>'
@@ -993,8 +1026,8 @@ function openDeviceDetail(idx){
   ].map(pairToDetailItem).join("") : emptyDetailNote("No raw sample received yet.");
 
   const sampleIdx = raw ? Number(raw.sample_index)||0 : 0;
-  const sampleTotal = agg && agg.sample_count ? Number(agg.sample_count) : 100;
-  $("#detail-sampling").innerHTML = '<div class="sampling-head"><span>Current aggregation cycle</span><span class="v">'+sampleIdx+' / '+sampleTotal+' · '+Math.round(sampleIdx/sampleTotal*100)+'%</span></div><div class="dash-gauge">'+Array.from({length:30}).map((_,i)=>'<i class="'+((i/30*sampleTotal)<sampleIdx?"filled":"")+'"></i>').join("")+'</div>';
+  const cpDetail = cycleProgress(sampleIdx, AGG_WINDOW);
+  $("#detail-sampling").innerHTML = '<div class="sampling-head"><span>Current aggregation cycle</span><span class="v">Cycle '+cpDetail.cycle+' · '+cpDetail.within+' / '+cpDetail.total+' · '+cpDetail.percent+'%</span></div><div class="dash-gauge">'+Array.from({length:30}).map((_,i)=>'<i class="'+((i/30*cpDetail.total)<cpDetail.within?"filled":"")+'"></i>').join("")+'</div>';
 
   $("#detail-agg-grid").innerHTML = agg ? [
     ["Day · Aggregation", "DAY "+dayLabelFor(agg.recorded_at, Date.now())+" • #"+or0(agg.sample_index)],
@@ -1134,9 +1167,9 @@ function tableLoadingRow(colspan){ return '<tr><td colspan="'+colspan+'" style="
 
 /* ---- RAW DATA table ---------------------------------------------------- */
 
-async function loadRawHistory(){
+async function loadRawHistory(silent){
   const dev = $("#raw-device-filter").value, day = $("#raw-day-filter").value;
-  $("#raw-table-body").innerHTML = tableLoadingRow(9);
+  if(!silent) $("#raw-table-body").innerHTML = tableLoadingRow(9);
   try{
     const json = await fetchHistory("raw", dev, day, state.rawPage, PAGE_SIZE);
     state.rawPageData = json.data;
@@ -1147,8 +1180,10 @@ async function loadRawHistory(){
   } catch(err){
     console.error("loadRawHistory error:", err);
     markHistoryEndpoint(String(err.message||"").startsWith("HTTP") ? "error" : "disconnected");
-    $("#raw-table-body").innerHTML = tableErrorRow(9, err.message);
-    $("#raw-table-count").textContent = "0 records";
+    if(!silent){
+      $("#raw-table-body").innerHTML = tableErrorRow(9, err.message);
+      $("#raw-table-count").textContent = "0 records";
+    }
   }
 }
 
@@ -1170,9 +1205,9 @@ function renderRawTable(){
 
 /* ---- AGGREGATED DATA table --------------------------------------------- */
 
-async function loadAggregatedHistory(){
+async function loadAggregatedHistory(silent){
   const dev = $("#agg-device-filter").value, day = $("#agg-day-filter").value;
-  $("#agg-table-body").innerHTML = tableLoadingRow(10);
+  if(!silent) $("#agg-table-body").innerHTML = tableLoadingRow(10);
   try{
     const json = await fetchHistory("aggregated", dev, day, state.aggPage, PAGE_SIZE);
     state.aggPageData = json.data;
@@ -1183,21 +1218,26 @@ async function loadAggregatedHistory(){
   } catch(err){
     console.error("loadAggregatedHistory error:", err);
     markHistoryEndpoint(String(err.message||"").startsWith("HTTP") ? "error" : "disconnected");
-    $("#agg-table-body").innerHTML = tableErrorRow(10, err.message);
-    $("#agg-table-count").textContent = "0 records";
+    if(!silent){
+      $("#agg-table-body").innerHTML = tableErrorRow(10, err.message);
+      $("#agg-table-count").textContent = "0 records";
+    }
   }
 }
 
 function renderAggTable(){
   const rows = state.aggPageData, meta = state.aggPageMeta;
-  $("#agg-table-body").innerHTML = rows.length ? rows.map(a=>
-    '<tr><td class="num">'+or0(a.recorded_at)+'</td><td class="device-col">'+(DEVICE_NAMES[a.node_id]||("NODE ID "+a.node_id))+'</td>'+
+  $("#agg-table-body").innerHTML = rows.length ? rows.map(a=>{
+    const aggIdx = Number(a.aggregated_index)||0;
+    const rangeStart = aggIdx>0 ? ((aggIdx-1)*AGG_WINDOW)+1 : 0;
+    const rangeEnd = aggIdx>0 ? aggIdx*AGG_WINDOW : 0;
+    return '<tr><td class="num">'+or0(a.recorded_at)+'</td><td class="device-col">'+(DEVICE_NAMES[a.node_id]||("NODE ID "+a.node_id))+'</td>'+
     '<td class="trace-col"><span class="day">DAY '+or0(a.day_number)+'</span> · #'+or0(a.aggregated_index)+'</td>'+
-    '<td class="num">#'+or0(a.raw_range_start)+'–'+or0(a.raw_range_end)+'</td>'+
+    '<td class="num">#'+rangeStart+'–'+rangeEnd+'</td>'+
     '<td class="num">'+fmtNum(a.temperature,2)+' °C</td><td class="num">'+fmtNum(a.moisture,2)+' %</td>'+
     '<td class="num">'+or0(a.soil_adc)+'</td><td class="num">'+or0(a.mq4_adc)+'</td>'+
-    '<td class="num">'+or0(a.ch4_index)+'</td><td class="num">'+or0(a.compost_status)+'</td></tr>'
-  ).join("") : tableEmptyRow(10, "No historical data available for the selected filter.");
+    '<td class="num">'+or0(a.ch4_index)+'</td><td class="num">'+or0(a.compost_status)+'</td></tr>';
+  }).join("") : tableEmptyRow(10, "No historical data available for the selected filter.");
   const from = meta.total ? (state.aggPage-1)*PAGE_SIZE+1 : 0, to = Math.min(state.aggPage*PAGE_SIZE, meta.total);
   $("#agg-table-count").textContent = meta.total+" records"+(meta.total? " · showing "+from+"–"+to : "");
   $("#agg-pageinfo").textContent = state.aggPage+" / "+meta.total_pages;
@@ -1271,16 +1311,17 @@ function renderAlerts(){
 
 function activeDeviceIndexes(){ return state.analyticsDevice==="all" ? [1,2,3,4,5] : [Number(state.analyticsDevice)]; }
 
-async function refreshAnalytics(){
+async function refreshAnalytics(silent){
   renderAnalyticsChips();
   const type = state.analyticsSource; // "raw" | "aggregated"
   const dayVal = state.analyticsDay;
   const nodeVal = state.analyticsDevice;
 
-  $all(".chart-card .chart-empty, .chart-card svg.linechart").forEach(()=>{});
-  ["chart-temp-wrap","chart-moisture-wrap","chart-soil-wrap","chart-methane-wrap"].forEach(id=>{
-    $("#"+id).innerHTML = '<div class="chart-empty">Loading historical data…</div>';
-  });
+  if(!silent){
+    ["chart-temp-wrap","chart-moisture-wrap","chart-soil-wrap","chart-methane-wrap"].forEach(id=>{
+      $("#"+id).innerHTML = '<div class="chart-empty">Loading historical data…</div>';
+    });
+  }
 
   try{
     // Analytics needs more points than one table page — request the max
@@ -1288,6 +1329,7 @@ async function refreshAnalytics(){
     const json = await fetchHistory(type, nodeVal, dayVal, 1, 500);
     const points = json.data.map(r=>({
       recorded_at: r.recorded_at,
+      ts: new Date(r.recorded_at).getTime(),
       day: r.day_number,
       index: type==="raw" ? r.sample_index : r.aggregated_index,
       temperature: Number(r.temperature), moisture: Number(r.moisture),
@@ -1306,9 +1348,11 @@ async function refreshAnalytics(){
   } catch(err){
     console.error("refreshAnalytics error:", err);
     markHistoryEndpoint(String(err.message||"").startsWith("HTTP") ? "error" : "disconnected");
-    ["chart-temp-wrap","chart-moisture-wrap","chart-soil-wrap","chart-methane-wrap"].forEach(id=>{
-      $("#"+id).innerHTML = '<div class="chart-empty">Unable to load historical chart data — '+err.message+'</div>';
-    });
+    if(!silent){
+      ["chart-temp-wrap","chart-moisture-wrap","chart-soil-wrap","chart-methane-wrap"].forEach(id=>{
+        $("#"+id).innerHTML = '<div class="chart-empty">Unable to load historical chart data — '+err.message+'</div>';
+      });
+    }
   }
 }
 
@@ -1318,38 +1362,178 @@ function statOf(points, key){
   return { latest: vals[vals.length-1], avg: vals.reduce((a,b)=>a+b,0)/vals.length, min: Math.min(...vals), max: Math.max(...vals) };
 }
 
+// Smooth line through the data using a midpoint-quadratic chain — much
+// easier to read at a glance than dense point-to-point zigzags.
+function smoothPathD(pts){
+  if(pts.length<2) return "";
+  if(pts.length===2) return "M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1)+" L"+pts[1][0].toFixed(1)+","+pts[1][1].toFixed(1);
+  let d = "M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1)+" ";
+  for(let i=1;i<pts.length;i++){
+    const [x0,y0] = pts[i-1], [x1,y1] = pts[i];
+    const mx = ((x0+x1)/2).toFixed(1), my = ((y0+y1)/2).toFixed(1);
+    d += "Q "+x0.toFixed(1)+","+y0.toFixed(1)+" "+mx+","+my+" ";
+  }
+  const last = pts[pts.length-1];
+  d += "L "+last[0].toFixed(1)+","+last[1].toFixed(1);
+  return d;
+}
+
+function buildNodeSeries(points){
+  const byNode = {};
+  points.forEach(p=>{ (byNode[p.node_id] = byNode[p.node_id] || []).push(p); });
+  return Object.keys(byNode).map(Number).sort((a,b)=>a-b).map(nid=>({
+    nodeId: nid,
+    label: DEVICE_NAMES[nid] || ("Node "+nid),
+    color: NODE_COLORS[nid] || "var(--loam)",
+    points: byNode[nid].slice().sort((a,b)=>a.ts-b.ts)
+  }));
+}
+
 function drawLineChart(containerId, points, key, color, thresholds, unit){
   const wrap = $("#"+containerId);
   if(points.length<2){
     wrap.innerHTML = '<div class="chart-empty">No historical data available for the selected filter.</div>';
     return;
   }
-  const W=680,H=220,PAD=30;
-  const values = points.map(p=>p[key]);
-  const dataMin = Math.min(...values), dataMax = Math.max(...values);
+
+  const multi = state.analyticsDevice==="all";
+  const seriesGroups = multi ? buildNodeSeries(points) : [{ nodeId:null, label:null, color:color, points:points }];
+
+  const W=680, H=220, PAD=34, chartH = H-40;
+  const allVals = points.map(p=>p[key]);
+  const dataMin = Math.min(...allVals), dataMax = Math.max(...allVals);
   const thMin = thresholds ? Math.min(...thresholds,dataMin) : dataMin;
   const thMax = thresholds ? Math.max(...thresholds,dataMax) : dataMax;
   const min = thMin - (thMax-thMin||10)*0.15, max = thMax + (thMax-thMin||10)*0.15;
-  const xStep = (W-PAD*2)/(points.length-1);
-  const y = v => H-40-PAD - ((v-min)/(max-min||1))*(H-40-PAD*2);
-  const path = points.map((p,i)=> (i===0?"M":"L")+(PAD+i*xStep).toFixed(1)+","+y(p[key]).toFixed(1)).join(" ");
-  const thLines = (thresholds||[]).map(t=> '<line x1="'+PAD+'" y1="'+y(t).toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y(t).toFixed(1)+'" stroke="var(--border-strong)" stroke-dasharray="3 3" stroke-width="1"/>'+'<text x="'+(W-PAD+4)+'" y="'+(y(t)+3).toFixed(1)+'" class="axis-label">'+t+'</text>').join("");
-  const s = statOf(points, key);
+
+  const minTs = Math.min(...points.map(p=>p.ts)), maxTs = Math.max(...points.map(p=>p.ts));
+  const x = ts => PAD + ((ts-minTs)/((maxTs-minTs)||1)) * (W-PAD*2);
+  const y = v => chartH-PAD - ((v-min)/(max-min||1)) * (chartH-PAD*2);
+
+  // Horizontal gridlines (4 bands) with value labels
+  const gridCount = 4;
+  let gridLines = "";
+  for(let g=0;g<=gridCount;g++){
+    const gv = min + (max-min)*(g/gridCount);
+    const gy = y(gv);
+    gridLines += '<line class="chart-grid-line" x1="'+PAD+'" y1="'+gy.toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+gy.toFixed(1)+'"/>';
+    gridLines += '<text x="4" y="'+(gy+3).toFixed(1)+'" class="axis-label">'+gv.toFixed(0)+'</text>';
+  }
+
+  const thLines = (thresholds||[]).map(t=>
+    '<line x1="'+PAD+'" y1="'+y(t).toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y(t).toFixed(1)+'" stroke="var(--border-strong)" stroke-dasharray="3 3" stroke-width="1"/>'+
+    '<text x="'+(W-PAD+4)+'" y="'+(y(t)+3).toFixed(1)+'" class="axis-label">'+t+'</text>'
+  ).join("");
+
+  const gradId = "grad-"+containerId;
+  const baseline = chartH-PAD;
+
+  let seriesSvg = "";
+  let legendHtml = "";
+  seriesGroups.forEach((s,si)=>{
+    const pts = s.points.map(p=>[x(p.ts), y(p[key])]);
+    const d = smoothPathD(pts);
+    const isSingle = seriesGroups.length===1;
+    if(isSingle){
+      const areaD = d + " L"+pts[pts.length-1][0].toFixed(1)+","+baseline+" L"+pts[0][0].toFixed(1)+","+baseline+" Z";
+      seriesSvg += '<defs><linearGradient id="'+gradId+'" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.28"/>'+
+        '<stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/>'+
+        '</linearGradient></defs>';
+      seriesSvg += '<path d="'+areaD+'" fill="url(#'+gradId+')" stroke="none"/>';
+    }
+    seriesSvg += '<path class="chart-series-line" data-series="'+si+'" d="'+d+'" fill="none" stroke="'+s.color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+    // live pulsing dot on the last point of each series
+    const lastPt = pts[pts.length-1];
+    seriesSvg += '<circle class="chart-livedot" cx="'+lastPt[0].toFixed(1)+'" cy="'+lastPt[1].toFixed(1)+'" r="3.2" fill="'+s.color+'"/>';
+    if(multi) legendHtml += '<span><i style="background:'+s.color+';"></i>'+s.label+'</span>';
+  });
+
+  const s0 = statOf(points, key);
 
   wrap.innerHTML =
-    '<svg class="linechart" viewBox="0 0 '+W+' '+(H-40)+'">'+
-      '<text x="4" y="12" class="axis-label">'+max.toFixed(0)+' '+unit+'</text><text x="4" y="'+(H-40-PAD+4)+'" class="axis-label">'+min.toFixed(0)+' '+unit+'</text>'+
-      thLines+'<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2"/>'+
-      points.map((p,i)=>{
-        const idxLabel = state.analyticsSource==="raw" ? ("Sample "+p.index) : ("Aggregated Index "+p.index);
-        const tip = "Node: "+p.node_id+"\\n"+idxLabel+"\\nTime: "+or0(p.recorded_at)+"\\n"+key+": "+p[key].toFixed(1)+" "+unit;
-        return '<circle cx="'+(PAD+i*xStep).toFixed(1)+'" cy="'+y(p[key]).toFixed(1)+'" r="2.6" fill="'+color+'"><title>'+tip+'</title></circle>';
-      }).join("")+
-    '</svg>'+
-    (s ? '<div class="chart-stats"><span>Latest <b class="num">'+s.latest.toFixed(1)+'</b></span><span>Average <b class="num">'+s.avg.toFixed(1)+'</b></span><span>Min <b class="num">'+s.min.toFixed(1)+'</b></span><span>Max <b class="num">'+s.max.toFixed(1)+'</b></span></div>' : '');
+    (multi ? '<div class="chart-legend">'+legendHtml+'</div>' : '') +
+    '<div class="chart-container">'+
+      '<svg class="linechart" id="svg-'+containerId+'" viewBox="0 0 '+W+' '+chartH+'">'+
+        gridLines + thLines + seriesSvg +
+        '<line class="chart-crosshair" id="cross-'+containerId+'" x1="0" y1="0" x2="0" y2="'+baseline+'"/>'+
+        seriesGroups.map((s,si)=>'<circle class="chart-hoverdot" id="hoverdot-'+containerId+'-'+si+'" r="4" fill="'+s.color+'" stroke="var(--surface)" stroke-width="2"/>').join("")+
+        '<rect class="chart-hit-area" x="'+PAD+'" y="0" width="'+(W-PAD*2)+'" height="'+chartH+'"/>'+
+      '</svg>'+
+      '<div class="chart-tooltip" id="tip-'+containerId+'"></div>'+
+    '</div>'+
+    (s0 ? '<div class="chart-stats"><span>Latest <b class="num">'+s0.latest.toFixed(1)+'</b></span><span>Average <b class="num">'+s0.avg.toFixed(1)+'</b></span><span>Min <b class="num">'+s0.min.toFixed(1)+'</b></span><span>Max <b class="num">'+s0.max.toFixed(1)+'</b></span></div>' : '');
+
+  // ---- interactive crosshair + tooltip ----
+  const svgEl = $("#svg-"+containerId);
+  const crossEl = $("#cross-"+containerId);
+  const tipEl = $("#tip-"+containerId);
+  const hitArea = svgEl.querySelector(".chart-hit-area");
+  const hoverDots = seriesGroups.map((s,si)=> $("#hoverdot-"+containerId+"-"+si));
+
+  function nearestPointForSeries(pts, targetTs){
+    let best = pts[0], bestDiff = Math.abs(pts[0].ts-targetTs);
+    for(let i=1;i<pts.length;i++){
+      const diff = Math.abs(pts[i].ts-targetTs);
+      if(diff<bestDiff){ best = pts[i]; bestDiff = diff; }
+    }
+    return best;
+  }
+
+  function onMove(evt){
+    const rect = svgEl.getBoundingClientRect();
+    const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+    const relX = ((clientX-rect.left)/rect.width) * W;
+    const clampedX = Math.max(PAD, Math.min(W-PAD, relX));
+    const targetTs = minTs + ((clampedX-PAD)/(W-PAD*2)) * (maxTs-minTs);
+
+    crossEl.setAttribute("x1", clampedX.toFixed(1));
+    crossEl.setAttribute("x2", clampedX.toFixed(1));
+    crossEl.style.opacity = "1";
+
+    let tipRows = "";
+    let anyTime = "";
+    seriesGroups.forEach((s,si)=>{
+      const np = nearestPointForSeries(s.points, targetTs);
+      const px = x(np.ts), py = y(np[key]);
+      const dot = hoverDots[si];
+      dot.setAttribute("cx", px.toFixed(1));
+      dot.setAttribute("cy", py.toFixed(1));
+      dot.style.opacity = "1";
+      anyTime = np.recorded_at;
+      const idxLabel = type_label_for(np);
+      tipRows += '<div class="tt-row"><i style="background:'+s.color+';"></i>'+(s.label||"Value")+(idxLabel?' <span style="color:var(--text-faint);">('+idxLabel+')</span>':'')+'<span class="tt-val">'+np[key].toFixed(1)+' '+unit+'</span></div>';
+    });
+
+    tipEl.innerHTML = '<div class="tt-time">'+or0(anyTime)+'</div>'+tipRows;
+    tipEl.classList.add("show");
+
+    const wrapRect = wrap.querySelector(".chart-container").getBoundingClientRect();
+    const tipW = tipEl.offsetWidth || 160;
+    let leftPx = ((clampedX/W)*wrapRect.width) + 14;
+    if(leftPx + tipW > wrapRect.width) leftPx = ((clampedX/W)*wrapRect.width) - tipW - 14;
+    tipEl.style.left = leftPx+"px";
+    tipEl.style.top = "8px";
+  }
+
+  function onLeave(){
+    crossEl.style.opacity = "0";
+    hoverDots.forEach(d=> d.style.opacity="0");
+    tipEl.classList.remove("show");
+  }
+
+  function type_label_for(np){
+    return state.analyticsSource==="raw" ? ("Sample #"+np.index) : ("Agg #"+np.index);
+  }
+
+  hitArea.addEventListener("mousemove", onMove);
+  hitArea.addEventListener("mouseleave", onLeave);
+  hitArea.addEventListener("touchmove", onMove, {passive:true});
+  hitArea.addEventListener("touchend", onLeave);
 }
 
 function renderAnalyticsChips(){
+
   const chips = ['<div class="chip '+(state.analyticsDevice==="all"?"active":"")+'" data-dev="all">All nodes</div>'];
   for(let i=1;i<=5;i++) chips.push('<div class="chip '+(state.analyticsDevice==String(i)?"active":"")+'" data-dev="'+i+'">'+DEVICE_NAMES[i]+'</div>');
   $("#analytics-device-chips").innerHTML = chips.join("");
@@ -1433,13 +1617,18 @@ async function loadData(){
 
     $("#server-clock").textContent = data.server_time ? String(data.server_time).split(" ").pop() : "--:--:--";
 
-    // Dashboard/Fleet realtime — latest.php only. History, Analytics, and
-    // Export pull from history.php on-demand when their own view opens
-    // (see navigateView), not on this 5s poll — that's what keeps realtime
-    // monitoring light even once the database holds millions of rows.
+    // Dashboard/Fleet realtime — latest.php only, always refreshed here.
     renderAllDeviceGrids();
     renderSystemHealth(true, data);
     renderAlerts();
+
+    // Also silently refresh the currently open history/analytics view (if
+    // any) on this same 5s cadence, so live-watching a table or chart
+    // shows new samples without needing to leave and reopen the tab.
+    // Filters/page are preserved since these functions read them from state.
+    if(state.currentView==="raw") loadRawHistory(true);
+    else if(state.currentView==="aggregated") loadAggregatedHistory(true);
+    else if(state.currentView==="analytics") refreshAnalytics(true);
   } catch(err){
     console.error("loadData error:", err);
     renderSystemHealth(false, state.lastGoodData);
@@ -1532,6 +1721,7 @@ const VIEW_TITLES = {
 };
 
 function renderView(name){
+  state.currentView = name;
   $all(".view").forEach(v=>v.classList.remove("active"));
   $("#view-"+name).classList.add("active");
   $all(".nav-item[data-view]").forEach(n=> n.classList.toggle("active", n.dataset.view===name));
@@ -1600,6 +1790,9 @@ $("#setting-motion-switch").addEventListener("click", function(){ this.classList
 $("#notif-btn").addEventListener("click", ()=> navigateTo("alerts"));
 $("#profile-chip").addEventListener("click", ()=> navigateTo(isAdmin()?"settings":"dashboard"));
 $("#logout-btn").addEventListener("click", doLogout);
+$("#topbar-logout-btn").addEventListener("click", ()=>{
+  if(confirm("Log out of ASTERCOMP?")) doLogout();
+});
 
 function doLogout(){
   booted = false; state.currentUser = null;
@@ -1643,6 +1836,24 @@ $("#login-email").addEventListener("keydown", e=>{ if(e.key==="Enter") attemptLo
    ========================================================================== */
 
 let booted = false;
+async function seedLiveDayCounter(){
+  // The live dashboard/device-detail widgets label "DAY X" using calendar
+  // dates seen THIS session (dayLabelFor), which used to restart at Day 1
+  // on every page reload — inconsistent with Raw/Aggregated tables, which
+  // get their day number from the database. Seed it once at boot using
+  // the real available_days count so both views agree on "today's" day.
+  try{
+    const json = await fetchHistory("raw", "all", "all", 1, 1);
+    const days = json.available_days || [];
+    if(days.length){
+      const todayKey = new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Jakarta"});
+      state.liveDayIndex[todayKey] = days[days.length-1];
+      state.liveDayCounter = days[days.length-1];
+    }
+  } catch(err){
+    console.warn("seedLiveDayCounter skipped:", err.message);
+  }
+}
 function boot(){
   if(booted) return; booted = true;
   applyRoleUI();
@@ -1652,6 +1863,7 @@ function boot(){
   renderView_orGuard();
   loadData();
   healthCheckHistory();
+  seedLiveDayCounter();
   setInterval(tickClock, CLOCK_INTERVAL_MS);
   setInterval(loadData, POLL_INTERVAL_MS);
   setInterval(healthCheckHistory, HEALTHCHECK_INTERVAL_MS);
